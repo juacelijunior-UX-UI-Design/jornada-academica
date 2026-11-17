@@ -1,6 +1,8 @@
 // Ingresso com QR Code: token secreto, leitura, PNG do QR e e-mail de confirmação (somente servidor).
 import QRCode from "qrcode";
 import { todos } from "@/lib/jornada.server";
+import { enviarPorGmail } from "@/lib/gmail.server";
+import { htmlConfirmacao } from "@/lib/email-confirmacao.server";
 
 const SITE = "https://6jornadaacaduninassau.com";
 
@@ -171,39 +173,24 @@ export function qrPng(texto, escala = 8, margem = 4) {
   return png;
 }
 
-/* ---------- E-mail de confirmação com o QR Code ---------- */
+/* ---------- E-mail de confirmação com o QR Code (pelo Gmail) ---------- */
 
 // Devolve true quando o e-mail foi enviado. Nunca interrompe a inscrição.
 export async function enviarConfirmacao(base44, participante) {
   try {
     const p = await garantirToken(base44, participante);
     const nome = String(p.nome).trim().split(/\s+/)[0];
-    const ingressoUrl = `${SITE}/minha-inscricao`;
 
-    let qrUrl = "";
-    try {
-      const file = new File([qrPng(conteudoQr(p))], `ingresso-${p.id}.png`, { type: "image/png" });
-      const up = await base44.integrations.Core.UploadPublicFile({ file });
-      qrUrl = up?.file_url || "";
-    } catch {
-      qrUrl = "";
-    }
-
-    const core = base44.integrations.Core;
-    const resposta = qrUrl
-      ? await core.SendEmail({
-          to: p.email,
-          template_name: "ConfirmacaoInscricao",
-          category: "transactional",
-          variables: { nome, titulo: p.titulo || "", qr_url: qrUrl, ingresso_url: ingressoUrl },
-        })
-      : await core.SendEmail({
-          to: p.email,
-          subject: "Inscrição confirmada | VI Jornada Acadêmica Uninassau Teresina",
-          category: "transactional",
-          body: `<p>Olá, ${nome}! Sua inscrição na VI Jornada Acadêmica foi confirmada.</p><p>Seu QR Code de identificação está disponível em <a href="${ingressoUrl}">${ingressoUrl}</a>. Entre com o mesmo e-mail da inscrição.</p>`,
-        });
-    return resposta?.success !== false;
+    return await enviarPorGmail(base44, {
+      para: p.email,
+      assunto: "Inscrição confirmada | VI Jornada Acadêmica Uninassau Teresina",
+      html: htmlConfirmacao({
+        nome,
+        titulo: p.titulo || "",
+        ingressoUrl: `${SITE}/minha-inscricao`,
+      }),
+      imagem: qrPng(conteudoQr(p)),
+    });
   } catch {
     return false;
   }
