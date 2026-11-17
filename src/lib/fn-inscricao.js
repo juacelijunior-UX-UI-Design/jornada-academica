@@ -11,6 +11,7 @@ import {
   normalizarTelefone,
   validarInscricao,
 } from "@/lib/validacao";
+import { enviarConfirmacao } from "@/lib/ingresso.server";
 import { motivoInscricoesFechadas, obterConfiguracao, todos } from "@/lib/jornada.server";
 
 const soDigitosOuVazio = (v) => (typeof v === "string" ? v : "");
@@ -61,9 +62,12 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     arquivo_tamanho: data.arquivo_tamanho ? Number(data.arquivo_tamanho) : undefined,
   });
 
+  const email_enviado = await enviarConfirmacao(base44, participante);
+
   return {
     ok: true,
     participante: {
+      email_enviado,
       nome: participante.nome,
       formato: participante.formato,
       tem_resumo: Boolean(participante.resumo),

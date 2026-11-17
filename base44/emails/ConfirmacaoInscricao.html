@@ -1,0 +1,48 @@
+<mjml>
+  <mj-head>
+    <mj-title>Inscrição confirmada | VI Jornada Acadêmica Uninassau Teresina</mj-title>
+    <mj-preview>Seu QR Code de identificação está neste e-mail.</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Inter, Arial, sans-serif" />
+      <mj-section background-color="#ffffff" padding="0 36px" />
+      <mj-text color="#1a1f36" font-size="15px" line-height="1.6" padding="0" />
+      <mj-button background-color="#ffcb0c" color="#000000" border-radius="0px" font-weight="700" inner-padding="14px 28px" align="center" />
+      <mj-class name="h" font-family="Montserrat, Arial, sans-serif" font-weight="800" color="#011c63" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#e6ecf9">
+    <mj-section background-color="#ffcb0c" padding="20px 36px">
+      <mj-column>
+        <mj-image src="https://media.base44.com/images/public/6afc5f6bdef0a308e8558411/23f60c835_logo.png" alt="WebDeploy Pro" width="140px" align="left" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-section padding="36px 36px 8px">
+      <mj-column>
+        <mj-text mj-class="h" font-size="28px" line-height="1.2">Inscrição confirmada, {{nome}}!</mj-text>
+        <mj-text color="#5b6480" padding="10px 0 0">Guarde o QR Code abaixo: ele é o seu ingresso na VI Jornada Acadêmica da Uninassau Teresina.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 36px">
+      <mj-column>
+        <mj-image src="{{qr_url}}" alt="QR Code de identificação" width="240px" align="center" padding="0" />
+        <mj-text align="center" color="#5b6480" font-size="13px" padding="12px 0 0">{{titulo}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="8px 36px 16px">
+      <mj-column>
+        <mj-text>Apresente este QR Code nos dias do evento (09 e 10/12/2026) para registrar a sua presença. Ela será usada para a emissão do certificado.</mj-text>
+        <mj-text padding="12px 0 0">Você também pode ver o QR Code no site: entre com o mesmo e-mail da inscrição.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="8px 36px 36px">
+      <mj-column>
+        <mj-button href="{{ingresso_url}}">Abrir meu ingresso no site</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#011c63" padding="18px 36px">
+      <mj-column>
+        <mj-text color="#ffffff" font-size="12px" align="center">VI Jornada Acadêmica da Uninassau Teresina</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

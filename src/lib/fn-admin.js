@@ -11,6 +11,8 @@ import {
   todos,
 } from "@/lib/jornada.server";
 
+import { novoCodigo } from "@/lib/certificado.server";
+
 const ehAdmin = (user) => user?.role === "admin";
 const DATA = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -104,6 +106,7 @@ export const emitirCertificados = createServerFn({ method: "POST" })
         horas_presentes: a.horas_presentes,
         percentual: a.percentual,
         emitido_em: new Date().toISOString(),
+        codigo: novoCodigo(),
       }))
     );
     return resumo;

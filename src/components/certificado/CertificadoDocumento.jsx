@@ -24,6 +24,24 @@ const CertificadoDocumento = forwardRef(function CertificadoDocumento({ dados },
       >
         <div style={{ position: "absolute", inset: 18, border: "3px solid #011c63" }} />
         <div style={{ position: "absolute", inset: 26, border: "1px solid #ffcb0c" }} />
+        {dados.codigo && (
+          <p
+            style={{
+              position: "absolute",
+              bottom: 34,
+              left: 0,
+              right: 0,
+              zIndex: 2,
+              margin: 0,
+              textAlign: "center",
+              fontSize: 11,
+              color: "#5b6480",
+            }}
+          >
+            Código de autenticidade: <strong>{dados.codigo}</strong> · Valide em
+            6jornadaacaduninassau.com/validar
+          </p>
+        )}
 
         <img
           src={FAIXAS}
@@ -53,7 +71,7 @@ const CertificadoDocumento = forwardRef(function CertificadoDocumento({ dados },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "52px 90px 40px",
+            padding: "52px 90px 60px",
             textAlign: "center",
           }}
         >

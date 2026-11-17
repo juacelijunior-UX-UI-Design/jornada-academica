@@ -11,6 +11,7 @@ const LINKS = [
   { texto: "Programação", to: "/", hash: "programacao" },
   { texto: "Cronograma", to: "/", hash: "cronograma" },
   { texto: "Certificado", to: "/certificado" },
+  { texto: "Validar certificado", to: "/validar" },
   { texto: "Dúvidas", to: "/", hash: "faq" },
 ];
 
@@ -58,6 +59,12 @@ export default function SiteHeader() {
           ))}
           {logado ? (
             <>
+              <Link to="/meu-ingresso" className={linkClasse}>
+                Meu ingresso
+              </Link>
+              <Link to="/checkin" className={linkClasse}>
+                Check-in
+              </Link>
               <Link to="/professor" className={linkClasse}>
                 Chamada
               </Link>
@@ -105,6 +112,8 @@ export default function SiteHeader() {
               ...LINKS,
               ...(logado
                 ? [
+                    { texto: "Meu ingresso", to: "/meu-ingresso" },
+                    { texto: "Check-in", to: "/checkin" },
                     { texto: "Chamada", to: "/professor" },
                     ...(user.role === "admin" ? [{ texto: "Gerenciador", to: "/gerenciador" }] : []),
                   ]

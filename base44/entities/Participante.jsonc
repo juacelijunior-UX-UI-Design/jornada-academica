@@ -102,6 +102,10 @@
     },
     "arquivo_tamanho": {
       "type": "number"
+    },
+    "token_ingresso": {
+      "type": "string",
+      "description": "C\u00f3digo secreto aleat\u00f3rio do QR Code de ingresso (nunca exibir em listas)."
     }
   },
   "required": [

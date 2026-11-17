@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { apenasDigitos } from "@/lib/validacao";
 import { EVENTO } from "@/lib/evento";
+import { CODIGO_VALIDO, garantirCertificado } from "@/lib/certificado.server";
 import {
   calcularResumo,
   certificadosLiberados,
@@ -8,6 +9,34 @@ import {
   obterConfiguracao,
   todos,
 } from "@/lib/jornada.server";
+
+// Validação pública pelo código de autenticidade: mostra só nome, curso, horas e evento.
+export const validarCertificado = createServerFn({ method: "POST" }).handler(async ({ data, context }) => {
+  const codigo = String(data?.codigo || "").trim().toUpperCase().slice(0, 20);
+  if (!CODIGO_VALIDO.test(codigo)) return { encontrado: false };
+  const base44 = context.getBase44().asServiceRole;
+  const cert = (await todos(base44.entities.Certificado.filter({ codigo })))[0];
+  if (!cert) return { encontrado: false };
+  const config = await obterConfiguracao(base44);
+  let curso = "";
+  try {
+    curso = (await base44.entities.Participante.get(cert.participante_id)).curso || "";
+  } catch {
+    curso = "";
+  }
+  return {
+    encontrado: true,
+    certificado: {
+      codigo,
+      nome: cert.nome,
+      curso,
+      horas: config.carga_horaria_certificado,
+      evento: EVENTO.nome,
+      datas: EVENTO.datas,
+      emitido_em: cert.emitido_em || cert.created_date,
+    },
+  };
+});
 
 // Consulta pública do certificado: CPF e e-mail juntos. Nunca revela se um CPF existe.
 export const consultarCertificado = createServerFn({ method: "POST" }).handler(async ({ data, context }) => {
@@ -44,12 +73,15 @@ export const consultarCertificado = createServerFn({ method: "POST" }).handler(a
     };
   }
 
+  const codigo = await garantirCertificado(base44, resumo);
+
   return {
     status: "aprovado",
     primeiro_nome: primeiroNome,
     presenca: { horas: resumo.horas_presentes, percentual: resumo.percentual },
     minimo,
     certificado: {
+      codigo,
       nome: aluno.nome,
       curso: aluno.curso,
       horas: config.carga_horaria_certificado,

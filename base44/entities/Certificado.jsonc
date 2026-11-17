@@ -17,6 +17,10 @@
     "emitido_em": {
       "type": "string",
       "format": "date-time"
+    },
+    "codigo": {
+      "type": "string",
+      "description": "C\u00f3digo de autenticidade no formato XXXX-XXXX-XXXX."
     }
   },
   "required": [

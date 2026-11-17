@@ -1,4 +1,5 @@
-import { CheckCircle2, ShoppingBasket } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { CheckCircle2, QrCode, ShoppingBasket } from "lucide-react";
 import Botao from "@/components/site/Botao";
 import { EVENTO, FORMATOS } from "@/lib/evento";
 
@@ -26,6 +27,18 @@ export default function PainelSucesso({ resultado, onNova }) {
           Formato de apresentação: <strong>{FORMATOS[resultado.formato]}</strong>
         </p>
       )}
+
+      <div className="jr-alerta jr-alerta-info mb-4">
+        <QrCode className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+        <span>
+          {resultado.email_enviado
+            ? "Enviamos a confirmação com o seu QR Code de identificação para o seu e-mail. "
+            : "Não conseguimos enviar o e-mail agora, mas o seu QR Code já está disponível no site. "}
+          Para vê-lo aqui no site, entre com o mesmo e-mail da inscrição em{" "}
+          <Link to="/meu-ingresso">Meu ingresso</Link>. Apresente-o nos dias do evento para
+          registrar a sua presença.
+        </span>
+      </div>
 
       <div className="jr-alerta jr-alerta-info mb-4">
         <ShoppingBasket className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />

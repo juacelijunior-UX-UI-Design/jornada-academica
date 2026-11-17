@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, mascararCpf } from "@/lib/validacao";
+import { exigirEquipe } from "@/lib/ingresso.server";
 import {
   calcularResumo,
   descreverRegra,
@@ -12,6 +13,7 @@ export const carregarChamada = createServerFn({ method: "GET" })
   .middleware([requireUser])
   .handler(async ({ context }) => {
     const base44 = context.getBase44().asServiceRole;
+    await exigirEquipe(base44, context.user);
     const [{ alunos, configuracao, carga_horaria_total }, sessoes, presencas] = await Promise.all([
       calcularResumo(base44),
       todos(base44.entities.Sessao.list("data")),
@@ -50,6 +52,7 @@ export const registrarPresencas = createServerFn({ method: "POST" })
   .middleware([requireUser])
   .handler(async ({ data, context }) => {
     const base44 = context.getBase44().asServiceRole;
+    await exigirEquipe(base44, context.user);
     const sessaoId = String(data.sessao_id || "");
     const ids = Array.isArray(data.participante_ids) ? data.participante_ids.filter(Boolean) : [];
     if (!sessaoId || !ids.length) return { ok: false, erro: "Selecione a sessão e os participantes." };
@@ -91,6 +94,7 @@ export const buscarPorCpf = createServerFn({ method: "GET" })
     const cpf = apenasDigitos(data?.cpf);
     if (cpf.length < 3) return [];
     const base44 = context.getBase44().asServiceRole;
+    await exigirEquipe(base44, context.user);
     const encontrados = await todos(
       base44.entities.Participante.filter(cpf.length === 11 ? { cpf } : { cpf: { $regex: cpf } })
     );
