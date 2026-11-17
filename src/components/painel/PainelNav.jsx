@@ -23,7 +23,7 @@ export default function PainelNav({ perfil }) {
               <Link
                 to={s.to}
                 activeOptions={{ exact: s.to === "/painel" }}
-                className="flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.95rem] font-semibold text-navy no-underline transition-colors hover:bg-fundo"
+                className="flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.95rem] font-semibold leading-snug lg:whitespace-normal text-navy no-underline transition-colors hover:bg-fundo"
                 activeProps={{ className: "bg-navy text-white hover:bg-navy" }}
               >
                 <Icone className="h-4 w-4 flex-none" aria-hidden="true" />
