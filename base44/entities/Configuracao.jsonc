@@ -5,18 +5,20 @@
     "modo_aprovacao": {
       "type": "string",
       "enum": [
+        "presenca",
         "percentual",
         "horas"
       ],
       "enumColors": [
+        "green",
         "blue",
         "purple"
       ],
-      "description": "Como a presen\u00e7a m\u00ednima \u00e9 medida."
+      "description": "Como a presen\u00e7a m\u00ednima \u00e9 medida. 'presenca' = basta 1 registro de frequ\u00eancia."
     },
     "valor_minimo": {
       "type": "number",
-      "description": "Percentual (0-100) ou horas."
+      "description": "Percentual (0-100) ou horas. Ignorado no modo 'presenca'."
     },
     "carga_horaria_certificado": {
       "type": "number",

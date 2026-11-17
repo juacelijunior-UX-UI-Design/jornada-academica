@@ -11,7 +11,7 @@ const DATAS = ["inscricoes_de", "inscricoes_ate", "certificados_a_partir_de"];
 export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
   const salvar = useServerFn(salvarConfiguracoes);
   const [form, setForm] = useState({
-    modo_aprovacao: config.modo_aprovacao || "percentual",
+    modo_aprovacao: config.modo_aprovacao || "presenca",
     valor_minimo: String(config.valor_minimo ?? ""),
     inscricoes_de: String(config.inscricoes_de ?? "").slice(0, 10),
     inscricoes_ate: String(config.inscricoes_ate ?? "").slice(0, 10),
@@ -31,7 +31,9 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
 
   const minimo = Number(form.valor_minimo);
   const dica =
-    cargaTotal && minimo > 0
+    form.modo_aprovacao === "presenca"
+      ? "Basta um check-in em qualquer um dos dois dias do evento."
+      : cargaTotal && minimo > 0
       ? form.modo_aprovacao === "percentual"
         ? `≈ ${num((minimo / 100) * cargaTotal)} h de ${num(cargaTotal)} h de sessões`
         : minimo > cargaTotal
@@ -44,9 +46,11 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
     if (salvando) return;
     setErroGeral("");
     const novos = {};
-    if (!(minimo > 0)) novos.valor_minimo = "Informe um número maior que zero.";
-    else if (form.modo_aprovacao === "percentual" && minimo > 100)
-      novos.valor_minimo = "No modo percentual, o máximo é 100.";
+    if (form.modo_aprovacao !== "presenca") {
+      if (!(minimo > 0)) novos.valor_minimo = "Informe um número maior que zero.";
+      else if (form.modo_aprovacao === "percentual" && minimo > 100)
+        novos.valor_minimo = "No modo percentual, o máximo é 100.";
+    }
     DATAS.forEach((c) => {
       if (!form[c]) novos[c] = "Informe a data.";
     });
@@ -57,7 +61,9 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
 
     setSalvando(true);
     try {
-      const res = await salvar({ data: { ...form, valor_minimo: minimo } });
+      const res = await salvar({
+        data: { ...form, valor_minimo: form.modo_aprovacao === "presenca" ? 1 : minimo },
+      });
       if (!res?.ok) {
         if (res?.erros && Object.keys(res.erros).length) setErros(res.erros);
         if (res?.erro) setErroGeral(res.erro);
@@ -94,28 +100,35 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
               value={form.modo_aprovacao}
               onChange={(e) => setCampo("modo_aprovacao", e.target.value)}
             >
+              <option value="presenca">Pelo menos 1 presença (check-in)</option>
               <option value="percentual">Percentual de presença</option>
               <option value="horas">Horas de presença</option>
             </select>
           </Campo>
 
-          <Campo
-            id="valor_minimo"
-            label={form.modo_aprovacao === "percentual" ? "Presença mínima (%)" : "Presença mínima (horas)"}
-            erro={erros.valor_minimo}
-            ajuda={dica}
-          >
-            <input
+          {form.modo_aprovacao === "presenca" ? (
+            <div className="flex items-end pb-1">
+              <p className="jr-legenda">{dica}</p>
+            </div>
+          ) : (
+            <Campo
               id="valor_minimo"
-              className="jr-input"
-              type="number"
-              min="0"
-              step="0.5"
-              inputMode="decimal"
-              value={form.valor_minimo}
-              onChange={(e) => setCampo("valor_minimo", e.target.value)}
-            />
-          </Campo>
+              label={form.modo_aprovacao === "percentual" ? "Presença mínima (%)" : "Presença mínima (horas)"}
+              erro={erros.valor_minimo}
+              ajuda={dica}
+            >
+              <input
+                id="valor_minimo"
+                className="jr-input"
+                type="number"
+                min="0"
+                step="0.5"
+                inputMode="decimal"
+                value={form.valor_minimo}
+                onChange={(e) => setCampo("valor_minimo", e.target.value)}
+              />
+            </Campo>
+          )}
         </div>
 
         <div className="grid gap-x-4 md:grid-cols-3">

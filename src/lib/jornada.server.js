@@ -2,8 +2,8 @@
 import { arredondar2, percentualDe, estaElegivel } from "@/lib/regras";
 
 export const CONFIGURACAO_PADRAO = {
-  modo_aprovacao: "percentual",
-  valor_minimo: 75,
+  modo_aprovacao: "presenca",
+  valor_minimo: 1,
   carga_horaria_certificado: 20,
   certificados_a_partir_de: "2026-12-14",
   inscricoes_de: "2026-11-16",
@@ -69,12 +69,30 @@ export function motivoInscricoesFechadas(config, hoje = hojeSaoPaulo()) {
   return null;
 }
 
-export function certificadosLiberados(config, hoje = hojeSaoPaulo()) {
+// Data e hora locais no formato "AAAA-MM-DDTHH:MM", para comparar com o horário exato de liberação.
+export function agoraSaoPaulo() {
+  const partes = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date());
+  const p = Object.fromEntries(partes.map((x) => [x.type, x.value]));
+  return `${p.year}-${p.month}-${p.day}T${p.hour === "24" ? "00" : p.hour}:${p.minute}`;
+}
+
+// Os certificados abrem no dia configurado, às 00:01 (horário de São Paulo).
+export function certificadosLiberados(config, agora = agoraSaoPaulo()) {
   if (config.ignorar_datas) return true;
-  return !config.certificados_a_partir_de || hoje >= config.certificados_a_partir_de;
+  if (!config.certificados_a_partir_de) return true;
+  return agora >= `${String(config.certificados_a_partir_de).slice(0, 10)}T00:01`;
 }
 
 export function descreverRegra(config) {
+  if (config.modo_aprovacao === "presenca") return "pelo menos 1 presença registrada";
   const valor = Number(config.valor_minimo).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
   return config.modo_aprovacao === "horas"
     ? `${valor} h de presença`
@@ -110,7 +128,7 @@ export async function calcularResumo(base44, { participanteId } = {}) {
         presencas: qtd,
         horas_presentes: arredondar2(horas),
         percentual: arredondar2(percentualDe(horas, cargaTotal)),
-        elegivel: estaElegivel(horas, cargaTotal, configuracao),
+        elegivel: estaElegivel({ horas, presencas: qtd }, cargaTotal, configuracao),
       };
     });
 

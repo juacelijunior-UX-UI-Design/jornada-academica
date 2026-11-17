@@ -36,10 +36,14 @@ export default function ConsultaCertificado() {
   const [mostrarDocumento, setMostrarDocumento] = useState(false);
   const documentoRef = useRef(null);
 
-  const linhaPresenca = (p, m) =>
-    m.modo_aprovacao === "horas"
+  const linhaPresenca = (p, m) => {
+    if (m.modo_aprovacao === "presenca") {
+      return `Presença registrada no evento: ${p.presencas} check-in(s).`;
+    }
+    return m.modo_aprovacao === "horas"
       ? `Sua presença: ${num(p.horas)} h. Mínimo exigido: ${num(m.valor_minimo)} h.`
       : `Sua presença: ${num(p.percentual)}%. Mínimo exigido: ${num(m.valor_minimo)}%.`;
+  };
 
   async function enviar(evento) {
     evento.preventDefault();
@@ -168,8 +172,16 @@ export default function ConsultaCertificado() {
           {resultado.status === "nao_elegivel" && (
             <Caixa
               tipo="info"
-              titulo={`Olá, ${resultado.primeiro_nome}. Sua presença não atingiu o mínimo.`}
-              texto={linhaPresenca(resultado.presenca, resultado.minimo)}
+              titulo={
+                resultado.minimo.modo_aprovacao === "presenca"
+                  ? `Olá, ${resultado.primeiro_nome}. Não encontramos presença registrada no seu nome.`
+                  : `Olá, ${resultado.primeiro_nome}. Sua presença não atingiu o mínimo.`
+              }
+              texto={
+                resultado.minimo.modo_aprovacao === "presenca"
+                  ? "O certificado é liberado com pelo menos um check-in feito no credenciamento ou nas atividades. Se você participou, procure a organização."
+                  : linhaPresenca(resultado.presenca, resultado.minimo)
+              }
             />
           )}
 

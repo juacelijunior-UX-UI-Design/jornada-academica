@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { apenasDigitos } from "@/lib/validacao";
+import { apenasDigitos, mascaraCpf } from "@/lib/validacao";
 import { EVENTO } from "@/lib/evento";
 import { CODIGO_VALIDO, garantirCertificado } from "@/lib/certificado.server";
 import {
@@ -64,13 +64,14 @@ export const consultarCertificado = createServerFn({ method: "POST" }).handler(a
   const minimo = { modo_aprovacao: config.modo_aprovacao, valor_minimo: config.valor_minimo };
   const primeiroNome = String(aluno.nome).trim().split(/\s+/)[0];
 
+  const presenca = {
+    horas: resumo?.horas_presentes ?? 0,
+    percentual: resumo?.percentual ?? 0,
+    presencas: resumo?.presencas ?? 0,
+  };
+
   if (!resumo?.elegivel) {
-    return {
-      status: "nao_elegivel",
-      primeiro_nome: primeiroNome,
-      presenca: { horas: resumo?.horas_presentes ?? 0, percentual: resumo?.percentual ?? 0 },
-      minimo,
-    };
+    return { status: "nao_elegivel", primeiro_nome: primeiroNome, presenca, minimo };
   }
 
   const codigo = await garantirCertificado(base44, resumo);
@@ -78,11 +79,12 @@ export const consultarCertificado = createServerFn({ method: "POST" }).handler(a
   return {
     status: "aprovado",
     primeiro_nome: primeiroNome,
-    presenca: { horas: resumo.horas_presentes, percentual: resumo.percentual },
+    presenca,
     minimo,
     certificado: {
       codigo,
       nome: aluno.nome,
+      cpf: mascaraCpf(aluno.cpf),
       curso: aluno.curso,
       horas: config.carga_horaria_certificado,
       reitora_nome: config.reitora_nome,

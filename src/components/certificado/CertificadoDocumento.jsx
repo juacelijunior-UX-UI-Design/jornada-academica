@@ -113,6 +113,10 @@ const CertificadoDocumento = forwardRef(function CertificadoDocumento({ dados },
             {dados.nome}
           </h2>
 
+          {dados.cpf && (
+            <p style={{ margin: "8px 0 0", fontSize: 15, color: "#5b6480" }}>CPF {dados.cpf}</p>
+          )}
+
           <p style={{ margin: "24px 0 0", maxWidth: 780, fontSize: 17, lineHeight: 1.66 }}>
             participou da <strong>{dados.evento}</strong>, realizada nos dias{" "}
             <strong>{dados.datas}</strong>, em {dados.local}, com carga horária total de{" "}

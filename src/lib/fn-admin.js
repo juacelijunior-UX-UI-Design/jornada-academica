@@ -49,11 +49,15 @@ export const salvarConfiguracoes = createServerFn({ method: "POST" })
     const { perfil } = await acessoDe(base44, context.user);
     if (!permitido(perfil, PERFIS_CONFIG)) return NEGADO;
 
-    const modo = data.modo_aprovacao === "horas" ? "horas" : "percentual";
-    const minimo = Number(data.valor_minimo);
+    const modo = ["presenca", "horas", "percentual"].includes(data.modo_aprovacao)
+      ? data.modo_aprovacao
+      : "presenca";
+    const minimo = modo === "presenca" ? 1 : Number(data.valor_minimo);
     const erros = {};
-    if (!Number.isFinite(minimo) || minimo < 0) erros.valor_minimo = "Informe um valor válido.";
-    else if (modo === "percentual" && minimo > 100) erros.valor_minimo = "O percentual vai de 0 a 100.";
+    if (modo !== "presenca") {
+      if (!Number.isFinite(minimo) || minimo < 0) erros.valor_minimo = "Informe um valor válido.";
+      else if (modo === "percentual" && minimo > 100) erros.valor_minimo = "O percentual vai de 0 a 100.";
+    }
 
     for (const campo of ["inscricoes_de", "inscricoes_ate", "certificados_a_partir_de"]) {
       if (data[campo] && !DATA.test(data[campo])) erros[campo] = "Data inválida.";
