@@ -8,11 +8,11 @@ import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
 
 const LINKS = [
   { texto: "Início", to: "/" },
-  { texto: "Sobre o evento", to: "/", hash: "sobre" },
+  { texto: "O evento", to: "/", hash: "sobre" },
   { texto: "Programação", to: "/", hash: "programacao" },
   { texto: "Cronograma", to: "/", hash: "cronograma" },
   { texto: "Certificado", to: "/certificado" },
-  { texto: "Validar certificado", to: "/validar" },
+  { texto: "Validar", to: "/validar" },
   { texto: "Dúvidas", to: "/", hash: "faq" },
 ];
 
@@ -62,7 +62,7 @@ export default function SiteHeader() {
           {logado ? (
             <>
               <Link to="/minha-inscricao" className={linkClasse}>
-                Minha inscrição
+                Inscrição
               </Link>
               {daEquipe && (
                 <Link to="/painel" className={linkClasse}>
@@ -108,7 +108,7 @@ export default function SiteHeader() {
               ...LINKS,
               ...(logado
                 ? [
-                    { texto: "Minha inscrição", to: "/minha-inscricao" },
+                    { texto: "Inscrição", to: "/minha-inscricao" },
                     ...(daEquipe ? [{ texto: "Painel", to: "/painel" }] : []),
                   ]
                 : [{ texto: "Entrar", to: "/login" }]),
