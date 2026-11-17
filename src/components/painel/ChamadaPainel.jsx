@@ -225,11 +225,11 @@ export default function ChamadaPainel() {
               ? `${pendentesSelecionados.length} selecionado(s)`
               : "Nenhum aluno selecionado"}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto [&>button]:flex-1 sm:[&>button]:flex-none">
             <button
               type="button"
               onClick={marcarTodos}
-              className="inline-flex min-h-10 items-center rounded-lg border-2 border-royal px-4 font-semibold text-royal transition hover:bg-royal hover:text-white"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border-2 border-royal px-4 font-semibold text-royal transition hover:bg-royal hover:text-white"
             >
               Marcar todos
             </button>
@@ -237,7 +237,7 @@ export default function ChamadaPainel() {
               type="button"
               onClick={salvar}
               disabled={salvando || !pendentesSelecionados.length}
-              className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-royal px-4 font-semibold text-white transition hover:bg-navy disabled:cursor-not-allowed disabled:bg-[#e3e8f4] disabled:text-[#3f4a6b]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-royal px-4 font-semibold text-white transition hover:bg-navy disabled:cursor-not-allowed disabled:bg-[#e3e8f4] disabled:text-[#3f4a6b]"
             >
               {salvando ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserCheck className="h-4 w-4" />}
               {salvando ? "Registrando…" : "Registrar presença"}
@@ -246,7 +246,41 @@ export default function ChamadaPainel() {
         </div>
 
         {visiveis.length ? (
-          <div className="overflow-x-auto">
+          <>
+          {/* Celular: lista em cartões, fácil de marcar com o dedo */}
+          <ul className="divide-y divide-linea md:hidden" aria-label={`Participantes da sessão ${sessao?.titulo ?? ""}`}>
+            {visiveis.map((p) => {
+              const presente = presentes.has(p.id);
+              return (
+                <li key={p.id}>
+                  <label className={`flex items-center gap-3 px-4 py-3 ${presente ? "" : "cursor-pointer active:bg-fundo"}`}>
+                    <input
+                      type="checkbox"
+                      className="h-6 w-6 flex-none accent-[#0040ce]"
+                      checked={presente || selecionados.has(p.id)}
+                      disabled={presente}
+                      onChange={() => alternar(p.id)}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block break-words font-medium text-navy">{p.nome}</span>
+                      <span className="block text-[0.85rem] text-tinta-suave">
+                        {p.matricula || "—"}
+                        {p.curso ? ` · ${p.curso}` : ""}
+                      </span>
+                    </span>
+                    <span
+                      className={`inline-flex flex-none rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${
+                        presente ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"
+                      }`}
+                    >
+                      {presente ? "Presente" : "Pendente"}
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[38rem] border-collapse text-left">
               <caption className="sr-only">
                 Participantes da sessão {sessao?.titulo}
@@ -297,6 +331,7 @@ export default function ChamadaPainel() {
               </tbody>
             </table>
           </div>
+          </>
         ) : (
           <p className="p-6 text-tinta-suave">Nenhum participante encontrado para esta busca.</p>
         )}
