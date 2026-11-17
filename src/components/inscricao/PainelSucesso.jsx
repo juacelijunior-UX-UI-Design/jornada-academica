@@ -35,7 +35,7 @@ export default function PainelSucesso({ resultado, onNova }) {
             ? "Enviamos a confirmação com o seu QR Code de identificação para o seu e-mail. "
             : "Não conseguimos enviar o e-mail agora, mas o seu QR Code já está disponível no site. "}
           Para vê-lo aqui no site, entre com o mesmo e-mail da inscrição em{" "}
-          <Link to="/meu-ingresso">Meu ingresso</Link>. Apresente-o nos dias do evento para
+          <Link to="/minha-inscricao">Minha inscrição</Link>. Apresente-o nos dias do evento para
           registrar a sua presença.
         </span>
       </div>

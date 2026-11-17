@@ -1,4 +1,5 @@
-import { Instagram, MapPin } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Instagram, LockKeyhole, MapPin } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import CoautoresDialog from "@/components/site/CoautoresDialog";
 import {
@@ -84,8 +85,15 @@ export default function SiteFooter() {
           <p>
             Professor orientador: <strong className="text-white">{ORIENTADOR}</strong>
           </p>
-          <div className="pt-1">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
             <CoautoresDialog />
+            <Link
+              to="/painel"
+              className="inline-flex items-center gap-1.5 font-semibold text-white no-underline hover:text-amarelo"
+            >
+              <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+              Painel administrativo
+            </Link>
           </div>
         </div>
       </div>

@@ -1,0 +1,200 @@
+import { createServerFn } from "@tanstack/react-start";
+import { requireUser } from "@/lib/auth-middleware";
+import { apenasDigitos, normalizarTelefone } from "@/lib/validacao";
+import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
+import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
+import { PERFIS_EQUIPE, PERFIS_INSCRICAO } from "@/lib/perfis";
+
+const lista = (res) => (Array.isArray(res) ? res : (res?.items ?? []));
+
+export const meuAcesso = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ context }) => acessoDe(context.getBase44().asServiceRole, context.user));
+
+export const resumoPainel = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const acesso = await acessoDe(base44, context.user);
+    if (!permitido(acesso.perfil, PERFIS_EQUIPE)) return { ...acesso, numeros: null };
+    const [inscritos, presencas, certificados, sessoes] = await Promise.all([
+      base44.entities.Participante.count({}),
+      base44.entities.Presenca.count({}),
+      base44.entities.Certificado.count({}),
+      base44.entities.Sessao.count({}),
+    ]);
+    return { ...acesso, numeros: { inscritos, presencas, certificados, sessoes } };
+  });
+
+export const listarUsuarios = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (perfil !== "administrador") return { ok: false, erro: "Apenas administradores gerenciam usuários." };
+
+    const [contas, membros] = await Promise.all([
+      base44.entities.User.list(),
+      todos(base44.entities.Equipe.list("nome")),
+    ]);
+    return {
+      ok: true,
+      membros: membros.map((m) => ({
+        id: m.id,
+        nome: m.nome,
+        email: m.email,
+        perfil: m.perfil,
+        ativo: m.ativo !== false,
+      })),
+      contas: lista(contas).map((u) => ({
+        id: u.id,
+        nome: u.full_name || "",
+        email: u.email,
+        role: u.role,
+      })),
+    };
+  });
+
+export const salvarMembro = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (perfil !== "administrador") return { ok: false, erro: "Apenas administradores alteram perfis." };
+
+    const nome = String(data?.nome || "").trim().slice(0, 120);
+    const email = String(data?.email || "").trim().toLowerCase();
+    const novoPerfil = String(data?.perfil || "");
+    if (!nome) return { ok: false, erro: "Informe o nome." };
+    if (!EMAIL.test(email)) return { ok: false, erro: "E-mail inválido." };
+    if (!PERFIS_EQUIPE.includes(novoPerfil)) return { ok: false, erro: "Perfil inválido." };
+
+    const ativo = data?.ativo !== false;
+    if (data?.id) {
+      await base44.entities.Equipe.update(data.id, { nome, email, perfil: novoPerfil, ativo });
+      return { ok: true };
+    }
+
+    const existentes = await todos(base44.entities.Equipe.filter({ email }));
+    if (existentes.length) {
+      await base44.entities.Equipe.update(existentes[0].id, { nome, email, perfil: novoPerfil, ativo: true });
+      return { ok: true };
+    }
+    await base44.entities.Equipe.create({ nome, email, perfil: novoPerfil, ativo: true });
+    return { ok: true };
+  });
+
+// Convida a pessoa (ela define a própria senha no primeiro acesso) e já define o perfil.
+export const convidarUsuario = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (perfil !== "administrador") return { ok: false, erro: "Apenas administradores convidam usuários." };
+
+    const nome = String(data?.nome || "").trim().slice(0, 120);
+    const email = String(data?.email || "").trim().toLowerCase();
+    const novoPerfil = String(data?.perfil || "");
+    if (!EMAIL.test(email)) return { ok: false, erro: "E-mail inválido." };
+    if (!PERFIS_EQUIPE.includes(novoPerfil)) return { ok: false, erro: "Perfil inválido." };
+
+    let convite = "enviado";
+    try {
+      await base44.users.inviteUser(email, "user");
+    } catch {
+      convite = "existente";
+    }
+
+    const existentes = await todos(base44.entities.Equipe.filter({ email }));
+    const dados = { nome: nome || email, email, perfil: novoPerfil, ativo: true };
+    if (existentes.length) await base44.entities.Equipe.update(existentes[0].id, dados);
+    else await base44.entities.Equipe.create(dados);
+
+    return { ok: true, convite };
+  });
+
+export const removerMembro = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (perfil !== "administrador") return { ok: false, erro: "Apenas administradores removem perfis." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+    await base44.entities.Equipe.delete(data.id);
+    return { ok: true };
+  });
+
+// Alunos e participantes inscritos (professores também consultam).
+export const listarInscritos = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não gerencia inscrições." };
+
+    const { alunos, configuracao, carga_horaria_total } = await calcularResumo(base44);
+    return {
+      ok: true,
+      regra: descreverRegra(configuracao),
+      carga_horaria_total,
+      total: alunos.length,
+      inscritos: alunos.map((a) => ({
+        id: a.id,
+        tipo: a.tipo,
+        nome: a.nome,
+        email: a.email,
+        telefone: a.telefone,
+        matricula: a.matricula || "",
+        instituicao: a.instituicao || "",
+        curso: a.curso || "",
+        disciplina: a.disciplina || "",
+        formato: a.formato,
+        titulo: a.titulo || "",
+        presencas: a.presencas,
+        horas: a.horas_presentes,
+        percentual: a.percentual,
+        elegivel: a.elegivel,
+      })),
+    };
+  });
+
+export const atualizarInscrito = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não edita inscrições." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+
+    const nome = String(data.nome || "").trim().slice(0, 150);
+    const email = String(data.email || "").trim().toLowerCase().slice(0, 150);
+    const telefone = normalizarTelefone(data.telefone).slice(0, 11);
+    if (nome.split(/\s+/).filter(Boolean).length < 2) return { ok: false, erro: "Informe nome e sobrenome." };
+    if (!EMAIL.test(email)) return { ok: false, erro: "E-mail inválido." };
+    if (telefone.length < 10) return { ok: false, erro: "Telefone com DDD inválido." };
+
+    await base44.entities.Participante.update(data.id, {
+      nome,
+      email,
+      telefone,
+      instituicao: String(data.instituicao || "").trim().slice(0, 150),
+      curso: String(data.curso || "").trim().slice(0, 100),
+      titulo: String(data.titulo || "").trim().slice(0, 200),
+    });
+    return { ok: true };
+  });
+
+// Usado pelo painel para conferir o CPF digitado (a lista traz o CPF mascarado).
+export const idsPorCpf = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_INSCRICAO)) return [];
+    const cpf = apenasDigitos(data?.cpf);
+    if (cpf.length < 3) return [];
+    const encontrados = await todos(
+      base44.entities.Participante.filter(cpf.length === 11 ? { cpf } : { cpf: { $regex: cpf } })
+    );
+    return encontrados.map((p) => p.id);
+  });

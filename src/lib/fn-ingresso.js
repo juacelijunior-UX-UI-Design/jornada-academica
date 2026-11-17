@@ -2,9 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, cpfValido, mascararCpf } from "@/lib/validacao";
 import { todos } from "@/lib/jornada.server";
+import { exigirPerfil, resolverPerfil } from "@/lib/painel-equipe.server";
+import { PERFIS_CHAMADA } from "@/lib/perfis";
 import {
   conteudoQr,
-  exigirEquipe,
   garantirToken,
   localizarPorQr,
   participantePorEmail,
@@ -21,10 +22,24 @@ export const meuIngresso = createServerFn({ method: "GET" })
     const comToken = await garantirToken(base44, p);
     return {
       encontrado: true,
-      nome: comToken.nome,
-      titulo: comToken.titulo || "",
-      cpf: mascararCpf(comToken.cpf),
-      qr: conteudoQr(comToken),
+      inscricao: {
+        nome: comToken.nome,
+        titulo: comToken.titulo || "",
+        cpf: mascararCpf(comToken.cpf),
+        qr: conteudoQr(comToken),
+        tipo: comToken.tipo,
+        email: comToken.email,
+        telefone: comToken.telefone,
+        matricula: comToken.matricula || "",
+        instituicao: comToken.instituicao || "",
+        curso: comToken.curso || "",
+        disciplina: comToken.disciplina || "",
+        formato: comToken.formato,
+        resumo: comToken.resumo || "",
+        arquivo_nome: comToken.arquivo_nome || "",
+        coautores: comToken.coautores || [],
+        criado_em: comToken.created_date,
+      },
     };
   });
 
@@ -33,7 +48,8 @@ export const carregarCheckin = createServerFn({ method: "GET" })
   .middleware([requireUser])
   .handler(async ({ context }) => {
     const base44 = context.getBase44().asServiceRole;
-    await exigirEquipe(base44, context.user);
+    const perfil = await resolverPerfil(base44, context.user);
+    exigirPerfil(perfil, PERFIS_CHAMADA);
     const [sessoes, presencas, participantes] = await Promise.all([
       todos(base44.entities.Sessao.list("data")),
       todos(base44.entities.Presenca.list("-created_date", 500)),
@@ -64,7 +80,8 @@ export const registrarCheckin = createServerFn({ method: "POST" })
   .middleware([requireUser])
   .handler(async ({ data, context }) => {
     const base44 = context.getBase44().asServiceRole;
-    await exigirEquipe(base44, context.user);
+    const perfil = await resolverPerfil(base44, context.user);
+    exigirPerfil(perfil, PERFIS_CHAMADA);
 
     const sessaoId = String(data?.sessao_id || "").slice(0, 60);
     if (!sessaoId) return { ok: false, erro: "Selecione a atividade." };

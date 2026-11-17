@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
+import { acessoDe, permitido } from "@/lib/painel-equipe.server";
+import { PERFIS_CONFIG } from "@/lib/perfis";
 import {
   CONFIGURACAO_PADRAO,
   calcularResumo,
@@ -13,14 +15,15 @@ import {
 
 import { novoCodigo } from "@/lib/certificado.server";
 
-const ehAdmin = (user) => user?.role === "admin";
 const DATA = /^\d{4}-\d{2}-\d{2}$/;
+const NEGADO = { ok: false, erro: "Acesso restrito à administração e ao suporte." };
 
 export const carregarAdmin = createServerFn({ method: "GET" })
   .middleware([requireUser])
   .handler(async ({ context }) => {
-    if (!ehAdmin(context.user)) return { ok: false, erro: "Apenas administradores têm acesso a este painel." };
     const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_CONFIG)) return NEGADO;
     const [{ alunos, configuracao, carga_horaria_total }, certificados] = await Promise.all([
       calcularResumo(base44),
       todos(base44.entities.Certificado.list("-created_date")),
@@ -42,7 +45,9 @@ export const carregarAdmin = createServerFn({ method: "GET" })
 export const salvarConfiguracoes = createServerFn({ method: "POST" })
   .middleware([requireUser])
   .handler(async ({ data, context }) => {
-    if (!ehAdmin(context.user)) return { ok: false, erro: "Apenas administradores podem alterar as configurações." };
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_CONFIG)) return NEGADO;
 
     const modo = data.modo_aprovacao === "horas" ? "horas" : "percentual";
     const minimo = Number(data.valor_minimo);
@@ -58,7 +63,7 @@ export const salvarConfiguracoes = createServerFn({ method: "POST" })
     }
     if (Object.keys(erros).length) return { ok: false, erros };
 
-    const configuracao = await salvarConfiguracao(context.getBase44().asServiceRole, {
+    const configuracao = await salvarConfiguracao(base44, {
       modo_aprovacao: modo,
       valor_minimo: minimo,
       inscricoes_de: data.inscricoes_de || CONFIGURACAO_PADRAO.inscricoes_de,
@@ -76,8 +81,9 @@ export const salvarConfiguracoes = createServerFn({ method: "POST" })
 export const emitirCertificados = createServerFn({ method: "POST" })
   .middleware([requireUser])
   .handler(async ({ data, context }) => {
-    if (!ehAdmin(context.user)) return { ok: false, erro: "Apenas administradores podem emitir certificados." };
     const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_CONFIG)) return NEGADO;
     const configuracao = await obterConfiguracao(base44);
 
     if (!certificadosLiberados(configuracao)) {

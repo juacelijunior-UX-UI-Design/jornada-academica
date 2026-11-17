@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut, Menu, X } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
+import { useAcesso } from "@/hooks/useAcesso";
 import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
 
 const LINKS = [
@@ -18,6 +19,7 @@ const LINKS = [
 export default function SiteHeader() {
   const [aberto, setAberto] = useState(false);
   const { user, isLoadingAuth, logout } = useAuth();
+  const { daEquipe } = useAcesso();
   const logado = !isLoadingAuth && Boolean(user);
   const linkClasse =
     "border-b-[3px] border-transparent px-3 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo";
@@ -59,18 +61,12 @@ export default function SiteHeader() {
           ))}
           {logado ? (
             <>
-              <Link to="/meu-ingresso" className={linkClasse}>
-                Meu ingresso
+              <Link to="/minha-inscricao" className={linkClasse}>
+                Minha inscrição
               </Link>
-              <Link to="/checkin" className={linkClasse}>
-                Check-in
-              </Link>
-              <Link to="/professor" className={linkClasse}>
-                Chamada
-              </Link>
-              {user.role === "admin" && (
-                <Link to="/gerenciador" className={linkClasse}>
-                  Gerenciador
+              {daEquipe && (
+                <Link to="/painel" className={linkClasse}>
+                  Painel
                 </Link>
               )}
               <button
@@ -112,10 +108,8 @@ export default function SiteHeader() {
               ...LINKS,
               ...(logado
                 ? [
-                    { texto: "Meu ingresso", to: "/meu-ingresso" },
-                    { texto: "Check-in", to: "/checkin" },
-                    { texto: "Chamada", to: "/professor" },
-                    ...(user.role === "admin" ? [{ texto: "Gerenciador", to: "/gerenciador" }] : []),
+                    { texto: "Minha inscrição", to: "/minha-inscricao" },
+                    ...(daEquipe ? [{ texto: "Painel", to: "/painel" }] : []),
                   ]
                 : [{ texto: "Entrar", to: "/login" }]),
             ].map((l) => (

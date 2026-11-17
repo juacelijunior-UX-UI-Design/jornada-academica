@@ -1,0 +1,66 @@
+{
+  "name": "Equipe",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "email": {
+      "type": "string",
+      "maxLength": 150,
+      "description": "E-mail da conta que ter\u00e1 o perfil."
+    },
+    "perfil": {
+      "type": "string",
+      "enum": [
+        "administrador",
+        "suporte",
+        "professor",
+        "monitor"
+      ],
+      "enumColors": [
+        "purple",
+        "blue",
+        "green",
+        "yellow"
+      ],
+      "description": "O que a pessoa pode fazer no painel."
+    },
+    "ativo": {
+      "type": "boolean",
+      "description": "Desligado bloqueia o acesso ao painel."
+    },
+    "observacao": {
+      "type": "string",
+      "maxLength": 200
+    }
+  },
+  "required": [
+    "nome",
+    "email",
+    "perfil"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -40,14 +40,6 @@ export async function participantePorEmail(base44, email) {
   return lista[0] ?? null;
 }
 
-// Equipe = administradores e quem não é participante inscrito (ex.: professores).
-export async function exigirEquipe(base44, user) {
-  if (user?.role === "admin") return;
-  if (await participantePorEmail(base44, user?.email)) {
-    throw Object.assign(new Error("Acesso restrito à equipe da Jornada."), { status: 403 });
-  }
-}
-
 export async function localizarPorQr(base44, texto) {
   const q = lerQr(texto);
   if (!q) return { erro: "QR Code não pertence à Jornada." };
@@ -186,7 +178,7 @@ export async function enviarConfirmacao(base44, participante) {
   try {
     const p = await garantirToken(base44, participante);
     const nome = String(p.nome).trim().split(/\s+/)[0];
-    const ingressoUrl = `${SITE}/meu-ingresso`;
+    const ingressoUrl = `${SITE}/minha-inscricao`;
 
     let qrUrl = "";
     try {
