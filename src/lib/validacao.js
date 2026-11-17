@@ -2,6 +2,7 @@
 
 export const OUTROS = "__outros__";
 export const RESUMO_MAX = 2000;
+export const TITULO_MAX = 200;
 export const ARQUIVO_MAX_MB = 10;
 export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt"];
 export const MAX_COAUTORES = 9;
@@ -133,6 +134,11 @@ export function validarInscricao(v) {
 
   if (!v.disciplina) e.disciplina = "Selecione sua disciplina.";
   if (!v.formato) e.formato = "Selecione o formato da apresentação.";
+
+  const titulo = String(v.titulo ?? "").trim();
+  if (!titulo) e.titulo = "Informe o título do trabalho.";
+  else if (titulo.length < 5) e.titulo = "O título deve ter pelo menos 5 caracteres.";
+  else if (titulo.length > TITULO_MAX) e.titulo = `O título deve ter até ${TITULO_MAX} caracteres.`;
 
   const tamResumo = tamanhoResumo(v.resumo);
   if (!tamResumo) e.resumo = "Escreva o resumo do seu trabalho.";

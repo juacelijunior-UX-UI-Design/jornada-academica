@@ -84,6 +84,11 @@
         "yellow"
       ]
     },
+    "titulo": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "T\u00edtulo do trabalho inscrito."
+    },
     "resumo": {
       "type": "string",
       "maxLength": 2000

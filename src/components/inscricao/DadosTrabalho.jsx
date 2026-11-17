@@ -8,7 +8,7 @@ import {
   OUTROS,
   RESUMO_MAX,
 } from "@/lib/evento";
-import { formatarTamanho, tamanhoResumo, validarArquivo } from "@/lib/validacao";
+import { TITULO_MAX, formatarTamanho, tamanhoResumo, validarArquivo } from "@/lib/validacao";
 
 export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArquivo, setErro }) {
   const automatico = FORMATO_AUTOMATICO[form.disciplina];
@@ -108,6 +108,18 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
             </option>
           ))}
         </select>
+      </Campo>
+
+      <Campo id="titulo" label="Título do trabalho" erro={erros.titulo}>
+        <input
+          id="titulo"
+          className="jr-input"
+          type="text"
+          maxLength={TITULO_MAX}
+          value={form.titulo}
+          aria-invalid={erros.titulo ? "true" : undefined}
+          onChange={(e) => setCampo("titulo", e.target.value)}
+        />
       </Campo>
 
       <Campo id="resumo" label="Resumo do trabalho" erro={erros.resumo}>

@@ -54,6 +54,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     curso: String(data.curso).trim(),
     disciplina: data.disciplina,
     formato,
+    titulo: String(data.titulo || "").trim().replace(/\s+/g, " "),
     resumo: String(data.resumo || "").trim(),
     arquivo_uri: data.arquivo_uri || undefined,
     arquivo_nome: data.arquivo_nome || undefined,

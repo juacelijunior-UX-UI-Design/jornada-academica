@@ -23,11 +23,12 @@ const VAZIO = {
   curso_outro: "",
   disciplina: "",
   formato: "",
+  titulo: "",
   resumo: "",
   aceite: false,
 };
 
-const ORDEM_CAMPOS = ["nome", "email", "telefone", "cpf", "matricula", "instituicao", "curso", "curso_outro", "disciplina", "formato", "resumo", "arquivo"];
+const ORDEM_CAMPOS = ["nome", "email", "telefone", "cpf", "matricula", "instituicao", "curso", "curso_outro", "disciplina", "formato", "titulo", "resumo", "arquivo"];
 
 export default function FormularioInscricao({ aberta, motivo }) {
   const criar = useServerFn(criarInscricao);
@@ -86,6 +87,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
           curso: form.curso === OUTROS ? form.curso_outro.trim() : form.curso,
           disciplina: form.disciplina,
           formato: form.formato,
+          titulo: form.titulo,
           resumo: form.resumo,
           aceite: form.aceite,
           arquivo_uri,
