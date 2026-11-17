@@ -31,9 +31,9 @@ export default function PainelShell({ children }) {
             />
           </Link>
 
-          <div className="flex items-center gap-3 text-white">
-            <div className="text-right text-[0.85rem] leading-tight">
-              <span className="block font-semibold">{user?.full_name || user?.email}</span>
+          <div className="flex min-w-0 items-center gap-3 text-white">
+            <div className="min-w-0 text-right text-[0.85rem] leading-tight">
+              <span className="block max-w-[11rem] truncate font-semibold sm:max-w-xs">{user?.full_name || user?.email}</span>
               <Link to="/" className="text-[0.8rem] text-white/70 no-underline hover:text-amarelo">
                 Voltar ao site
               </Link>
@@ -41,7 +41,7 @@ export default function PainelShell({ children }) {
             <button
               type="button"
               onClick={() => logout()}
-              className="inline-flex min-h-10 items-center gap-2 rounded-lg border-2 border-white/60 px-3 font-semibold text-white transition hover:bg-white hover:text-navy"
+              className="inline-flex min-h-10 flex-none items-center gap-2 rounded-lg border-2 border-white/60 px-3 font-semibold text-white transition hover:bg-white hover:text-navy"
             >
               <LogOut className="h-4 w-4" aria-hidden="true" />
               Sair
