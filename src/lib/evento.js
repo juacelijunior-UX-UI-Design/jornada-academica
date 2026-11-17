@@ -66,6 +66,7 @@ export const ORIENTADOR = "Juaceli Junior";
 export const DEV = [
   { nome: "Carlos Rony", rotulo: "Instagram", url: "https://www.instagram.com/c.r_rony" },
   { nome: "Hernandes Sales", rotulo: "Portfólio", url: "https://linkhernandess.vercel.app/" },
+  { nome: "Miqueias Santos" },
 ];
 
 export const REDES = {

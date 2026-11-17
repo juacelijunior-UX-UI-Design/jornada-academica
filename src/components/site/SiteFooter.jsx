@@ -70,15 +70,19 @@ export default function SiteFooter() {
             Desenvolvido por{" "}
             {DEV.map((d, i) => (
               <span key={d.nome}>
-                <a
-                  href={d.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-white hover:text-amarelo"
-                >
-                  {d.nome}
-                </a>
-                {i < DEV.length - 1 ? " e " : ""}
+                {d.url ? (
+                  <a
+                    href={d.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-white hover:text-amarelo"
+                  >
+                    {d.nome}
+                  </a>
+                ) : (
+                  <strong className="font-semibold text-white">{d.nome}</strong>
+                )}
+                {i === DEV.length - 1 ? "" : i === DEV.length - 2 ? " e " : ", "}
               </span>
             ))}
           </p>
