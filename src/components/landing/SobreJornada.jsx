@@ -1,4 +1,4 @@
-import { Download, FilePlus2 } from "lucide-react";
+import { Download, FilePlus2, FolderOpen } from "lucide-react";
 import Botao from "@/components/site/Botao";
 import { EDITAL, EVENTO } from "@/lib/evento";
 
@@ -61,6 +61,10 @@ export default function SobreJornada() {
           >
             <Download className="h-5 w-5" aria-hidden="true" />
             Baixar edital (PDF)
+          </Botao>
+          <Botao to="/modelos" variante="claro">
+            <FolderOpen className="h-5 w-5" aria-hidden="true" />
+            Modelos de Documentos
           </Botao>
         </div>
       </div>
