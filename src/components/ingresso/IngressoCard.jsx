@@ -15,15 +15,15 @@ export default function IngressoCard({ ingresso }) {
   }, [ingresso.qr]);
 
   return (
-    <article className="jr-card mx-auto max-w-md border-t-[5px] border-amarelo p-6 text-center">
+    <article className="jr-card mx-auto w-full max-w-md border-t-[5px] border-amarelo p-5 text-center sm:p-6">
       <p className="text-[0.85rem] font-semibold uppercase tracking-[0.08em] text-royal">
         Ingresso · VI Jornada Acadêmica
       </p>
-      <h2 className="mt-1 font-heading text-[1.4rem] font-extrabold text-navy">{ingresso.nome}</h2>
+      <h2 className="mt-1 break-words font-heading text-[1.4rem] font-extrabold text-navy">{ingresso.nome}</h2>
       <p className="jr-legenda mt-1">CPF {ingresso.cpf}</p>
       {ingresso.titulo && <p className="mt-2 text-[0.95rem] text-tinta-suave">{ingresso.titulo}</p>}
 
-      <div className="mx-auto mt-5 flex h-[260px] w-[260px] items-center justify-center rounded-lg border border-linea bg-white">
+      <div className="mx-auto mt-5 flex aspect-square w-full max-w-[260px] items-center justify-center rounded-lg border border-linea bg-white">
         {imagem ? (
           <img src={imagem} alt="QR Code de identificação do participante" className="h-full w-full" />
         ) : (
