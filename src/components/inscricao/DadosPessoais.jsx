@@ -1,4 +1,5 @@
 import Campo from "@/components/inscricao/Campo";
+import Coautores from "@/components/inscricao/Coautores";
 import { mascaraCpf, mascaraTelefone, mascaraMatricula } from "@/lib/validacao";
 
 export default function DadosPessoais({ form, setCampo, erros }) {
@@ -36,9 +37,15 @@ export default function DadosPessoais({ form, setCampo, erros }) {
         </div>
       </fieldset>
 
-      <Campo id="nome" label="Nome completo" erro={erros.nome}>
+      <Campo id="nome" label="Nome do apresentador" erro={erros.nome}>
         <input {...props("nome")} type="text" autoComplete="name" maxLength={150} />
       </Campo>
+
+      <Coautores
+        coautores={form.coautores ?? []}
+        setCoautores={(lista) => setCampo("coautores", lista)}
+        erro={erros.coautores}
+      />
 
       <div className="grid gap-x-4 md:grid-cols-2">
         <Campo id="email" label="E-mail" erro={erros.email}>

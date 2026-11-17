@@ -13,6 +13,7 @@ import PainelSucesso from "@/components/inscricao/PainelSucesso";
 const VAZIO = {
   tipo: "aluno",
   nome: "",
+  coautores: [],
   email: "",
   telefone: "",
   cpf: "",
@@ -76,6 +77,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
         data: {
           tipo: form.tipo,
           nome: form.nome.trim(),
+          coautores: (form.coautores ?? []).map((n) => n.trim()).filter(Boolean),
           email: form.email.trim(),
           telefone: form.telefone,
           cpf: form.cpf,

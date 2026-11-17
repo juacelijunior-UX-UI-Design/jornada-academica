@@ -4,7 +4,9 @@ import {
   DISCIPLINAS,
 } from "@/lib/evento";
 import {
+  MAX_COAUTORES,
   apenasDigitos,
+  normalizarCoautores,
   normalizarFormato,
   normalizarTelefone,
   validarInscricao,
@@ -43,6 +45,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
   const participante = await base44.entities.Participante.create({
     tipo: data.tipo === "externo" ? "externo" : "aluno",
     nome: String(data.nome).trim().replace(/\s+/g, " "),
+    coautores: normalizarCoautores(data.coautores).slice(0, MAX_COAUTORES),
     email,
     telefone: normalizarTelefone(data.telefone),
     cpf,

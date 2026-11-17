@@ -4,6 +4,14 @@ export const OUTROS = "__outros__";
 export const RESUMO_MAX = 2000;
 export const ARQUIVO_MAX_MB = 10;
 export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt"];
+export const MAX_COAUTORES = 9;
+
+// Limpa a lista de co-autores: remove vazios e espaços sobrando.
+export function normalizarCoautores(lista) {
+  return (Array.isArray(lista) ? lista : [])
+    .map((nome) => String(nome ?? "").trim().replace(/\s+/g, " "))
+    .filter(Boolean);
+}
 
 export const apenasDigitos = (v) => String(v ?? "").replace(/\D/g, "");
 
@@ -84,6 +92,13 @@ export function validarInscricao(v) {
   else if (nome.split(/\s+/).filter(Boolean).length < 2) e.nome = "Informe nome e sobrenome.";
   else if (/\d/.test(nome)) e.nome = "O nome não pode ter números.";
   else if (nome.length > 150) e.nome = "O nome deve ter até 150 caracteres.";
+
+  const coautores = normalizarCoautores(v.coautores);
+  if (coautores.length > MAX_COAUTORES) {
+    e.coautores = `Informe no máximo ${MAX_COAUTORES} co-autores.`;
+  } else if (coautores.some((nome) => /\d/.test(nome) || nome.length > 150)) {
+    e.coautores = "Revise os nomes dos co-autores: sem números e até 150 caracteres.";
+  }
 
   const email = String(v.email ?? "").trim();
   if (!email) e.email = "Informe seu e-mail.";

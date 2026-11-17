@@ -16,7 +16,15 @@
     },
     "nome": {
       "type": "string",
-      "maxLength": 150
+      "maxLength": 150,
+      "description": "Nome do apresentador do trabalho."
+    },
+    "coautores": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Nomes dos co-autores do trabalho (at\u00e9 9)."
     },
     "email": {
       "type": "string",
