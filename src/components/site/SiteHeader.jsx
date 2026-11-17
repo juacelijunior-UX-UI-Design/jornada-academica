@@ -11,6 +11,7 @@ const LINKS = [
   { texto: "Programação", to: "/", hash: "programacao" },
   { texto: "Cronograma", to: "/", hash: "cronograma" },
   { texto: "Certificado", to: "/certificado" },
+  { texto: "Dúvidas", to: "/", hash: "faq" },
 ];
 
 export default function SiteHeader() {

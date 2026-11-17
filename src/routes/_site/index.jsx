@@ -4,6 +4,7 @@ import SobreJornada from "@/components/landing/SobreJornada";
 import DoacaoCard from "@/components/landing/DoacaoCard";
 import Programacao from "@/components/landing/Programacao";
 import Cronograma from "@/components/landing/Cronograma";
+import FaqJornada from "@/components/landing/FaqJornada";
 
 export const Route = createFileRoute("/_site/")({
   head: () => ({
@@ -32,6 +33,7 @@ function HomePage() {
       <DoacaoCard />
       <Programacao />
       <Cronograma />
+      <FaqJornada />
     </>
   );
 }
