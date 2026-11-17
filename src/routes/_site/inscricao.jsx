@@ -31,7 +31,7 @@ function InscricaoPage() {
       </section>
 
       <div className="jr-container -mt-24 pb-20">
-        <div className="jr-card mx-auto max-w-[46rem] border-t-[5px] border-amarelo p-6 shadow-[0_8px_28px_rgba(1,28,99,0.2)] sm:p-9">
+        <div className="jr-card mx-auto max-w-[46rem] border-t-[5px] border-amarelo p-6 shadow-[0_8px_28px_rgba(1,28,99,0.2)] max-sm:p-5 sm:p-9">
           <h1 className="jr-titulo-bloco filete mb-3">Inscrever meu trabalho</h1>
           <FormularioInscricao aberta={aberta} motivo={motivo} />
         </div>
