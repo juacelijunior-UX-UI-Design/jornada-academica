@@ -93,7 +93,7 @@ export default function InscritosPainel() {
         {visiveis.length ? (
           <>
           {/* Celular e tablet: cartões em vez de tabela larga */}
-          <ul className="divide-y divide-linea lg:hidden">
+          <ul className="divide-y divide-linea xl:hidden">
             {visiveis.map((i) => (
               <li key={i.id} className="p-4">
                 <div className="flex items-start justify-between gap-3">
@@ -125,7 +125,7 @@ export default function InscritosPainel() {
               </li>
             ))}
           </ul>
-          <div className="hidden overflow-x-auto lg:block">
+          <div className="hidden overflow-x-auto xl:block">
             <table className="w-full min-w-[52rem] text-left text-[0.95rem]">
               <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                 <tr>
