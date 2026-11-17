@@ -91,7 +91,41 @@ export default function InscritosPainel() {
 
       <div className="jr-card overflow-hidden">
         {visiveis.length ? (
-          <div className="overflow-x-auto">
+          <>
+          {/* Celular e tablet: cartões em vez de tabela larga */}
+          <ul className="divide-y divide-linea lg:hidden">
+            {visiveis.map((i) => (
+              <li key={i.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <strong className="block break-words text-navy">{i.nome}</strong>
+                    <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditando(i)}
+                    aria-label={`Editar inscrição de ${i.nome}`}
+                    className="inline-flex min-h-11 flex-none items-center gap-1.5 rounded-lg border border-linea px-3 font-semibold text-royal transition hover:bg-fundo"
+                  >
+                    <Pencil className="h-4 w-4" aria-hidden="true" />
+                    Editar
+                  </button>
+                </div>
+                <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[0.9rem]">
+                  <dt className="text-tinta-suave">Curso</dt>
+                  <dd className="min-w-0 break-words">{i.curso || "—"}</dd>
+                  <dt className="text-tinta-suave">Formato</dt>
+                  <dd>{i.formato === "banner" ? "Banner" : "Comunicação oral"}</dd>
+                  <dt className="text-tinta-suave">Presença</dt>
+                  <dd>{i.presencas} sessão(ões) · {i.percentual}%</dd>
+                </dl>
+                <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
+                  {i.elegivel ? "Apto ao certificado" : "Presença pendente"}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[52rem] text-left text-[0.95rem]">
               <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                 <tr>
@@ -133,6 +167,7 @@ export default function InscritosPainel() {
               </tbody>
             </table>
           </div>
+          </>
         ) : (
           <p className="p-6 text-tinta-suave">Nenhuma inscrição encontrada para esta busca.</p>
         )}
