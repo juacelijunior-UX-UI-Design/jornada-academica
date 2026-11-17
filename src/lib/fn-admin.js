@@ -19,7 +19,7 @@ export const carregarAdmin = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     if (!ehAdmin(context.user)) return { ok: false, erro: "Apenas administradores têm acesso a este painel." };
     const base44 = context.getBase44().asServiceRole;
-    const [{ alunos, configuracao }, certificados] = await Promise.all([
+    const [{ alunos, configuracao, carga_horaria_total }, certificados] = await Promise.all([
       calcularResumo(base44),
       todos(base44.entities.Certificado.list("-created_date")),
     ]);
@@ -31,6 +31,7 @@ export const carregarAdmin = createServerFn({ method: "GET" })
       total_inscritos: alunos.length,
       total_elegiveis: alunos.filter((a) => a.elegivel).length,
       total_certificados: certificados.length,
+      carga_horaria_total,
       liberado: certificadosLiberados(configuracao),
       liberacao: formatarDataBr(configuracao.certificados_a_partir_de),
     };

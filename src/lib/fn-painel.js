@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
-import { mascararCpf } from "@/lib/validacao";
+import { apenasDigitos, mascararCpf } from "@/lib/validacao";
 import {
   calcularResumo,
   descreverRegra,
@@ -82,4 +82,17 @@ export const registrarPresencas = createServerFn({ method: "POST" })
       ja_registradas: ids.length - novos.length,
       presentes: [...jaPresentes, ...novos],
     };
+  });
+
+// Busca por CPF na chamada (o painel recebe o CPF mascarado, então a busca é no servidor).
+export const buscarPorCpf = createServerFn({ method: "GET" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const cpf = apenasDigitos(data?.cpf);
+    if (cpf.length < 3) return [];
+    const base44 = context.getBase44().asServiceRole;
+    const encontrados = await todos(
+      base44.entities.Participante.filter(cpf.length === 11 ? { cpf } : { cpf: { $regex: cpf } })
+    );
+    return encontrados.map((p) => p.id);
   });
