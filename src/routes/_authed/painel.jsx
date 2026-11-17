@@ -32,15 +32,15 @@ function PainelLayout() {
             <Image src={LOGO_JORNADA} alt="Logo da VI Jornada Acadêmica" fittingType="fit" className="h-6 w-auto sm:h-7" />
           </Link>
 
-          <div className="flex items-center gap-3 text-white">
-            <div className="text-right text-[0.85rem] leading-tight">
-              <span className="block font-semibold">{acesso.nome || acesso.email}</span>
+          <div className="flex min-w-0 items-center gap-3 text-white">
+            <div className="min-w-0 text-right text-[0.85rem] leading-tight">
+              <span className="block max-w-[11rem] truncate font-semibold sm:max-w-xs">{acesso.nome || acesso.email}</span>
               <span className="text-white/70">{PERFIS[acesso.perfil] || PERFIS.visitante}</span>
             </div>
             <button
               type="button"
               onClick={() => logout()}
-              className="inline-flex min-h-10 items-center gap-2 rounded-lg border-2 border-white/60 px-3 font-semibold text-white transition hover:bg-white hover:text-navy"
+              className="inline-flex min-h-10 flex-none items-center gap-2 rounded-lg border-2 border-white/60 px-3 font-semibold text-white transition hover:bg-white hover:text-navy"
             >
               <LogOut className="h-4 w-4" aria-hidden="true" />
               Sair
