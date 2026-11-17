@@ -1,0 +1,48 @@
+{
+  "name": "Certificado",
+  "type": "object",
+  "properties": {
+    "participante_id": {
+      "type": "string"
+    },
+    "nome": {
+      "type": "string"
+    },
+    "horas_presentes": {
+      "type": "number"
+    },
+    "percentual": {
+      "type": "number"
+    },
+    "emitido_em": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participante_id",
+    "nome"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

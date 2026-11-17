@@ -1,0 +1,126 @@
+{
+  "name": "Participante",
+  "type": "object",
+  "properties": {
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "aluno",
+        "externo"
+      ],
+      "enumColors": [
+        "blue",
+        "purple"
+      ],
+      "description": "Aluno da Uninassau ou p\u00fablico externo."
+    },
+    "nome": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "email": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "telefone": {
+      "type": "string",
+      "description": "Somente d\u00edgitos, com DDD."
+    },
+    "cpf": {
+      "type": "string",
+      "description": "Somente d\u00edgitos (11)."
+    },
+    "matricula": {
+      "type": "string",
+      "description": "Vazia para participantes externos."
+    },
+    "instituicao": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "curso": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "disciplina": {
+      "type": "string",
+      "enum": [
+        "APIExt I",
+        "APIExt II",
+        "APIExt III",
+        "APIExt IV",
+        "APIExt V",
+        "APIExt VI",
+        "PIC",
+        "Outras"
+      ],
+      "enumColors": [
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "purple",
+        "gray"
+      ]
+    },
+    "formato": {
+      "type": "string",
+      "enum": [
+        "banner",
+        "comunicacao_oral"
+      ],
+      "enumColors": [
+        "green",
+        "yellow"
+      ]
+    },
+    "resumo": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "arquivo_uri": {
+      "type": "string",
+      "description": "URI privada do arquivo do trabalho."
+    },
+    "arquivo_nome": {
+      "type": "string"
+    },
+    "arquivo_tamanho": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "tipo",
+    "nome",
+    "email",
+    "telefone",
+    "cpf",
+    "curso",
+    "disciplina",
+    "formato"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

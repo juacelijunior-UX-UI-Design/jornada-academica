@@ -7,17 +7,27 @@ import { Base44Scripts } from "base44:document";
 import appCss from "@/index.css?url";
 
 export const Route = createRootRoute({
-  // Per-page <title>/meta come from each route's head(); this is the shared base.
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Base44 App" },
-      { name: "description", content: "A full-stack Base44 app built with TanStack Start." },
+      { title: "VI Jornada Acadêmica da Uninassau Teresina" },
+      {
+        name: "description",
+        content:
+          "Sistema de inscrição de trabalhos, frequência e certificados da VI Jornada Acadêmica da Uninassau Teresina (09 e 10/12/2026).",
+      },
+      { name: "theme-color", content: "#011c63" },
     ],
-    // No icon link: the platform adds the app's logo when serving.
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap",
+      },
     ],
   }),
   errorComponent: DefaultCatchBoundary,
@@ -38,7 +48,7 @@ function RootComponent() {
 // The document. There is no index.html: the server renders <html> from here.
 function RootDocument({ children }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>

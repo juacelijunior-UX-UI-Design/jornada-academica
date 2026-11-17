@@ -1,0 +1,75 @@
+{
+  "name": "Configuracao",
+  "type": "object",
+  "properties": {
+    "modo_aprovacao": {
+      "type": "string",
+      "enum": [
+        "percentual",
+        "horas"
+      ],
+      "enumColors": [
+        "blue",
+        "purple"
+      ],
+      "description": "Como a presen\u00e7a m\u00ednima \u00e9 medida."
+    },
+    "valor_minimo": {
+      "type": "number",
+      "description": "Percentual (0-100) ou horas."
+    },
+    "carga_horaria_certificado": {
+      "type": "number",
+      "description": "Horas impressas no certificado."
+    },
+    "inscricoes_de": {
+      "type": "string",
+      "format": "date"
+    },
+    "inscricoes_ate": {
+      "type": "string",
+      "format": "date"
+    },
+    "certificados_a_partir_de": {
+      "type": "string",
+      "format": "date"
+    },
+    "ignorar_datas": {
+      "type": "boolean"
+    },
+    "reitora_nome": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "coordenador_nome": {
+      "type": "string",
+      "maxLength": 150
+    }
+  },
+  "required": [
+    "modo_aprovacao",
+    "valor_minimo"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

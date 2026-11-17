@@ -1,0 +1,45 @@
+{
+  "name": "Presenca",
+  "type": "object",
+  "properties": {
+    "participante_id": {
+      "type": "string"
+    },
+    "sessao_id": {
+      "type": "string"
+    },
+    "registrado_por": {
+      "type": "string",
+      "description": "Nome de quem registrou a chamada."
+    },
+    "registrado_por_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participante_id",
+    "sessao_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
