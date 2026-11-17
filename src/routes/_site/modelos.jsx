@@ -16,7 +16,14 @@ const MODELOS = [
   {
     titulo: "Modelo de banner",
     descricao: "Modelo de banner com os campos de título, curso, orientador, autores, introdução, objetivos, método, resultados, considerações finais e referências.",
-    arquivos: [{ tipo: "PDF", nome: "modelo-banner.pdf", url: `${BASE}/f27ada17a_modelo-banner.pdf` }],
+    arquivos: [
+      { tipo: "PDF", nome: "modelo-banner.pdf", url: `${BASE}/f27ada17a_modelo-banner.pdf` },
+      {
+        tipo: "PPTX",
+        nome: "modelo-banner.pptx",
+        url: "https://1drv.ms/p/c/04af3aafaa704b82/IQC1OeUiQAYkT6gxETbGBsyWAdFiP106Sr0mPo1k4Uc_MiE?e=92WJm3",
+      },
+    ],
   },
 ];
 
