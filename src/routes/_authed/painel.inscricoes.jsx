@@ -11,7 +11,8 @@ function InscricoesPage() {
     <>
       <h1 className="font-heading text-[clamp(1.3rem,4vw,1.8rem)] font-extrabold text-navy">Inscrições</h1>
       <p className="mb-5 mt-1 text-tinta-suave">
-        Consulte os alunos e participantes inscritos, acompanhe a presença e corrija os dados de contato.
+        Em <strong>Submissões</strong>, a banca abre cada trabalho para ver os dados, o resumo e o arquivo, e marca
+        quem apresentou. Em <strong>Participantes</strong>, ficam as inscrições de quem só vai assistir.
       </p>
       <InscritosPainel />
     </>
