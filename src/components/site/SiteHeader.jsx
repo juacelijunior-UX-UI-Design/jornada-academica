@@ -46,7 +46,7 @@ export default function SiteHeader() {
   const extras = logado ? [LINK_INSCRICAO, ...(daEquipe ? [LINK_PAINEL] : [])] : [];
 
   return (
-    <header className="border-b-4 border-amarelo bg-navy shadow-[0_2px_10px_rgba(1,28,99,0.08)]">
+    <header className="sticky top-0 z-40 border-b-4 border-amarelo bg-navy shadow-[0_4px_16px_rgba(1,28,99,0.25)]">
       <div className="jr-container flex max-w-[1400px] items-center justify-between gap-3 py-3">
         <Link
           to="/"
@@ -107,7 +107,7 @@ export default function SiteHeader() {
       </div>
 
       {aberto && (
-        <nav id="menu-mobile" aria-label="Principal" className="jr-container pb-4 xl:hidden">
+        <nav id="menu-mobile" aria-label="Principal" className="jr-container max-h-[calc(100dvh-5rem)] overflow-y-auto pb-4 xl:hidden">
           <ul className="flex flex-col rounded-lg bg-white/5 p-2">
             {[...LINKS, ...extras, ...(logado ? [] : [LINK_ENTRAR])].map(({ texto, to, hash, Icone }) => (
               <li key={texto}>
