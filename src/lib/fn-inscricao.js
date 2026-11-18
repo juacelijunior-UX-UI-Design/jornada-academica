@@ -31,8 +31,11 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     telefone: data.telefone,
     arquivo: data.arquivo_nome ? { name: data.arquivo_nome, size: Number(data.arquivo_tamanho) || 0 } : null,
   };
+  const externo = data.tipo === "externo";
   const erros = validarInscricao(valores);
-  if (!DISCIPLINAS.includes(valores.disciplina)) erros.disciplina = "Selecione sua disciplina.";
+  if (!externo && !DISCIPLINAS.includes(valores.disciplina)) erros.disciplina = "Selecione sua disciplina.";
+  const formato = (!externo && FORMATO_AUTOMATICO[data.disciplina]) || normalizarFormato(data.formato);
+  if (!erros.formato && !["banner", "comunicacao_oral"].includes(formato)) erros.formato = "Selecione o formato da apresentação.";
   if (Object.keys(erros).length) return { ok: false, erros };
 
   const cpf = apenasDigitos(data.cpf);
@@ -44,7 +47,6 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
   if (jaExiste.some((p) => String(p.email).toLowerCase() === email)) dup.email = "Este e-mail já está cadastrado.";
   if (Object.keys(dup).length) return { ok: false, erros: dup };
 
-  const formato = FORMATO_AUTOMATICO[data.disciplina] || normalizarFormato(data.formato);
   const participante = await base44.entities.Participante.create({
     tipo: data.tipo === "externo" ? "externo" : "aluno",
     nome: String(data.nome).trim().replace(/\s+/g, " "),
@@ -55,7 +57,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     matricula: data.tipo === "externo" ? "" : soDigitosOuVazio(apenasDigitos(data.matricula)),
     instituicao: data.tipo === "externo" ? String(data.instituicao || "").trim() : undefined,
     curso: String(data.curso).trim(),
-    disciplina: data.disciplina,
+    disciplina: externo ? undefined : data.disciplina,
     formato,
     titulo: String(data.titulo || "").trim().replace(/\s+/g, " "),
     resumo: String(data.resumo || "").trim(),
