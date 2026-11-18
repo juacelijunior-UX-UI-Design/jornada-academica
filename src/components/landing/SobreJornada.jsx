@@ -2,7 +2,7 @@ import { Download, Eye } from "lucide-react";
 import { EDITAL, EVENTO } from "@/lib/evento";
 
 const botaoPequeno =
-  "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 text-[0.9rem] font-semibold no-underline transition";
+  "inline-flex min-h-11 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 text-[0.875rem] font-semibold no-underline transition";
 
 export default function SobreJornada() {
   return (
@@ -63,7 +63,7 @@ export default function SobreJornada() {
               </li>
             </ul>
 
-            <div className="mt-6 flex flex-wrap gap-2 lg:mt-auto lg:pt-8">
+            <div className="mt-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-2 lg:mt-auto lg:pt-8">
               <a
                 href={EDITAL}
                 target="_blank"
