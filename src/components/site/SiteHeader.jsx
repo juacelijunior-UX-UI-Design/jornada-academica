@@ -5,7 +5,6 @@ import {
   BadgeCheck,
   CalendarDays,
   Home,
-  Info,
   LayoutDashboard,
   ListChecks,
   LogIn,
@@ -21,7 +20,6 @@ import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
 
 const LINKS = [
   { texto: "Início", to: "/", Icone: Home },
-  { texto: "O evento", to: "/", hash: "sobre", Icone: Info },
   { texto: "Programação", to: "/", hash: "programacao", Icone: CalendarDays },
   { texto: "Cronograma", to: "/", hash: "cronograma", Icone: ListChecks },
   { texto: "Certificado", to: "/certificado", Icone: Award },
