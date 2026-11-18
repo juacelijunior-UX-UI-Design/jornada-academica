@@ -243,7 +243,7 @@ export default function InscritosPainel() {
                   <col />
                   <col className="w-[22%]" />
                   <col className="w-[11rem]" />
-                  <col className="w-[13.5rem]" />
+                  <col className="w-[15rem]" />
                 </colgroup>
                 <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                   <tr>
@@ -261,7 +261,7 @@ export default function InscritosPainel() {
                           type="button"
                           onClick={() => setVendo(i)}
                           title={i.titulo}
-                          className="block w-full text-left font-heading text-[1rem] font-bold leading-snug text-navy [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden hover:text-royal hover:underline"
+                          className="block w-full text-left font-heading text-[1rem] font-bold leading-snug text-navy [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3] overflow-hidden hover:text-royal hover:underline"
                         >
                           {i.titulo || "Trabalho sem título"}
                         </button>
