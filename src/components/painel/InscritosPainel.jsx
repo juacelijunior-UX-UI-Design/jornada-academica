@@ -5,6 +5,13 @@ import { Loader2, Pencil, Search } from "lucide-react";
 import { idsPorCpf, listarInscritos } from "@/lib/fn-equipe";
 import InscritoEditor from "@/components/painel/InscritoEditor";
 
+const rotuloFormato = (i) =>
+  i.tipo === "participante"
+    ? "Participante (ouvinte)"
+    : i.formato === "banner"
+      ? "Banner"
+      : "Comunicação oral";
+
 const norm = (s) =>
   String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
@@ -115,7 +122,7 @@ export default function InscritosPainel() {
                   <dt className="text-tinta-suave">Curso</dt>
                   <dd className="min-w-0 break-words">{i.curso || "—"}</dd>
                   <dt className="text-tinta-suave">Formato</dt>
-                  <dd>{i.formato === "banner" ? "Banner" : "Comunicação oral"}</dd>
+                  <dd>{rotuloFormato(i)}</dd>
                   <dt className="text-tinta-suave">Presença</dt>
                   <dd>{i.presencas} sessão(ões) · {i.percentual}%</dd>
                 </dl>
@@ -145,7 +152,7 @@ export default function InscritosPainel() {
                       <span className="block text-[0.8rem] text-tinta-suave">{i.email}</span>
                     </td>
                     <td className="px-4 py-3">{i.curso || "—"}</td>
-                    <td className="px-4 py-3">{i.formato === "banner" ? "Banner" : "Comunicação oral"}</td>
+                    <td className="px-4 py-3">{rotuloFormato(i)}</td>
                     <td className="px-4 py-3">{i.presencas} sessão(ões) · {i.percentual}%</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
