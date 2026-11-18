@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
 import { acessoDe, permitido } from "@/lib/painel-equipe.server";
 import { PERFIS_CONFIG } from "@/lib/perfis";
+import { DATA_LIBERACAO_CERTIFICADOS } from "@/lib/evento";
 import {
   CONFIGURACAO_PADRAO,
   calcularResumo,
