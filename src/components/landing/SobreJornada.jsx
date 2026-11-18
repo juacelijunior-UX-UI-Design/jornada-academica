@@ -1,14 +1,6 @@
-import { Download, Eye, FilePlus2, FolderOpen } from "lucide-react";
+import { Download, Eye, FolderOpen } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import Botao from "@/components/site/Botao";
 import { EDITAL, EVENTO } from "@/lib/evento";
-
-const PASSOS = [
-  "Inscreva o seu trabalho de 16 a 30/11.",
-  "Em 05/12, confira os trabalhos selecionados e o dia e horário da apresentação nas redes sociais do evento.",
-  "Apresente em 09 ou 10/12 e contribua com 1 kg de alimento não perecível no credenciamento.",
-  "A partir de 14/12, consulte o certificado no site.",
-];
 
 const botaoPequeno =
   "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 text-[0.9rem] font-semibold no-underline transition";
@@ -101,29 +93,6 @@ export default function SobreJornada() {
           </aside>
         </div>
 
-        <div className="mt-14">
-          <h3 className="font-heading text-[1.25rem] font-bold text-navy">Como participar</h3>
-          <ol className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PASSOS.map((passo, i) => (
-              <li key={passo} className="jr-card flex items-start gap-3 p-5">
-                <span
-                  aria-hidden="true"
-                  className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-amarelo font-heading text-base font-extrabold text-navy"
-                >
-                  {i + 1}
-                </span>
-                <span className="text-[1rem] leading-snug text-tinta">{passo}</span>
-              </li>
-            ))}
-          </ol>
-
-          <div className="mt-8">
-            <Botao to="/inscricao" variante="cta">
-              <FilePlus2 className="h-5 w-5" aria-hidden="true" />
-              Inscrever meu trabalho
-            </Botao>
-          </div>
-        </div>
       </div>
     </section>
   );
