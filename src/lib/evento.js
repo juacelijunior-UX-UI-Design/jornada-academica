@@ -10,6 +10,8 @@ export const EVENTO = {
 };
 
 export const RESUMO_MAX = 2000;
+// Carga horária do certificado de quem se inscreve só como participante (ouvinte, sem trabalho).
+export const CARGA_HORARIA_PARTICIPANTE = 4;
 export const ARQUIVO_MAX_MB = 10;
 export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
 export const OUTROS = "__outros__";
