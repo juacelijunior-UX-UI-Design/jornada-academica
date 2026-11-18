@@ -94,9 +94,9 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-6 text-[0.75rem] uppercase tracking-[0.14em] text-[#8f9fd1] md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-6 text-[0.75rem] uppercase tracking-[0.14em] text-[#8f9fd1] lg:flex-row lg:items-center lg:justify-between">
           <span>© 2026 UNINASSAU · Teresina — PI</span>
-          <span className="normal-case tracking-normal md:text-right md:text-[0.8rem]">
+          <span className="normal-case tracking-normal lg:text-right lg:text-[0.8rem]">
             Desenvolvido por{" "}
             {DEV.map((d, i) => (
               <span key={d.nome}>
