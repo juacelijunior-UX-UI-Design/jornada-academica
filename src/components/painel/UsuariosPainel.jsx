@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { listarUsuarios } from "@/lib/fn-equipe";
 import EquipeForm from "@/components/painel/EquipeForm";
 import EquipeLista from "@/components/painel/EquipeLista";
+import SolicitacoesCheckin from "@/components/painel/SolicitacoesCheckin";
 
 export default function UsuariosPainel() {
   const carregar = useServerFn(listarUsuarios);
@@ -26,6 +27,7 @@ export default function UsuariosPainel() {
 
   return (
     <div className="space-y-5">
+      <SolicitacoesCheckin onAtualizar={refetch} />
       <EquipeForm onSalvo={refetch} />
 
       <section className="jr-card p-5">
