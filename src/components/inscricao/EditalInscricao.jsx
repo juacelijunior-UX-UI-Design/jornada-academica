@@ -50,6 +50,10 @@ export default function EditalInscricao() {
         </li>
         <li>A inscrição é obrigatória para os alunos das disciplinas de APIExt (I a VI).</li>
         <li>Cada apresentação dura 10 minutos e é avaliada por pelo menos um professor ou profissional da área.</li>
+        <li>
+          Quem <strong>apresentar o trabalho</strong> recebe o certificado de <strong>20 horas</strong>. Sem
+          apresentação, com presença registrada no evento, o certificado é de 4 horas.
+        </li>
       </ul>
 
       <hr className="my-5 border-linea" />
