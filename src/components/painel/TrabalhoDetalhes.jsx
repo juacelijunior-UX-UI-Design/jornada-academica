@@ -1,18 +1,49 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Download, FileText, Loader2 } from "lucide-react";
+import { Download, FileText, Loader2, Mail, Phone, UserRound, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { linkArquivoTrabalho } from "@/lib/fn-equipe";
 import { formatarTamanho } from "@/lib/validacao";
 
 const dataBr = (d) =>
-  d ? new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(d) ? d : `${d}Z`).toLocaleDateString("pt-BR", { timeZone: "America/Fortaleza" }) : "";
+  d
+    ? new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(d) ? d : `${d}Z`).toLocaleDateString("pt-BR", {
+        timeZone: "America/Fortaleza",
+      })
+    : "";
+
+const telefoneBr = (t) => {
+  const d = String(t || "").replace(/\D/g, "");
+  if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return t || "";
+};
+
+function Secao({ titulo, children, className = "" }) {
+  return (
+    <section className={className}>
+      <h3 className="mb-2 font-heading text-[0.8rem] font-bold uppercase tracking-[0.12em] text-tinta-suave">{titulo}</h3>
+      {children}
+    </section>
+  );
+}
+
+function Linha({ rotulo, children }) {
+  return (
+    <div className="grid gap-x-3 py-2 sm:grid-cols-[8.5rem_1fr]">
+      <dt className="text-[0.85rem] font-semibold text-tinta-suave">{rotulo}</dt>
+      <dd className="min-w-0 break-words text-[0.95rem] text-tinta">{children}</dd>
+    </div>
+  );
+}
 
 // Janela com todos os dados do trabalho submetido, para a banca avaliar e baixar o arquivo.
 export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
   const abrirLink = useServerFn(linkArquivoTrabalho);
   const [abrindo, setAbrindo] = useState(false);
+  const formato = i.formato === "banner" ? "Banner" : "Comunicação oral";
+  const externo = i.tipo === "externo";
 
   async function abrirArquivo() {
     if (abrindo) return;
@@ -36,42 +67,34 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
     }
   }
 
-  const linhas = [
-    ["Apresentador", i.nome],
-    ["Co-autores", i.coautores?.length ? i.coautores.join(", ") : "Trabalho individual"],
-    ["Inscrição", i.tipo === "externo" ? "Público externo" : "Aluno da instituição"],
-    [i.tipo === "externo" ? "Instituição" : "Matrícula", i.tipo === "externo" ? i.instituicao : i.matricula],
-    ["Curso", i.curso],
-    ["Disciplina", i.disciplina],
-    ["Formato", i.formato === "banner" ? "Banner" : "Comunicação oral"],
-    ["E-mail", i.email],
-    ["Telefone", i.telefone],
-    ["CPF", i.cpf],
-    ["Inscrito em", dataBr(i.criado_em)],
-  ].filter(([, v]) => v);
-
   return (
     <Dialog open onOpenChange={(v) => !v && onFechar?.()}>
-      <DialogContent className="max-h-[90vh] gap-0 overflow-hidden p-0 sm:max-w-3xl">
-        <DialogHeader className="border-b-4 border-amarelo bg-navy px-6 py-5 text-left">
-          <DialogTitle className="pr-6 font-heading text-[1.25rem] leading-snug text-white">
+      <DialogContent className="flex max-h-[92vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl [&>button:last-child]:bg-transparent [&>button:last-child]:text-white [&>button:last-child]:opacity-90">
+        {/* Cabeçalho: fica fixo; o conteúdo abaixo rola */}
+        <DialogHeader className="flex-none border-b-4 border-amarelo bg-navy px-6 pb-4 pt-5 text-left">
+          <DialogTitle className="pr-8 font-heading text-[1.2rem] leading-snug text-white sm:text-[1.3rem]">
             {i.titulo || "Trabalho sem título"}
           </DialogTitle>
-          <DialogDescription className="text-[#dbe4fb]">
-            {i.nome} · {i.formato === "banner" ? "Banner" : "Comunicação oral"}
+          <DialogDescription asChild>
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {[formato, i.disciplina, i.curso].filter(Boolean).map((t) => (
+                <span key={t} className="rounded-full bg-white/15 px-2.5 py-0.5 text-[0.8rem] font-semibold text-white">
+                  {t}
+                </span>
+              ))}
+            </div>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[calc(90vh-6rem)] space-y-6 overflow-y-auto px-6 py-5">
-          <section>
-            <h3 className="font-heading text-[1.05rem] font-bold text-navy">Arquivo do trabalho</h3>
+        <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-6 py-5">
+          <Secao titulo="Arquivo do trabalho">
             {i.tem_arquivo ? (
-              <div className="mt-2 flex flex-wrap items-center gap-3 rounded-lg border border-linea bg-fundo/60 p-3">
-                <FileText className="h-6 w-6 flex-none text-royal" aria-hidden="true" />
-                <span className="min-w-0 flex-1 break-all text-[0.95rem]">
-                  {i.arquivo_nome || "Arquivo"}
+              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-linea bg-fundo/60 p-3">
+                <FileText className="h-7 w-7 flex-none text-royal" aria-hidden="true" />
+                <span className="min-w-0 flex-1">
+                  <span className="block break-all font-semibold text-navy">{i.arquivo_nome || "Arquivo"}</span>
                   {i.arquivo_tamanho ? (
-                    <span className="text-tinta-suave"> · {formatarTamanho(i.arquivo_tamanho)}</span>
+                    <span className="block text-[0.8rem] text-tinta-suave">{formatarTamanho(i.arquivo_tamanho)}</span>
                   ) : null}
                 </span>
                 <button
@@ -89,28 +112,80 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
                 </button>
               </div>
             ) : (
-              <p className="mt-2 text-tinta-suave">Nenhum arquivo enviado.</p>
+              <p className="rounded-lg border border-dashed border-linea p-3 text-tinta-suave">Nenhum arquivo enviado.</p>
             )}
-          </section>
+          </Secao>
 
-          <section>
-            <h3 className="font-heading text-[1.05rem] font-bold text-navy">Resumo</h3>
-            <p className="mt-2 whitespace-pre-line rounded-lg border border-linea bg-white p-4 text-[0.95rem] leading-relaxed text-tinta">
+          <Secao titulo="Resumo">
+            <p className="whitespace-pre-line rounded-lg border border-linea bg-white p-4 text-[0.95rem] leading-relaxed text-tinta">
               {i.resumo || "Sem resumo."}
             </p>
-          </section>
+          </Secao>
 
-          <section>
-            <h3 className="font-heading text-[1.05rem] font-bold text-navy">Dados da inscrição</h3>
-            <dl className="mt-2 divide-y divide-linea text-[0.95rem]">
-              {linhas.map(([rotulo, valor]) => (
-                <div key={rotulo} className="grid gap-x-4 py-2 sm:grid-cols-[10rem_1fr]">
-                  <dt className="font-semibold text-tinta-suave">{rotulo}</dt>
-                  <dd className="min-w-0 break-words text-tinta">{valor}</dd>
+          <div className="grid gap-5 md:grid-cols-2">
+            <Secao titulo="Autoria">
+              <div className="rounded-lg border border-linea p-4">
+                <p className="m-0 flex items-start gap-2">
+                  <UserRound className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
+                  <span>
+                    <strong className="block font-semibold text-navy">{i.nome}</strong>
+                    <span className="text-[0.85rem] text-tinta-suave">Apresentador</span>
+                  </span>
+                </p>
+                <div className="mt-3 flex items-start gap-2 border-t border-linea pt-3">
+                  <Users className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
+                  {i.coautores?.length ? (
+                    <ul className="m-0 list-none space-y-1 p-0 text-[0.95rem]">
+                      {i.coautores.map((c) => (
+                        <li key={c} className="break-words">
+                          {c}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="text-[0.95rem] text-tinta-suave">Trabalho individual</span>
+                  )}
                 </div>
-              ))}
-            </dl>
-          </section>
+              </div>
+            </Secao>
+
+            <Secao titulo="Inscrição e contato">
+              <dl className="m-0 divide-y divide-linea rounded-lg border border-linea px-4 py-1">
+                <Linha rotulo="Inscrição">{externo ? "Público externo" : "Aluno da instituição"}</Linha>
+                {externo ? (
+                  i.instituicao && <Linha rotulo="Instituição">{i.instituicao}</Linha>
+                ) : (
+                  i.matricula && <Linha rotulo="Matrícula">{i.matricula}</Linha>
+                )}
+                <Linha rotulo="E-mail">
+                  <a href={`mailto:${i.email}`} className="inline-flex items-center gap-1.5 break-all">
+                    <Mail className="h-3.5 w-3.5 flex-none" aria-hidden="true" />
+                    {i.email}
+                  </a>
+                </Linha>
+                {i.telefone && (
+                  <Linha rotulo="Telefone">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Phone className="h-3.5 w-3.5 flex-none text-tinta-suave" aria-hidden="true" />
+                      {telefoneBr(i.telefone)}
+                    </span>
+                  </Linha>
+                )}
+                {i.cpf && <Linha rotulo="CPF">{i.cpf}</Linha>}
+                {i.criado_em && <Linha rotulo="Inscrito em">{dataBr(i.criado_em)}</Linha>}
+              </dl>
+            </Secao>
+          </div>
+        </div>
+
+        <div className="flex flex-none justify-end border-t border-linea bg-fundo/50 px-6 py-3">
+          <button
+            type="button"
+            onClick={() => onFechar?.()}
+            className="inline-flex min-h-10 items-center rounded-lg border border-linea bg-white px-5 font-semibold text-navy transition hover:bg-fundo"
+          >
+            Fechar
+          </button>
         </div>
       </DialogContent>
     </Dialog>
