@@ -74,8 +74,7 @@ export default function SiteHeader() {
               key={texto}
               to={to}
               hash={hash}
-              className={linkClasse}
-              activeProps={hash ? undefined : { className: "text-amarelo" }}
+              className={hash ? linkClasse : `${linkClasse} data-[status=active]:text-amarelo`}
               activeOptions={{ exact: to === "/" }}
             >
               <Icone className={iconeClasse} aria-hidden="true" />
