@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Send } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { criarInscricao } from "@/lib/fn-inscricao";
 import { OUTROS } from "@/lib/evento";
 import { validarInscricao } from "@/lib/validacao";
+import TipoSeletor from "@/components/inscricao/TipoSeletor";
+import EditalInscricao from "@/components/inscricao/EditalInscricao";
 import DadosPessoais from "@/components/inscricao/DadosPessoais";
 import DadosTrabalho from "@/components/inscricao/DadosTrabalho";
+import Coautores from "@/components/inscricao/Coautores";
 import PainelSucesso from "@/components/inscricao/PainelSucesso";
 
 const VAZIO = {
@@ -28,7 +31,18 @@ const VAZIO = {
   aceite: false,
 };
 
-const ORDEM_CAMPOS = ["nome", "email", "telefone", "cpf", "matricula", "instituicao", "curso", "curso_outro", "disciplina", "formato", "titulo", "resumo", "arquivo"];
+const ORDEM_CAMPOS = ["titulo", "disciplina", "curso", "curso_outro", "formato", "resumo", "arquivo", "nome", "email", "telefone", "cpf", "matricula", "instituicao"];
+
+function Secao({ numero, titulo, children }) {
+  return (
+    <section className="mt-10 first:mt-0">
+      <h2 className="mb-4 font-heading text-[1.2rem] font-bold text-navy">
+        {numero}. {titulo}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
 export default function FormularioInscricao({ aberta, motivo }) {
   const criar = useServerFn(criarInscricao);
@@ -105,6 +119,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
         return;
       }
       setResultado(resposta.participante);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       setErroGeral("Não foi possível concluir a inscrição. Verifique sua internet e tente novamente.");
     } finally {
@@ -119,51 +134,104 @@ export default function FormularioInscricao({ aberta, motivo }) {
     setResultado(null);
   }
 
-  if (resultado) return <PainelSucesso resultado={resultado} onNova={novaInscricao} />;
+  if (resultado) {
+    return (
+      <div className="jr-card border-t-[5px] border-amarelo p-5 sm:p-9">
+        <PainelSucesso resultado={resultado} onNova={novaInscricao} />
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={enviar} noValidate>
-      <p className="jr-legenda mb-5">
-        Preencha os dados abaixo. Todos os campos são obrigatórios.
-      </p>
+    <div className="space-y-6">
+      <TipoSeletor valor={form.tipo} onMudar={(v) => setCampo("tipo", v)} />
 
-      {!aberta && motivo && (
-        <div className="jr-alerta jr-alerta-erro mb-5" role="alert">
-          {motivo}
-        </div>
-      )}
+      <EditalInscricao />
 
-      {erroGeral && (
-        <div className="jr-alerta jr-alerta-erro mb-5" role="alert">
-          {erroGeral}
-        </div>
-      )}
+      <div className="jr-card p-5 sm:p-10">
+        <form onSubmit={enviar} noValidate>
+          {!aberta && motivo && (
+            <div className="jr-alerta jr-alerta-erro mb-6" role="alert">
+              {motivo}
+            </div>
+          )}
 
-      <DadosPessoais form={form} setCampo={setCampo} erros={erros} />
-      <DadosTrabalho
-        form={form}
-        setCampo={setCampo}
-        erros={erros}
-        arquivo={arquivo}
-        setArquivo={setArquivo}
-        setErro={setErro}
-      />
+          {erroGeral && (
+            <div className="jr-alerta jr-alerta-erro mb-6" role="alert">
+              {erroGeral}
+            </div>
+          )}
 
-      <button
-        type="submit"
-        disabled={enviando || !aberta}
-        className="mt-2 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-6 py-3 font-semibold text-navy transition hover:bg-[#e8b800] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-[#e3e8f4] disabled:text-[#3f4a6b] disabled:hover:translate-y-0"
-      >
-        {enviando && <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />}
-        {enviando ? "Enviando..." : "Confirmar inscrição"}
-      </button>
+          <Secao numero={1} titulo="Trabalho">
+            <DadosTrabalho
+              form={form}
+              setCampo={setCampo}
+              erros={erros}
+              arquivo={arquivo}
+              setArquivo={setArquivo}
+              setErro={setErro}
+            />
+          </Secao>
 
-      <p className="mt-4 text-center">
-        <Link to="/" className="inline-flex items-center gap-2 no-underline">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Voltar para a página inicial
-        </Link>
-      </p>
-    </form>
+          <Secao numero={2} titulo="Seus dados (apresentador)">
+            <DadosPessoais form={form} setCampo={setCampo} erros={erros} />
+          </Secao>
+
+          <Secao numero={3} titulo="Co-autores do trabalho">
+            <Coautores
+              coautores={form.coautores ?? []}
+              setCoautores={(lista) => setCampo("coautores", lista)}
+              erro={erros.coautores}
+            />
+          </Secao>
+
+          <Secao numero={4} titulo="Confirmação">
+            <label className="flex cursor-pointer items-start gap-3 text-[0.95rem]">
+              <input
+                type="checkbox"
+                checked={form.aceite}
+                onChange={(e) => setCampo("aceite", e.target.checked)}
+                className="mt-1 h-5 w-5 flex-none accent-[#0040ce]"
+              />
+              <span>
+                Li e concordo com o uso dos meus dados somente para a inscrição, o controle de presença
+                e a emissão do certificado da VI Jornada Acadêmica.
+              </span>
+            </label>
+            {erros.aceite && (
+              <p className="jr-erro" role="alert">
+                {erros.aceite}
+              </p>
+            )}
+
+            <div className="mt-5 rounded-lg border border-[#f3d27a] bg-[#fff6d9] px-4 py-3 text-[0.95rem] text-[#5c4300]">
+              <strong>Doação solidária:</strong> cada aluno participante é convidado a levar 1 kg de
+              alimento não perecível no credenciamento. Tudo será doado a uma instituição de trabalho
+              social reconhecida.
+            </div>
+          </Secao>
+
+          <button
+            type="submit"
+            disabled={enviando || !aberta}
+            className="mt-6 inline-flex min-h-[3.25rem] w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-6 py-3 text-[1.05rem] font-bold text-navy transition hover:-translate-y-0.5 hover:bg-[#e8b800] disabled:cursor-not-allowed disabled:bg-[#e3e8f4] disabled:text-[#3f4a6b] disabled:hover:translate-y-0"
+          >
+            {enviando ? (
+              <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+            ) : (
+              <Send className="h-5 w-5" aria-hidden="true" />
+            )}
+            {enviando ? "Enviando..." : "Enviar inscrição"}
+          </button>
+
+          <p className="mt-4 text-center">
+            <Link to="/" className="inline-flex items-center gap-2 no-underline">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Voltar para a página inicial
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
   );
 }
