@@ -31,8 +31,8 @@ function Secao({ titulo, children, className = "" }) {
 
 function Linha({ rotulo, children }) {
   return (
-    <div className="grid gap-x-3 py-2 sm:grid-cols-[6.25rem_1fr]">
-      <dt className="text-[0.85rem] font-semibold text-tinta-suave">{rotulo}</dt>
+    <div className="grid items-baseline gap-x-3 py-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
+      <dt className="whitespace-nowrap text-[0.85rem] font-semibold text-tinta-suave">{rotulo}:</dt>
       <dd className="min-w-0 break-words text-[0.95rem] text-tinta">{children}</dd>
     </div>
   );
@@ -122,7 +122,7 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
             </p>
           </Secao>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
             <Secao titulo="Autoria">
               <div className="rounded-lg border border-linea p-4">
                 <p className="m-0 flex items-start gap-2">
@@ -134,17 +134,22 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
                 </p>
                 <div className="mt-3 flex items-start gap-2 border-t border-linea pt-3">
                   <Users className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
-                  {i.coautores?.length ? (
-                    <ul className="m-0 list-none space-y-1 p-0 text-[0.95rem]">
-                      {i.coautores.map((c) => (
-                        <li key={c} className="break-words">
-                          {c}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-[0.95rem] text-tinta-suave">Trabalho individual</span>
-                  )}
+                  <div className="min-w-0">
+                    <span className="block text-[0.85rem] font-semibold text-tinta-suave">
+                      {i.coautores?.length ? `Co-autores (${i.coautores.length}):` : "Co-autores:"}
+                    </span>
+                    {i.coautores?.length ? (
+                      <ol className="m-0 mt-1 list-decimal space-y-1 pl-5 text-[0.95rem] text-tinta">
+                        {i.coautores.map((c) => (
+                          <li key={c} className="break-words">
+                            {c}
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <span className="block text-[0.95rem] text-tinta-suave">Nenhum (trabalho individual)</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </Secao>
@@ -158,9 +163,13 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
                   i.matricula && <Linha rotulo="Matrícula">{i.matricula}</Linha>
                 )}
                 <Linha rotulo="E-mail">
-                  <a href={`mailto:${i.email}`} className="inline-flex items-center gap-1.5 break-all">
+                  <a
+                    href={`mailto:${i.email}`}
+                    title={i.email}
+                    className="flex min-w-0 items-center gap-1.5 whitespace-nowrap"
+                  >
                     <Mail className="h-3.5 w-3.5 flex-none" aria-hidden="true" />
-                    {i.email}
+                    <span className="truncate">{i.email}</span>
                   </a>
                 </Linha>
                 {i.telefone && (
