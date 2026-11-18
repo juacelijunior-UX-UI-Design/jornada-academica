@@ -9,6 +9,12 @@ import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
 
 const rotuloFormato = (i) => (i.formato === "banner" ? "Banner" : "Comunicação oral");
+const telefoneBr = (t) => {
+  const d = String(t || "").replace(/\D/g, "");
+  if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return t || "—";
+};
 const textoPresenca = (i) => `${i.presencas} ${i.presencas === 1 ? "sessão" : "sessões"}`;
 const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
@@ -304,13 +310,13 @@ export default function InscritosPainel() {
         ) : (
           <>
             {/* Participantes: cartões no celular e tablet */}
-            <ul className="divide-y divide-linea lg:hidden">
+            <ul className="divide-y divide-linea xl:hidden">
               {visiveis.map((i) => (
                 <li key={i.id} className="space-y-1.5 p-4">
                   <strong className="block break-words text-navy">{i.nome}</strong>
                   <span className="block break-all text-[0.85rem] text-tinta-suave">{i.email}</span>
                   <span className="block text-[0.9rem]">
-                    {i.telefone || "—"} · CPF {i.cpf}
+                    {telefoneBr(i.telefone)} · CPF {i.cpf}
                   </span>
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <span className="text-[0.9rem] text-tinta-suave">{textoPresenca(i)}</span>
@@ -323,41 +329,48 @@ export default function InscritosPainel() {
               ))}
             </ul>
 
-            {/* Participantes: tabela no computador */}
-            <div className="hidden lg:block">
-              <table className="w-full table-auto text-left text-[0.95rem]">
+            {/* Participantes: tabela no computador (4 colunas, nada cortado) */}
+            <div className="hidden xl:block">
+              <table className="w-full table-fixed text-left text-[0.95rem]">
+                <colgroup>
+                  <col />
+                  <col className="w-[12rem]" />
+                  <col className="w-[11rem]" />
+                  <col className="w-[8rem]" />
+                </colgroup>
                 <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                   <tr>
-                    <th className="w-[34%] px-4 py-2.5">Participante</th>
-                    <th className={th}>Telefone</th>
-                    <th className={th}>CPF</th>
-                    <th className={th}>Presença</th>
-                    <th className={th}>Certificado</th>
-                    <th className="w-px px-4 py-2.5">
-                      <span className="sr-only">Editar</span>
-                    </th>
+                    <th className="px-4 py-3">Participante</th>
+                    <th className="px-4 py-3">Telefone e CPF</th>
+                    <th className="px-4 py-3">Presença e certificado</th>
+                    <th className="px-4 py-3">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {visiveis.map((i) => (
-                    <tr key={i.id} className="border-t border-linea align-middle">
-                      <td className="px-4 py-3">
-                        <strong className="block break-words text-navy">{i.nome}</strong>
-                        <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
+                    <tr key={i.id} className="border-t border-linea align-top">
+                      <td className="px-4 py-4">
+                        <strong className="block break-words font-heading text-[1rem] text-navy">{i.nome}</strong>
+                        <span className="mt-0.5 block truncate text-[0.85rem] text-tinta-suave" title={i.email}>
+                          {i.email}
+                        </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">{i.telefone || "—"}</td>
-                      <td className="whitespace-nowrap px-4 py-3">{i.cpf}</td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <span className="block">{textoPresenca(i)}</span>
-                        <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
+                      <td className="px-4 py-4">
+                        <span className="block whitespace-nowrap">{telefoneBr(i.telefone)}</span>
+                        <span className="mt-0.5 block whitespace-nowrap text-[0.85rem] text-tinta-suave">CPF {i.cpf}</span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <SeloSituacao i={i} />
+                      <td className="px-4 py-4">
+                        <span className="block">{textoPresenca(i)} · {i.percentual}%</span>
+                        <span className="mt-2 block">
+                          <SeloSituacao i={i} />
+                        </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-right">
-                        <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
-                          Editar
-                        </BotaoAcao>
+                      <td className="px-4 py-4">
+                        <div className="[&>button]:w-full [&>button]:justify-center">
+                          <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
+                            Editar
+                          </BotaoAcao>
+                        </div>
                       </td>
                     </tr>
                   ))}
