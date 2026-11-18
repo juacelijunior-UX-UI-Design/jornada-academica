@@ -1,12 +1,12 @@
 import { GraduationCap, Users } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
+import Coautores from "@/components/inscricao/Coautores";
+import { mascaraCpf, mascaraTelefone, mascaraMatricula } from "@/lib/validacao";
 
 const TIPOS = [
   { valor: "aluno", texto: "Sou aluno", Icone: GraduationCap },
   { valor: "externo", texto: "Público externo", Icone: Users },
 ];
-import Coautores from "@/components/inscricao/Coautores";
-import { mascaraCpf, mascaraTelefone, mascaraMatricula } from "@/lib/validacao";
 
 export default function DadosPessoais({ form, setCampo, erros }) {
   const externo = form.tipo === "externo";
