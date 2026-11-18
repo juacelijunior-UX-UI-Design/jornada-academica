@@ -19,7 +19,7 @@ export default function SiteFooter() {
   return (
     <footer className="mt-16 bg-[#0d1f73] pb-8 pt-14 text-white">
       <div className="jr-container">
-        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_1.1fr_1fr]">
+        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.75fr_1fr_1.2fr]">
           <div className="sm:col-span-2 lg:col-span-1">
             <p className="mb-3 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-amarelo">VI edição</p>
             <p className="m-0 font-heading text-[clamp(2rem,4.5vw,2.6rem)] font-extrabold uppercase leading-[0.95] text-white">
@@ -79,7 +79,7 @@ export default function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Instagram do evento: ${REDES.usuario} (abre em nova aba)`}
-                  className={`${link} break-all`}
+                  className={`${link} break-words`}
                 >
                   {REDES.usuario}
                 </a>
