@@ -31,7 +31,7 @@ function Secao({ titulo, children, className = "" }) {
 
 function Linha({ rotulo, children }) {
   return (
-    <div className="grid gap-x-3 py-2 sm:grid-cols-[8.5rem_1fr]">
+    <div className="grid gap-x-3 py-2 sm:grid-cols-[6.25rem_1fr]">
       <dt className="text-[0.85rem] font-semibold text-tinta-suave">{rotulo}</dt>
       <dd className="min-w-0 break-words text-[0.95rem] text-tinta">{children}</dd>
     </div>
