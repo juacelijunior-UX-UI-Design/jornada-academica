@@ -11,8 +11,9 @@ import {
   normalizarTelefone,
   validarInscricao,
   validarParticipante,
+  mascararCpf,
 } from "@/lib/validacao";
-import { enviarConfirmacao } from "@/lib/ingresso.server";
+import { conteudoQr, enviarConfirmacao, garantirToken } from "@/lib/ingresso.server";
 import { motivoInscricoesFechadas, obterConfiguracao, todos } from "@/lib/jornada.server";
 
 const soDigitosOuVazio = (v) => (typeof v === "string" ? v : "");
@@ -94,7 +95,7 @@ export const criarParticipacao = createServerFn({ method: "POST" }).handler(asyn
   if (jaExiste.some((p) => String(p.email).toLowerCase() === email)) dup.email = "Este e-mail já está cadastrado.";
   if (Object.keys(dup).length) return { ok: false, erros: dup };
 
-  const participante = await base44.entities.Participante.create({
+  const criado = await base44.entities.Participante.create({
     tipo: "participante",
     nome: String(data.nome).trim().replace(/\s+/g, " "),
     email,
@@ -102,8 +103,18 @@ export const criarParticipacao = createServerFn({ method: "POST" }).handler(asyn
     cpf,
   });
 
+  // O QR Code de ingresso volta para a tela de confirmação (só para quem acabou de se inscrever).
+  const participante = await garantirToken(base44, criado);
   const email_enviado = await enviarConfirmacao(base44, participante);
-  return { ok: true, participante: { nome: participante.nome, email_enviado } };
+  return {
+    ok: true,
+    participante: {
+      nome: participante.nome,
+      cpf: mascararCpf(participante.cpf),
+      qr: conteudoQr(participante),
+      email_enviado,
+    },
+  };
 });
 
 // Situação atual das inscrições (usada pela página de inscrição).
