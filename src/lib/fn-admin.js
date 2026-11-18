@@ -6,6 +6,7 @@ import {
   CONFIGURACAO_PADRAO,
   calcularResumo,
   certificadosLiberados,
+  dataLiberacaoCertificados,
   descreverRegra,
   formatarDataBr,
   obterConfiguracao,
@@ -38,7 +39,7 @@ export const carregarAdmin = createServerFn({ method: "GET" })
       total_certificados: certificados.length,
       carga_horaria_total,
       liberado: certificadosLiberados(configuracao),
-      liberacao: formatarDataBr(configuracao.certificados_a_partir_de),
+      liberacao: formatarDataBr(dataLiberacaoCertificados(configuracao)),
     };
   });
 
@@ -61,6 +62,13 @@ export const salvarConfiguracoes = createServerFn({ method: "POST" })
 
     for (const campo of ["inscricoes_de", "inscricoes_ate", "certificados_a_partir_de"]) {
       if (data[campo] && !DATA.test(data[campo])) erros[campo] = "Data inválida.";
+    }
+    if (
+      !erros.certificados_a_partir_de &&
+      data.certificados_a_partir_de &&
+      data.certificados_a_partir_de < DATA_LIBERACAO_CERTIFICADOS
+    ) {
+      erros.certificados_a_partir_de = `Os certificados não podem ser liberados antes de ${formatarDataBr(DATA_LIBERACAO_CERTIFICADOS)}.`;
     }
     if (!erros.inscricoes_de && !erros.inscricoes_ate && data.inscricoes_de > data.inscricoes_ate) {
       erros.inscricoes_ate = "O fim das inscrições deve ser depois do início.";
@@ -91,7 +99,7 @@ export const emitirCertificados = createServerFn({ method: "POST" })
     const configuracao = await obterConfiguracao(base44);
 
     if (!certificadosLiberados(configuracao)) {
-      return { ok: false, erro: `Os certificados só podem ser emitidos a partir de ${formatarDataBr(configuracao.certificados_a_partir_de)}.` };
+      return { ok: false, erro: `Os certificados só podem ser emitidos a partir de ${formatarDataBr(dataLiberacaoCertificados(configuracao))}.` };
     }
 
     const { alunos } = await calcularResumo(base44);
