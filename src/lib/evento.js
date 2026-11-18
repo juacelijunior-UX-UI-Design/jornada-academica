@@ -10,6 +10,10 @@ export const EVENTO = {
 };
 
 export const RESUMO_MAX = 2000;
+
+// Data mínima de liberação dos certificados (participantes e apresentadores), às 00:01 de Brasília.
+// Nada no painel (data configurada ou modo de teste) libera os certificados antes disso.
+export const DATA_LIBERACAO_CERTIFICADOS = "2026-12-14";
 // Carga horária do certificado:
 // - submeteu trabalho (aluno da instituição ou público externo) E a equipe marcou "Apresentou": 20 horas;
 // - submeteu mas não apresentou (com presença registrada): 4 horas, como participante;
