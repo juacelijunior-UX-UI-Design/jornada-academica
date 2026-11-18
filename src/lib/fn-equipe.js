@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
-import { apenasDigitos, normalizarTelefone } from "@/lib/validacao";
+import { apenasDigitos, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
 import { PERFIS_EQUIPE, PERFIS_INSCRICAO } from "@/lib/perfis";
@@ -150,6 +150,13 @@ export const listarInscritos = createServerFn({ method: "GET" })
         disciplina: a.disciplina || "",
         formato: a.formato,
         titulo: a.titulo || "",
+        resumo: a.resumo || "",
+        coautores: Array.isArray(a.coautores) ? a.coautores : [],
+        cpf: mascararCpf(a.cpf),
+        arquivo_nome: a.arquivo_nome || "",
+        arquivo_tamanho: a.arquivo_tamanho || 0,
+        tem_arquivo: Boolean(a.arquivo_uri),
+        criado_em: a.created_date || "",
         presencas: a.presencas,
         horas: a.horas_presentes,
         percentual: a.percentual,
@@ -184,6 +191,34 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
       titulo: String(data.titulo || "").trim().slice(0, 200),
     });
     return { ok: true };
+  });
+
+// Link temporário (10 minutos) para a banca abrir o arquivo do trabalho, que fica guardado em área privada.
+export const linkArquivoTrabalho = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não acessa os trabalhos." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+
+    let p = null;
+    try {
+      p = await base44.entities.Participante.get(data.id);
+    } catch {
+      p = null;
+    }
+    if (!p?.arquivo_uri) return { ok: false, erro: "Este trabalho não tem arquivo enviado." };
+
+    try {
+      const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({
+        file_uri: p.arquivo_uri,
+        expires_in: 600,
+      });
+      return { ok: true, url: signed_url, nome: p.arquivo_nome || "arquivo-do-trabalho" };
+    } catch {
+      return { ok: false, erro: "Não foi possível abrir o arquivo agora. Tente novamente." };
+    }
   });
 
 // Marca (ou desmarca) que o trabalho foi apresentado. Só quem apresentou recebe o certificado de 20 horas.
