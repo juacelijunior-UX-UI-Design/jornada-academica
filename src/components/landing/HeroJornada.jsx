@@ -34,7 +34,7 @@ export default function HeroJornada() {
       />
 
       <div className="jr-container relative z-10 grid items-stretch gap-9 py-12 lg:grid-cols-[1fr_47%] lg:gap-[3.6%] lg:py-16">
-        <div className="flex flex-col justify-between gap-10">
+        <div className="flex min-w-0 flex-col justify-between gap-10">
           <div>
             <div className="inline-block max-w-full rounded-lg bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
               <h1 id="titulo-jornada" className="m-0 leading-none">
@@ -65,7 +65,7 @@ export default function HeroJornada() {
               ))}
             </ul>
 
-            <div className="mt-7 grid max-w-[36rem] grid-cols-[repeat(auto-fit,minmax(16.5rem,1fr))] gap-3">
+            <div className="mt-7 grid max-w-[36rem] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               <Botao to="/inscricao" variante="cta" className="min-h-[3.25rem] w-full whitespace-nowrap px-4 text-[1.05rem]">
                 <FilePlus2 className="h-5 w-5" aria-hidden="true" />
                 Inscrever meu trabalho
