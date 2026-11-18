@@ -68,7 +68,7 @@ export default function HeroJornada() {
             <div className="mt-7 grid max-w-[36rem] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               <Botao to="/inscricao" variante="cta" className="min-h-[3.25rem] w-full whitespace-nowrap px-4 text-[1.05rem]">
                 <FilePlus2 className="h-5 w-5" aria-hidden="true" />
-                Inscrever meu trabalho
+                Inscrições
               </Botao>
               <Botao
                 href={EDITAL}
