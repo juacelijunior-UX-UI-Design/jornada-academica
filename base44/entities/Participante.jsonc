@@ -1,6 +1,19 @@
 {
   "name": "Participante",
   "properties": {
+    "apresentou": {
+      "description": "Marcado pela equipe quando o trabalho foi apresentado. S\u00f3 quem apresentou recebe o certificado de 20 horas.",
+      "type": "boolean"
+    },
+    "apresentou_em": {
+      "description": "Quando a apresenta\u00e7\u00e3o foi marcada.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "apresentou_por": {
+      "description": "E-mail de quem marcou a apresenta\u00e7\u00e3o.",
+      "type": "string"
+    },
     "arquivo_nome": {
       "type": "string"
     },
