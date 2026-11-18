@@ -261,7 +261,7 @@ export default function InscritosPainel() {
                           type="button"
                           onClick={() => setVendo(i)}
                           title={i.titulo}
-                          className="block w-full text-left font-heading text-[1rem] font-bold leading-snug text-navy [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3] overflow-hidden hover:text-royal hover:underline"
+                          className="w-full text-left font-heading text-[1rem] font-bold leading-snug text-navy [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3] overflow-hidden hover:text-royal hover:underline"
                         >
                           {i.titulo || "Trabalho sem título"}
                         </button>
