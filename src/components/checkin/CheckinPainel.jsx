@@ -66,6 +66,8 @@ export default function CheckinPainel() {
         });
         bipe(r.novo);
         if (entrada.cpf) setCpf("");
+        // Presença registrada pelo QR Code: fecha a câmera. Para o próximo, toque em "Ler próximo QR Code".
+        if (entrada.qr) setCamera(false);
         await recarregar();
       }
     } catch {
@@ -104,7 +106,11 @@ export default function CheckinPainel() {
               className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-royal px-5 font-semibold text-white hover:bg-navy"
             >
               {camera ? <CameraOff className="h-5 w-5" /> : <Camera className="h-5 w-5" />}
-              {camera ? "Fechar câmera" : "Ler QR Code com a câmera"}
+              {camera
+                ? "Fechar câmera"
+                : aviso && aviso.tipo !== "erro"
+                  ? "Ler próximo QR Code"
+                  : "Ler QR Code com a câmera"}
             </button>
             {camera && <LeitorQr onLeitura={(texto) => confirmar({ qr: texto })} />}
           </div>
