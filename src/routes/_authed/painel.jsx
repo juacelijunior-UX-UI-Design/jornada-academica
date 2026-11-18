@@ -50,7 +50,7 @@ function PainelLayout() {
       </header>
 
       <main className="jr-container max-w-[1600px] py-6">
-        <div className="grid items-start gap-5 lg:grid-cols-[250px_1fr]">
+        <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)]">
           {liberado && (
             <div className="space-y-3">
               <PainelNav perfil={acesso.perfil} />
