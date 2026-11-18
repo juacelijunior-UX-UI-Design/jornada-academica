@@ -142,7 +142,7 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
         </p>
       </Campo>
 
-      <Campo id="arquivo" label="Arquivo do trabalho" erro={erros.arquivo}>
+      <Campo id="arquivo" label="Anexar Resumo do Trabalho" erro={erros.arquivo}>
         <label
           onDragOver={(e) => {
             e.preventDefault();
