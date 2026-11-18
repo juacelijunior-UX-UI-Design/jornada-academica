@@ -144,7 +144,8 @@ export function validarInscricao(v) {
     else if (inst.length > 150) e.instituicao = "Use até 150 caracteres.";
   }
 
-  if (!v.disciplina) e.disciplina = "Selecione sua disciplina.";
+  // Público externo não informa disciplina.
+  if (v.tipo !== "externo" && !v.disciplina) e.disciplina = "Selecione sua disciplina.";
   if (!v.formato) e.formato = "Selecione o formato da apresentação.";
 
   const titulo = String(v.titulo ?? "").trim();
