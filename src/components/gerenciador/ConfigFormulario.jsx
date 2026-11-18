@@ -4,6 +4,7 @@ import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import Campo from "@/components/inscricao/Campo";
 import { salvarConfiguracoes } from "@/lib/fn-admin";
+import { DATA_LIBERACAO_CERTIFICADOS } from "@/lib/evento";
 
 const num = (n) => Number(n || 0).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 const DATAS = ["inscricoes_de", "inscricoes_ate", "certificados_a_partir_de"];
