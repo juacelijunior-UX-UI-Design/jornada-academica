@@ -1,57 +1,32 @@
 {
   "name": "Participante",
-  "type": "object",
   "properties": {
-    "tipo": {
-      "type": "string",
-      "enum": [
-        "aluno",
-        "externo"
-      ],
-      "enumColors": [
-        "blue",
-        "purple"
-      ],
-      "description": "Aluno da Uninassau ou p\u00fablico externo."
+    "arquivo_nome": {
+      "type": "string"
     },
-    "nome": {
-      "type": "string",
-      "maxLength": 150,
-      "description": "Nome do apresentador do trabalho."
+    "arquivo_tamanho": {
+      "type": "number"
+    },
+    "arquivo_uri": {
+      "description": "URI privada do arquivo do trabalho.",
+      "type": "string"
     },
     "coautores": {
-      "type": "array",
+      "description": "Nomes dos co-autores do trabalho (at\u00e9 9).",
       "items": {
         "type": "string"
       },
-      "description": "Nomes dos co-autores do trabalho (at\u00e9 9)."
-    },
-    "email": {
-      "type": "string",
-      "maxLength": 150
-    },
-    "telefone": {
-      "type": "string",
-      "description": "Somente d\u00edgitos, com DDD."
+      "type": "array"
     },
     "cpf": {
-      "type": "string",
-      "description": "Somente d\u00edgitos (11)."
-    },
-    "matricula": {
-      "type": "string",
-      "description": "Vazia para participantes externos."
-    },
-    "instituicao": {
-      "type": "string",
-      "maxLength": 150
+      "description": "Somente d\u00edgitos (11).",
+      "type": "string"
     },
     "curso": {
-      "type": "string",
-      "maxLength": 100
+      "maxLength": 100,
+      "type": "string"
     },
     "disciplina": {
-      "type": "string",
       "enum": [
         "APIExt I",
         "APIExt II",
@@ -71,10 +46,14 @@
         "blue",
         "purple",
         "gray"
-      ]
+      ],
+      "type": "string"
+    },
+    "email": {
+      "maxLength": 150,
+      "type": "string"
     },
     "formato": {
-      "type": "string",
       "enum": [
         "banner",
         "comunicacao_oral"
@@ -82,30 +61,52 @@
       "enumColors": [
         "green",
         "yellow"
-      ]
-    },
-    "titulo": {
-      "type": "string",
-      "maxLength": 200,
-      "description": "T\u00edtulo do trabalho inscrito."
-    },
-    "resumo": {
-      "type": "string",
-      "maxLength": 2000
-    },
-    "arquivo_uri": {
-      "type": "string",
-      "description": "URI privada do arquivo do trabalho."
-    },
-    "arquivo_nome": {
+      ],
       "type": "string"
     },
-    "arquivo_tamanho": {
-      "type": "number"
+    "instituicao": {
+      "maxLength": 150,
+      "type": "string"
+    },
+    "matricula": {
+      "description": "Vazia para participantes externos.",
+      "type": "string"
+    },
+    "nome": {
+      "description": "Nome do apresentador do trabalho ou do participante.",
+      "maxLength": 150,
+      "type": "string"
+    },
+    "resumo": {
+      "maxLength": 2000,
+      "type": "string"
+    },
+    "telefone": {
+      "description": "Somente d\u00edgitos, com DDD.",
+      "type": "string"
+    },
+    "tipo": {
+      "description": "Submiss\u00e3o de aluno da Uninassau, submiss\u00e3o de p\u00fablico externo ou participante (ouvinte, sem trabalho).",
+      "enum": [
+        "aluno",
+        "externo",
+        "participante"
+      ],
+      "enumColors": [
+        "blue",
+        "purple",
+        "green"
+      ],
+      "type": "string"
+    },
+    "titulo": {
+      "description": "T\u00edtulo do trabalho inscrito.",
+      "maxLength": 200,
+      "type": "string"
     },
     "token_ingresso": {
-      "type": "string",
-      "description": "C\u00f3digo secreto aleat\u00f3rio do QR Code de ingresso (nunca exibir em listas)."
+      "description": "C\u00f3digo secreto aleat\u00f3rio do QR Code de ingresso (nunca exibir em listas).",
+      "type": "string"
     }
   },
   "required": [
@@ -113,11 +114,9 @@
     "nome",
     "email",
     "telefone",
-    "cpf",
-    "curso",
-    "disciplina",
-    "formato"
+    "cpf"
   ],
+  "type": "object",
   "rls": {
     "read": {
       "user_condition": {
