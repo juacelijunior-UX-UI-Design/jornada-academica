@@ -157,7 +157,7 @@ export const MODELOS = [
     rotulo: "Banner",
     descricao: "Modelo de banner com os campos de título, curso, orientador, autores, introdução, objetivos, método, resultados, considerações finais e referências.",
     arquivos: [
-      { tipo: "PDF", nome: "modelo-banner.pdf", url: `${ARQUIVOS}/f27ada17a_modelo-banner.pdf` },
+      { tipo: "PDF", nome: "MODELO-BANNER-6-JORNADA.pdf", url: `${ARQUIVOS}/33d846c36_MODELO-BANNER-6-JORNADA.pdf` },
       {
         tipo: "PPTX",
         nome: "modelo-banner.pptx",
