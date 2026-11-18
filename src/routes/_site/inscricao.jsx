@@ -22,17 +22,19 @@ function InscricaoPage() {
 
   return (
     <>
-      <section className="bg-navy pb-32 pt-10">
+      <section className="bg-navy bg-[linear-gradient(100deg,#011c63_0%,#0b2a86_50%,#1746b8_100%)] pb-16 pt-10 text-white sm:pt-12">
         <div className="jr-container">
-          <p className="text-[0.95rem] font-semibold uppercase tracking-[0.08em] text-amarelo">
-            VI Jornada Acadêmica · 09 e 10/12/2026
+          <h1 className="font-heading text-[clamp(2rem,6vw,2.75rem)] font-extrabold text-white">
+            Inscrição
+          </h1>
+          <p className="mt-1 max-w-2xl text-white/80">
+            Inscreva o seu trabalho na VI Jornada Acadêmica · 09 e 10/12/2026, na UNINASSAU Teresina.
           </p>
         </div>
       </section>
 
-      <div className="jr-container -mt-24 pb-20">
-        <div className="jr-card mx-auto max-w-[46rem] border-t-[5px] border-amarelo p-6 shadow-[0_8px_28px_rgba(1,28,99,0.2)] max-sm:p-5 sm:p-9">
-          <h1 className="jr-titulo-bloco filete mb-3">Inscrever meu trabalho</h1>
+      <div className="jr-container -mt-8 pb-20">
+        <div className="mx-auto max-w-[60rem]">
           <FormularioInscricao aberta={aberta} motivo={motivo} />
         </div>
       </div>
