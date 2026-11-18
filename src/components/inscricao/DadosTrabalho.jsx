@@ -12,7 +12,9 @@ import {
 import { TITULO_MAX, formatarTamanho, tamanhoResumo, validarArquivo } from "@/lib/validacao";
 
 export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArquivo, setErro }) {
-  const automatico = FORMATO_AUTOMATICO[form.disciplina];
+  // Público externo não escolhe disciplina: só o formato da apresentação.
+  const externo = form.tipo === "externo";
+  const automatico = externo ? undefined : FORMATO_AUTOMATICO[form.disciplina];
   const total = tamanhoResumo(form.resumo);
   const [arrastando, setArrastando] = useState(false);
 
@@ -43,7 +45,8 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
         />
       </Campo>
 
-      <div className="grid gap-x-4 md:grid-cols-2">
+      <div className={`grid gap-x-4 ${externo ? "" : "md:grid-cols-2"}`}>
+        {!externo && (
         <Campo id="disciplina" label="Disciplina" erro={erros.disciplina}>
           <select
             id="disciplina"
@@ -64,6 +67,7 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
             ))}
           </select>
         </Campo>
+        )}
 
         <Campo id="curso" label="Curso" erro={erros.curso}>
           <select
