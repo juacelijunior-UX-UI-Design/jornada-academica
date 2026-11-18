@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import HeroJornada from "@/components/landing/HeroJornada";
 import SobreJornada from "@/components/landing/SobreJornada";
 import ComoParticipar from "@/components/landing/ComoParticipar";
+import Formatos from "@/components/landing/Formatos";
 import DoacaoCard from "@/components/landing/DoacaoCard";
 import Programacao from "@/components/landing/Programacao";
 import Cronograma from "@/components/landing/Cronograma";
@@ -32,6 +33,7 @@ function HomePage() {
       <HeroJornada />
       <SobreJornada />
       <ComoParticipar />
+      <Formatos />
       <DoacaoCard />
       <Programacao />
       <Cronograma />
