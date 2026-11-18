@@ -50,9 +50,9 @@ function PainelLayout() {
       </header>
 
       <main className="jr-container max-w-[1600px] py-6">
-        <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)]">
+        <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)]">
           {liberado && (
-            <div className="space-y-3">
+            <div className="min-w-0 space-y-3">
               <PainelNav perfil={acesso.perfil} />
               <p className="jr-legenda px-1">
                 <Link to="/">Voltar ao site do evento</Link>
