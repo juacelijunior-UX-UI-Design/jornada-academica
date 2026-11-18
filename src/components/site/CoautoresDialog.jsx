@@ -9,15 +9,18 @@ function iniciais(nome) {
   return (a + b).toUpperCase();
 }
 
-export default function CoautoresDialog() {
+const GATILHO_PADRAO =
+  "inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/50 px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-white hover:text-navy";
+
+export default function CoautoresDialog({ gatilhoClasse = GATILHO_PADRAO, comIcone = true }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/50 px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-white hover:text-navy"
+          className={gatilhoClasse}
         >
-          <Users className="h-4 w-4" aria-hidden="true" />
+          {comIcone && <Users className="h-4 w-4" aria-hidden="true" />}
           Co-autores ({EQUIPES.length})
         </button>
       </DialogTrigger>
