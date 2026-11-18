@@ -13,7 +13,6 @@ const LINKS = [
   { texto: "Cronograma", to: "/", hash: "cronograma" },
   { texto: "Certificado", to: "/certificado" },
   { texto: "Validar", to: "/validar" },
-  { texto: "Dúvidas", to: "/", hash: "faq" },
 ];
 
 export default function SiteHeader() {
