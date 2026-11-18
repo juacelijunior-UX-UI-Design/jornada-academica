@@ -35,7 +35,7 @@ export default function Cronograma() {
                 {g.etapas.map(([data, texto, destaque]) => (
                   <li
                     key={`${data}-${texto}`}
-                    className={`grid min-h-[3.25rem] grid-cols-[minmax(8.5rem,auto)_1fr] items-center gap-3 rounded-lg bg-white px-4 py-3 shadow-[0_2px_12px_rgba(1,28,99,0.08)] ${
+                    className={`grid min-h-[3.25rem] grid-cols-1 items-center gap-x-3 gap-y-0.5 sm:grid-cols-[11.5rem_1fr] rounded-lg bg-white px-4 py-3 shadow-[0_2px_12px_rgba(1,28,99,0.08)] ${
                       destaque ? "border-l-4 border-vermelho" : ""
                     }`}
                   >
