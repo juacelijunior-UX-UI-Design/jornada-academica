@@ -32,12 +32,14 @@ const LINKS = [
 
 const LINK_INSCRICAO = { texto: "Minha inscrição", to: "/minha-inscricao", Icone: Ticket };
 const LINK_PAINEL = { texto: "Painel", to: "/painel", Icone: LayoutDashboard };
+// O monitor de frequência entra direto na Chamada (é o que ele pode ver no painel).
+const LINK_PAINEL_MONITOR = { texto: "Painel", to: "/painel/chamada", Icone: LayoutDashboard };
 const LINK_ENTRAR = { texto: "Entrar", to: "/login", Icone: LogIn };
 
 export default function SiteHeader() {
   const [aberto, setAberto] = useState(false);
   const { user, isLoadingAuth, logout } = useAuth();
-  const { daEquipe } = useAcesso();
+  const { daEquipe, perfil } = useAcesso();
   const logado = !isLoadingAuth && Boolean(user);
 
   // Logado, o menu tem mais itens: abaixo de 1536px os ícones somem para tudo caber numa linha.
@@ -45,7 +47,8 @@ export default function SiteHeader() {
   const linkClasse =
     "inline-flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo 2xl:px-2.5";
 
-  const extras = logado ? [LINK_INSCRICAO, ...(daEquipe ? [LINK_PAINEL] : [])] : [];
+  const linkPainel = perfil === "monitor" ? LINK_PAINEL_MONITOR : LINK_PAINEL;
+  const extras = logado ? [LINK_INSCRICAO, ...(daEquipe ? [linkPainel] : [])] : [];
 
   return (
     <header className="sticky top-0 z-40 border-b-4 border-amarelo bg-navy shadow-[0_4px_16px_rgba(1,28,99,0.25)]">
