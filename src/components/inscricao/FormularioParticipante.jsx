@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { CheckCircle2, Loader2, QrCode, ShoppingBasket, UserCheck } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
+import IngressoCard from "@/components/ingresso/IngressoCard";
+import { CARGA_HORARIA_PARTICIPANTE } from "@/lib/evento";
 import { GoogleIcon } from "@/components/auth/GoogleIcon";
 import { useAuth } from "@/lib/AuthContext";
 import { signInWithProvider } from "@/lib/authMfaFlow";
@@ -73,16 +75,26 @@ export default function FormularioParticipante() {
       <div className="jr-card border-t-[5px] border-amarelo p-5 sm:p-9">
         <div className="jr-alerta jr-alerta-sucesso mb-4" role="status">
           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-          <span>Inscrição confirmada, {String(resultado.nome).split(" ")[0]}!</span>
+          <span>
+            Inscrição confirmada, {String(resultado.nome).split(" ")[0]}! Guarde o QR Code abaixo: ele é o seu
+            ingresso.
+          </span>
         </div>
+
+        {resultado.qr && (
+          <div className="my-6">
+            <IngressoCard ingresso={{ nome: resultado.nome, cpf: resultado.cpf, qr: resultado.qr }} />
+          </div>
+        )}
+
         <div className="jr-alerta jr-alerta-info mb-4">
           <QrCode className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
           <span>
             {resultado.email_enviado
-              ? "Enviamos o seu QR Code de ingresso para o seu e-mail. "
-              : "Não conseguimos enviar o e-mail agora, mas o seu QR Code já está disponível no site. "}
-            Para vê-lo aqui, entre com o mesmo e-mail em <Link to="/minha-inscricao">Minha inscrição</Link>.
-            Apresente-o nos dias do evento para registrar a sua presença.
+              ? "Também enviamos o QR Code para o seu e-mail. "
+              : "Não conseguimos enviar o e-mail agora, mas você pode baixar o QR Code acima. "}
+            Se perder, ele fica em <Link to="/minha-inscricao">Minha inscrição</Link>, entrando com o mesmo
+            e-mail. Com a presença registrada, você recebe o certificado de {CARGA_HORARIA_PARTICIPANTE} horas.
           </span>
         </div>
         <div className="jr-alerta jr-alerta-info">
@@ -107,8 +119,8 @@ export default function FormularioParticipante() {
     <div className="jr-card p-5 sm:p-10">
       <h2 className="font-heading text-[1.25rem] font-bold text-navy">Inscrição de participante</h2>
       <p className="mt-1 text-[0.95rem] text-tinta-suave">
-        Para quem vai assistir às apresentações. Você recebe o QR Code de ingresso por e-mail para registrar a
-        sua presença no evento.
+        Para quem vai assistir às apresentações. Você recebe o QR Code de ingresso na hora e, com a presença
+        registrada no evento, o certificado de {CARGA_HORARIA_PARTICIPANTE} horas.
       </p>
 
       {erroGeral && (
