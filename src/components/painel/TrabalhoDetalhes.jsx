@@ -127,9 +127,9 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
               <div className="rounded-lg border border-linea p-4">
                 <p className="m-0 flex items-start gap-2">
                   <UserRound className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
-                  <span>
-                    <strong className="block font-semibold text-navy">{i.nome}</strong>
-                    <span className="text-[0.85rem] text-tinta-suave">Apresentador</span>
+                  <span className="min-w-0">
+                    <span className="block text-[0.85rem] font-semibold text-tinta-suave">Apresentador:</span>
+                    <strong className="mt-1 block break-words font-semibold text-navy">{i.nome}</strong>
                   </span>
                 </p>
                 <div className="mt-3 flex items-start gap-2 border-t border-linea pt-3">
