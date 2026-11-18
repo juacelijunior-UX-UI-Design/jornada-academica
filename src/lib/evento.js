@@ -10,14 +10,18 @@ export const EVENTO = {
 };
 
 export const RESUMO_MAX = 2000;
-// Carga horária do certificado, definida pelo tipo de inscrição:
-// quem submete e apresenta trabalho (aluno da instituição ou público externo) recebe 20 horas;
-// quem se inscreve só como participante (ouvinte, sem trabalho) recebe 4 horas.
-export const CARGA_HORARIA_SUBMISSAO = 20;
+// Carga horária do certificado:
+// - submeteu trabalho (aluno da instituição ou público externo) E a equipe marcou "Apresentou": 20 horas;
+// - submeteu mas não apresentou (com presença registrada): 4 horas, como participante;
+// - inscrição só como participante (ouvinte, sem trabalho): 4 horas.
+export const CARGA_HORARIA_APRESENTACAO = 20;
 export const CARGA_HORARIA_PARTICIPANTE = 4;
 
-export const cargaHorariaCertificado = (participante) =>
-  participante?.tipo === "participante" ? CARGA_HORARIA_PARTICIPANTE : CARGA_HORARIA_SUBMISSAO;
+export const ehSubmissao = (p) => Boolean(p) && p.tipo !== "participante";
+export const apresentouTrabalho = (p) => ehSubmissao(p) && p.apresentou === true;
+
+export const cargaHorariaCertificado = (p) =>
+  apresentouTrabalho(p) ? CARGA_HORARIA_APRESENTACAO : CARGA_HORARIA_PARTICIPANTE;
 export const ARQUIVO_MAX_MB = 10;
 export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
 export const OUTROS = "__outros__";
