@@ -21,7 +21,7 @@ function PainelLayout() {
   return (
     <div className="min-h-dvh bg-fundo">
       <header className="border-b-4 border-amarelo bg-navy">
-        <div className="jr-container flex flex-wrap items-center justify-between gap-3 py-3">
+        <div className="jr-container flex max-w-[1600px] flex-wrap items-center justify-between gap-3 py-3">
           <Link
             to="/"
             className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
@@ -49,7 +49,7 @@ function PainelLayout() {
         </div>
       </header>
 
-      <main className="jr-container py-6">
+      <main className="jr-container max-w-[1600px] py-6">
         <div className="grid items-start gap-5 lg:grid-cols-[250px_1fr]">
           {liberado && (
             <div className="space-y-3">
