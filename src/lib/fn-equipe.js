@@ -193,7 +193,7 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-// Link temporário (10 minutos) para a banca abrir o arquivo do trabalho, que fica guardado em área privada.
+// Link temporário (20 minutos) para a banca abrir o arquivo do trabalho, que fica guardado em área privada.
 export const linkArquivoTrabalho = createServerFn({ method: "POST" })
   .middleware([requireUser])
   .handler(async ({ data, context }) => {
@@ -213,7 +213,7 @@ export const linkArquivoTrabalho = createServerFn({ method: "POST" })
     try {
       const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({
         file_uri: p.arquivo_uri,
-        expires_in: 600,
+        expires_in: 1200,
       });
       return { ok: true, url: signed_url, nome: p.arquivo_nome || "arquivo-do-trabalho" };
     } catch {
