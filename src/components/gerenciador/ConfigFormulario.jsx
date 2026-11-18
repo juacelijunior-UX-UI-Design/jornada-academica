@@ -159,6 +159,7 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
               id="certificados_a_partir_de"
               className="jr-input"
               type="date"
+              min={DATA_LIBERACAO_CERTIFICADOS}
               value={form.certificados_a_partir_de}
               onChange={(e) => setCampo("certificados_a_partir_de", e.target.value)}
             />
@@ -174,10 +175,13 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
               className="mt-1 h-5 w-5 flex-none accent-[#0040ce]"
             />
             <span>
-              Modo de teste: ignorar as datas de inscrição e de certificado
+              Modo de teste: ignorar as datas de inscrição
+              <span className="mt-1 block text-[0.85rem] text-tinta-suave">
+                Os certificados nunca são liberados antes de 14/12/2026, mesmo com este modo ligado.
+              </span>
               {form.ignorar_datas && (
                 <strong className="mt-1 block text-vermelho-texto">
-                  Ligado: o sistema não respeita as datas. Use apenas para testes.
+                  Ligado: o sistema não respeita as datas de inscrição. Use apenas para testes.
                 </strong>
               )}
             </span>
