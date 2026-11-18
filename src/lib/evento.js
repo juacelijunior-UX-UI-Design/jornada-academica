@@ -11,7 +11,7 @@ export const EVENTO = {
 
 export const RESUMO_MAX = 2000;
 export const ARQUIVO_MAX_MB = 10;
-export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt"];
+export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
 export const OUTROS = "__outros__";
 
 export const DISCIPLINAS = [
