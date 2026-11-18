@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { ArrowLeft, GraduationCap, Loader2, Send, Users } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { criarInscricao } from "@/lib/fn-inscricao";
 import { OUTROS } from "@/lib/evento";
 import { validarInscricao } from "@/lib/validacao";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
-import EditalInscricao from "@/components/inscricao/EditalInscricao";
 import DadosPessoais from "@/components/inscricao/DadosPessoais";
 import DadosTrabalho from "@/components/inscricao/DadosTrabalho";
 import Coautores from "@/components/inscricao/Coautores";
@@ -30,6 +29,11 @@ const VAZIO = {
   resumo: "",
   aceite: false,
 };
+
+const TIPOS = [
+  { valor: "aluno", texto: "Sou aluno", Icone: GraduationCap },
+  { valor: "externo", texto: "Público externo", Icone: Users },
+];
 
 const ORDEM_CAMPOS = ["titulo", "disciplina", "curso", "curso_outro", "formato", "resumo", "arquivo", "nome", "email", "telefone", "cpf", "matricula", "instituicao"];
 
@@ -143,13 +147,20 @@ export default function FormularioInscricao({ aberta, motivo }) {
   }
 
   return (
-    <div className="space-y-6">
-      <TipoSeletor valor={form.tipo} onMudar={(v) => setCampo("tipo", v)} />
-
-      <EditalInscricao />
-
       <div className="jr-card p-5 sm:p-10">
         <form onSubmit={enviar} noValidate>
+          <div className="mb-8">
+            <p id="rotulo-tipo" className="jr-label">
+              Você é
+            </p>
+            <TipoSeletor
+              rotuloId="rotulo-tipo"
+              opcoes={TIPOS}
+              valor={form.tipo}
+              onMudar={(v) => setCampo("tipo", v)}
+            />
+          </div>
+
           {!aberta && motivo && (
             <div className="jr-alerta jr-alerta-erro mb-6" role="alert">
               {motivo}
@@ -232,6 +243,5 @@ export default function FormularioInscricao({ aberta, motivo }) {
           </p>
         </form>
       </div>
-    </div>
   );
 }
