@@ -10,8 +10,14 @@ export const EVENTO = {
 };
 
 export const RESUMO_MAX = 2000;
-// Carga horária do certificado de quem se inscreve só como participante (ouvinte, sem trabalho).
+// Carga horária do certificado, definida pelo tipo de inscrição:
+// quem submete e apresenta trabalho (aluno da instituição ou público externo) recebe 20 horas;
+// quem se inscreve só como participante (ouvinte, sem trabalho) recebe 4 horas.
+export const CARGA_HORARIA_SUBMISSAO = 20;
 export const CARGA_HORARIA_PARTICIPANTE = 4;
+
+export const cargaHorariaCertificado = (participante) =>
+  participante?.tipo === "participante" ? CARGA_HORARIA_PARTICIPANTE : CARGA_HORARIA_SUBMISSAO;
 export const ARQUIVO_MAX_MB = 10;
 export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
 export const OUTROS = "__outros__";
