@@ -10,6 +10,7 @@ import {
   normalizarFormato,
   normalizarTelefone,
   validarInscricao,
+  validarParticipante,
 } from "@/lib/validacao";
 import { enviarConfirmacao } from "@/lib/ingresso.server";
 import { motivoInscricoesFechadas, obterConfiguracao, todos } from "@/lib/jornada.server";
@@ -74,6 +75,35 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
       tem_arquivo: Boolean(participante.arquivo_uri),
     },
   };
+});
+
+// Inscrição de participante (ouvinte, sem trabalho): nome, CPF, telefone e e-mail.
+// Vale também depois do período de submissão, para quem só vai assistir.
+export const criarParticipacao = createServerFn({ method: "POST" }).handler(async ({ data, context }) => {
+  const base44 = context.getBase44().asServiceRole;
+
+  const erros = validarParticipante(data || {});
+  if (Object.keys(erros).length) return { ok: false, erros };
+
+  const cpf = apenasDigitos(data.cpf);
+  const email = String(data.email).trim().toLowerCase();
+
+  const jaExiste = await todos(base44.entities.Participante.list("-created_date"));
+  const dup = {};
+  if (jaExiste.some((p) => p.cpf === cpf)) dup.cpf = "Este CPF já está cadastrado.";
+  if (jaExiste.some((p) => String(p.email).toLowerCase() === email)) dup.email = "Este e-mail já está cadastrado.";
+  if (Object.keys(dup).length) return { ok: false, erros: dup };
+
+  const participante = await base44.entities.Participante.create({
+    tipo: "participante",
+    nome: String(data.nome).trim().replace(/\s+/g, " "),
+    email,
+    telefone: normalizarTelefone(data.telefone),
+    cpf,
+  });
+
+  const email_enviado = await enviarConfirmacao(base44, participante);
+  return { ok: true, participante: { nome: participante.nome, email_enviado } };
 });
 
 // Situação atual das inscrições (usada pela página de inscrição).
