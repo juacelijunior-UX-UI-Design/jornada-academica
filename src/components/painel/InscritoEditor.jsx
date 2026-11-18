@@ -9,13 +9,16 @@ const CAMPOS = [
   { id: "nome", label: "Nome completo", max: 150 },
   { id: "email", label: "E-mail", max: 150 },
   { id: "telefone", label: "Telefone", max: 20 },
-  { id: "instituicao", label: "Instituição", max: 150 },
-  { id: "curso", label: "Curso", max: 100 },
-  { id: "titulo", label: "Título do trabalho", max: 200 },
+  { id: "instituicao", label: "Instituição", max: 150, soSubmissao: true },
+  { id: "curso", label: "Curso", max: 100, soSubmissao: true },
+  { id: "titulo", label: "Título do trabalho", max: 200, soSubmissao: true },
 ];
 
 export default function InscritoEditor({ inscrito, onFechar, onSalvo }) {
   const salvar = useServerFn(atualizarInscrito);
+  // Participante (ouvinte) não tem trabalho: só nome, e-mail e telefone.
+  const participante = inscrito.tipo === "participante";
+  const campos = CAMPOS.filter((c) => !(participante && c.soSubmissao));
   const [form, setForm] = useState({
     nome: inscrito.nome,
     email: inscrito.email,
@@ -33,7 +36,8 @@ export default function InscritoEditor({ inscrito, onFechar, onSalvo }) {
     setSalvando(true);
     setErro("");
     try {
-      const res = await salvar({ data: { id: inscrito.id, ...form } });
+      const dados = Object.fromEntries(campos.map((c) => [c.id, form[c.id]]));
+      const res = await salvar({ data: { id: inscrito.id, ...dados } });
       if (!res?.ok) {
         setErro(res?.erro || "Não foi possível salvar.");
         return;
@@ -52,13 +56,13 @@ export default function InscritoEditor({ inscrito, onFechar, onSalvo }) {
     <Dialog open onOpenChange={(v) => !v && onFechar?.()}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Editar inscrição</DialogTitle>
+          <DialogTitle>{participante ? "Editar participante" : "Editar inscrição"}</DialogTitle>
         </DialogHeader>
 
         {erro && <div className="jr-alerta jr-alerta-erro" role="alert">{erro}</div>}
 
         <form onSubmit={enviar} noValidate className="space-y-3">
-          {CAMPOS.map((c) => (
+          {campos.map((c) => (
             <div key={c.id}>
               <label htmlFor={`edit-${c.id}`} className="jr-label">{c.label}</label>
               <input
