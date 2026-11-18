@@ -33,10 +33,10 @@ function VisaoGeral() {
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {cartoes.map(({ rotulo, valor, Icone, to }) => (
-          <Link key={rotulo} to={to} className="jr-card p-5 no-underline transition hover:-translate-y-0.5">
+          <Link key={rotulo} to={to} className="jr-card min-w-0 p-4 no-underline transition hover:-translate-y-0.5 sm:p-5">
             <Icone className="h-5 w-5 text-royal" aria-hidden="true" />
             <span className="mt-3 block font-heading text-[1.8rem] font-extrabold leading-none text-navy">{valor}</span>
-            <span className="text-[0.9rem] text-tinta-suave">{rotulo}</span>
+            <span className="mt-1 block text-[0.85rem] leading-snug text-tinta-suave sm:text-[0.9rem]">{rotulo}</span>
           </Link>
         ))}
       </div>
