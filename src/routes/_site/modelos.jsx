@@ -1,31 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import ModeloCard from "@/components/modelos/ModeloCard";
-
-const BASE = "https://base44.app/api/apps/6afc5f6bdef0a308e8558411/files/mp/public/6afc5f6bdef0a308e8558411";
-
-const MODELOS = [
-  {
-    titulo: "Modelo de apresentação oral",
-    descricao: "Modelo de slides para comunicação oral (8 slides: título, introdução, objetivos, método, resultados, considerações finais, referências e agradecimento).",
-    arquivos: [
-      { tipo: "PDF", nome: "modelo-apresentacao-oral.pdf", url: `${BASE}/81a078e10_modelo-apresentacao-oral.pdf` },
-      { tipo: "PPTX", nome: "modelo-comunicacao-oral.pptx", url: `${BASE}/3409cfd7a_modelo-comunicacao-oral.pptx` },
-    ],
-  },
-  {
-    titulo: "Modelo de banner",
-    descricao: "Modelo de banner com os campos de título, curso, orientador, autores, introdução, objetivos, método, resultados, considerações finais e referências.",
-    arquivos: [
-      { tipo: "PDF", nome: "modelo-banner.pdf", url: `${BASE}/f27ada17a_modelo-banner.pdf` },
-      {
-        tipo: "PPTX",
-        nome: "modelo-banner.pptx",
-        url: "https://1drv.ms/p/c/04af3aafaa704b82/IQC1OeUiQAYkT6gxETbGBsyWAdFiP106Sr0mPo1k4Uc_MiE?e=92WJm3",
-      },
-    ],
-  },
-];
+import { MODELOS } from "@/lib/evento";
 
 export const Route = createFileRoute("/_site/modelos")({
   head: () => ({
@@ -55,7 +31,7 @@ function ModelosPage() {
       <div className="jr-container -mt-20 pb-20">
         <div className="grid gap-6 md:grid-cols-2">
           {MODELOS.map((m) => (
-            <ModeloCard key={m.titulo} {...m} />
+            <ModeloCard key={m.titulo} titulo={m.titulo} descricao={m.descricao} arquivos={m.arquivos} />
           ))}
         </div>
         <p className="mt-8">
