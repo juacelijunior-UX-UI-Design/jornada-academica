@@ -45,6 +45,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* o menu fica fixo no topo: os links para seções (#sobre, #programacao...) param abaixo dele */
+    scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
   }
 
