@@ -1,10 +1,10 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate, Outlet, useLocation } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
 import { meuAcesso } from "@/lib/fn-equipe";
-import { PERFIS, ehEquipe } from "@/lib/perfis";
+import { PERFIS, ehEquipe, podeAcessar, primeiraSecao, secaoDaRota } from "@/lib/perfis";
 import PainelNav from "@/components/painel/PainelNav";
 
 export const Route = createFileRoute("/_authed/painel")({
@@ -17,6 +17,15 @@ function PainelLayout() {
   const acesso = Route.useLoaderData();
   const { logout } = useAuth();
   const liberado = ehEquipe(acesso.perfil);
+  const { pathname } = useLocation();
+  // Cada perfil só abre as seções dele (o monitor, por exemplo, só Chamada e Check-in).
+  const secao = secaoDaRota(pathname);
+  const bloqueada = liberado && secao && !podeAcessar(acesso.perfil, secao);
+  const inicio = primeiraSecao(acesso.perfil);
+
+  // Ao abrir o painel numa seção que o perfil não tem (como a Visão geral, para o monitor),
+  // vai direto para a primeira seção liberada.
+  if (bloqueada && secao === "visao" && inicio) return <Navigate to={inicio.to} replace />;
 
   return (
     <div className="min-h-dvh bg-fundo">
@@ -61,7 +70,19 @@ function PainelLayout() {
           )}
 
           <div className="min-w-0">
-            {liberado ? (
+            {bloqueada ? (
+              <div className="jr-card p-6">
+                <h1 className="font-heading text-[1.3rem] font-extrabold text-navy">Área não liberada</h1>
+                <p className="mt-2">
+                  Seu perfil ({PERFIS[acesso.perfil]}) não tem acesso a esta parte do painel.
+                </p>
+                {inicio && (
+                  <p className="mt-3">
+                    <Link to={inicio.to}>Ir para {inicio.titulo}</Link>
+                  </p>
+                )}
+              </div>
+            ) : liberado ? (
               <Outlet />
             ) : (
               <div className="jr-card p-6">
