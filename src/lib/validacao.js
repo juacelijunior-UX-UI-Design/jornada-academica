@@ -85,21 +85,13 @@ export function validarArquivo(arquivo) {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Recebe os valores do formulário e devolve { campo: mensagem } só com os inválidos.
-export function validarInscricao(v) {
-  const e = {};
+// Dados pessoais comuns à submissão e à inscrição de participante.
+function validarDadosPessoais(v, e) {
   const nome = String(v.nome ?? "").trim();
   if (!nome) e.nome = "Informe seu nome completo.";
   else if (nome.split(/\s+/).filter(Boolean).length < 2) e.nome = "Informe nome e sobrenome.";
   else if (/\d/.test(nome)) e.nome = "O nome não pode ter números.";
   else if (nome.length > 150) e.nome = "O nome deve ter até 150 caracteres.";
-
-  const coautores = normalizarCoautores(v.coautores);
-  if (coautores.length > MAX_COAUTORES) {
-    e.coautores = `Informe no máximo ${MAX_COAUTORES} co-autores.`;
-  } else if (coautores.some((nome) => /\d/.test(nome) || nome.length > 150)) {
-    e.coautores = "Revise os nomes dos co-autores: sem números e até 150 caracteres.";
-  }
 
   const email = String(v.email ?? "").trim();
   if (!email) e.email = "Informe seu e-mail.";
@@ -112,6 +104,26 @@ export function validarInscricao(v) {
 
   if (!String(v.cpf ?? "").trim()) e.cpf = "Informe seu CPF.";
   else if (/[A-Za-z]/.test(v.cpf) || !cpfValido(v.cpf)) e.cpf = "CPF inválido.";
+
+  if (!v.aceite) e.aceite = "Aceite o uso dos dados para continuar.";
+  return e;
+}
+
+// Inscrição de participante (ouvinte): só dados pessoais.
+export function validarParticipante(v) {
+  return validarDadosPessoais(v, {});
+}
+
+// Recebe os valores do formulário e devolve { campo: mensagem } só com os inválidos.
+export function validarInscricao(v) {
+  const e = validarDadosPessoais(v, {});
+
+  const coautores = normalizarCoautores(v.coautores);
+  if (coautores.length > MAX_COAUTORES) {
+    e.coautores = `Informe no máximo ${MAX_COAUTORES} co-autores.`;
+  } else if (coautores.some((nome) => /\d/.test(nome) || nome.length > 150)) {
+    e.coautores = "Revise os nomes dos co-autores: sem números e até 150 caracteres.";
+  }
 
   if (v.tipo === "aluno") {
     const mat = apenasDigitos(v.matricula);
@@ -143,8 +155,6 @@ export function validarInscricao(v) {
   const tamResumo = tamanhoResumo(v.resumo);
   if (!tamResumo) e.resumo = "Escreva o resumo do seu trabalho.";
   else if (tamResumo > RESUMO_MAX) e.resumo = `O resumo deve ter até ${RESUMO_MAX} caracteres.`;
-
-  if (!v.aceite) e.aceite = "Aceite o uso dos dados para continuar.";
 
   const erroArquivo = validarArquivo(v.arquivo);
   if (erroArquivo) e.arquivo = erroArquivo;
