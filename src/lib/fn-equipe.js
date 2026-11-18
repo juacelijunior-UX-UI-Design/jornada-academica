@@ -154,6 +154,8 @@ export const listarInscritos = createServerFn({ method: "GET" })
         horas: a.horas_presentes,
         percentual: a.percentual,
         elegivel: a.elegivel,
+        apresentou: a.apresentou === true,
+        horas_certificado: a.horas_certificado,
       })),
     };
   });
@@ -182,6 +184,33 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
       titulo: String(data.titulo || "").trim().slice(0, 200),
     });
     return { ok: true };
+  });
+
+// Marca (ou desmarca) que o trabalho foi apresentado. Só quem apresentou recebe o certificado de 20 horas.
+export const marcarApresentacao = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não marca apresentações." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+
+    let p = null;
+    try {
+      p = await base44.entities.Participante.get(data.id);
+    } catch {
+      p = null;
+    }
+    if (!p) return { ok: false, erro: "Inscrição não encontrada." };
+    if (p.tipo === "participante") return { ok: false, erro: "Participantes (ouvintes) não apresentam trabalho." };
+
+    const apresentou = data.apresentou === true;
+    await base44.entities.Participante.update(p.id, {
+      apresentou,
+      apresentou_em: apresentou ? new Date().toISOString() : null,
+      apresentou_por: apresentou ? String(context.user?.email || "") : "",
+    });
+    return { ok: true, apresentou };
   });
 
 // Usado pelo painel para conferir o CPF digitado (a lista traz o CPF mascarado).
