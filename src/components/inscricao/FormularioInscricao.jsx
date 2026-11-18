@@ -150,11 +150,8 @@ export default function FormularioInscricao({ aberta, motivo }) {
       <div className="jr-card p-5 sm:p-10">
         <form onSubmit={enviar} noValidate>
           <div className="mb-8">
-            <p id="rotulo-tipo" className="jr-label">
-              Você é
-            </p>
             <TipoSeletor
-              rotuloId="rotulo-tipo"
+              rotulo="Você é aluno ou público externo?"
               opcoes={TIPOS}
               valor={form.tipo}
               onMudar={(v) => setCampo("tipo", v)}
