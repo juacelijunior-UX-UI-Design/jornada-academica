@@ -1,4 +1,10 @@
+import { GraduationCap, Users } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
+
+const TIPOS = [
+  { valor: "aluno", texto: "Sou aluno", Icone: GraduationCap },
+  { valor: "externo", texto: "Público externo", Icone: Users },
+];
 import Coautores from "@/components/inscricao/Coautores";
 import { mascaraCpf, mascaraTelefone, mascaraMatricula } from "@/lib/validacao";
 
@@ -15,27 +21,33 @@ export default function DadosPessoais({ form, setCampo, erros }) {
 
   return (
     <>
-      <fieldset className="mb-4">
-        <legend className="jr-label">Você é</legend>
-        <div className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
-          {[
-            ["aluno", "Sou aluno"],
-            ["externo", "Público externo"],
-          ].map(([valor, texto]) => (
-            <label key={valor} className="flex cursor-pointer items-center gap-2 font-medium">
-              <input
-                type="radio"
-                name="tipo"
-                value={valor}
-                checked={form.tipo === valor}
-                onChange={() => setCampo("tipo", valor)}
-                className="h-4 w-4 accent-[#0040ce]"
-              />
-              {texto}
-            </label>
-          ))}
+      <div className="mb-6">
+        <p id="rotulo-tipo" className="jr-label">Você é</p>
+        <div
+          role="radiogroup"
+          aria-labelledby="rotulo-tipo"
+          className="grid grid-cols-2 gap-1.5 rounded-xl border border-linea bg-white p-1.5 shadow-[0_4px_16px_rgba(1,28,99,0.08)]"
+        >
+          {TIPOS.map(({ valor, texto, Icone }) => {
+            const ativo = form.tipo === valor;
+            return (
+              <button
+                key={valor}
+                type="button"
+                role="radio"
+                aria-checked={ativo}
+                onClick={() => setCampo("tipo", valor)}
+                className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-2 text-center text-[0.95rem] font-semibold transition-colors ${
+                  ativo ? "bg-navy text-white shadow-sm" : "text-navy hover:bg-fundo"
+                }`}
+              >
+                <Icone className="h-4 w-4 flex-none" aria-hidden="true" />
+                {texto}
+              </button>
+            );
+          })}
         </div>
-      </fieldset>
+      </div>
 
       <Campo id="nome" label="Nome do apresentador" erro={erros.nome}>
         <input {...props("nome")} type="text" autoComplete="name" maxLength={150} />
