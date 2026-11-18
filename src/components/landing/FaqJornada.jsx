@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import FaqItem from "@/components/landing/FaqItem";
+import TituloSecao from "@/components/landing/TituloSecao";
 import { REDES } from "@/lib/evento";
 
 const PERGUNTAS = [
@@ -44,7 +45,7 @@ const PERGUNTAS = [
 ];
 
 export default function FaqJornada() {
-  const [abertas, setAbertas] = useState(() => PERGUNTAS.map((p) => p.id));
+  const [abertas, setAbertas] = useState(() => [PERGUNTAS[0].id]);
 
   const alternar = (id) =>
     setAbertas((atual) =>
@@ -52,38 +53,11 @@ export default function FaqJornada() {
     );
 
   return (
-    <section
-      id="faq"
-      aria-labelledby="titulo-faq"
-      className="jr-container scroll-mt-24 pb-16 lg:pb-20"
-    >
-      <div className="grid gap-9 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:gap-[4%]">
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="m-0 flex items-center gap-2 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-tinta-suave">
-            <span aria-hidden="true" className="h-3.5 w-3.5 flex-none bg-amarelo" />
-            <span aria-hidden="true" className="h-px w-6 flex-none bg-tinta-suave/60" />
-            Dúvidas
-          </p>
+    <section id="faq" aria-labelledby="titulo-faq" className="bg-white py-14 lg:py-16">
+      <div className="jr-container">
+        <TituloSecao id="titulo-faq">Perguntas frequentes</TituloSecao>
 
-          <h2 id="titulo-faq" className="jr-titulo-bloco filete mt-3">
-            Perguntas frequentes
-          </h2>
-
-          <p className="mt-4 text-[1rem] leading-relaxed text-tinta-suave">
-            Todas as normas e novidades da Jornada são divulgadas neste site e no Instagram{" "}
-            <a
-              href={REDES.instagram}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="font-semibold text-royal underline"
-            >
-              {REDES.usuario}
-            </a>
-            .
-          </p>
-        </div>
-
-        <ul className="m-0 list-none space-y-3 p-0">
+        <ul className="mx-auto mt-9 max-w-[60rem] list-none space-y-3 p-0">
           {PERGUNTAS.map((item) => (
             <FaqItem
               key={item.id}
@@ -95,6 +69,19 @@ export default function FaqJornada() {
             />
           ))}
         </ul>
+
+        <p className="mx-auto mt-6 max-w-[60rem] text-center text-[0.95rem] text-tinta-suave">
+          Todas as normas e novidades da Jornada são divulgadas neste site e no Instagram{" "}
+          <a
+            href={REDES.instagram}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="font-semibold text-royal underline"
+          >
+            {REDES.usuario}
+          </a>
+          .
+        </p>
       </div>
     </section>
   );
