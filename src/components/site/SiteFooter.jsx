@@ -13,7 +13,7 @@ const NAVEGACAO = [
 ];
 
 const rotulo = "mb-4 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-[#8f9fd1]";
-const lista = "m-0 list-none space-y-2.5 p-0 text-[0.95rem] leading-snug text-[#dbe2f5]";
+const lista = "m-0 list-none space-y-2.5 p-0 text-[0.95rem] leading-snug text-[#dbe2f5] sm:whitespace-nowrap";
 const link = "text-[#dbe2f5] no-underline transition-colors hover:text-amarelo";
 
 export default function SiteFooter() {
@@ -34,9 +34,9 @@ export default function SiteFooter() {
         className="pointer-events-none absolute bottom-0 right-0 w-[min(55vw,320px)] -scale-x-100 opacity-90"
       />
 
-      <div className="jr-container relative z-10">
-        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.75fr_1fr_1.2fr]">
-          <div className="sm:col-span-2 lg:col-span-1">
+      <div className="jr-container relative z-10 max-w-[1400px]">
+        <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-[auto_auto_auto] lg:justify-between xl:grid-cols-[minmax(0,1fr)_auto_auto_auto] xl:gap-x-16">
+          <div className="sm:col-span-2 lg:col-span-3 lg:flex lg:items-center lg:gap-10 xl:col-span-1 xl:block">
             <Link
               to="/"
               aria-label="Página inicial da VI Jornada Acadêmica"
@@ -49,7 +49,7 @@ export default function SiteFooter() {
                 className="h-20 w-auto sm:h-24"
               />
             </Link>
-            <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-[#dbe2f5]">
+            <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-[#dbe2f5] lg:mt-0 lg:max-w-xl xl:mt-5 xl:max-w-sm">
               “{EVENTO.lema.replace(/\.$/, "")}”. Inscrição e apresentação de trabalhos em dois dias de
               programação acadêmica, {EVENTO.datas}, na UNINASSAU Teresina, Piauí.
             </p>
@@ -74,7 +74,7 @@ export default function SiteFooter() {
               <li>{EVENTO.local}</li>
               <li>09 e 10 de dezembro de 2026</li>
               <li>
-                Professor orientador: <strong className="font-semibold text-white">{ORIENTADOR}</strong>
+                Professor orientador: <strong className="whitespace-nowrap font-semibold text-white">{ORIENTADOR}</strong>
               </li>
               <li>
                 <CoautoresDialog
@@ -113,7 +113,7 @@ export default function SiteFooter() {
                 </a>
               </li>
             </ul>
-            <p className="mt-4 text-[0.95rem] text-[#dbe2f5]">Acompanhe novidades sobre o evento.</p>
+            <p className="mt-4 text-[0.95rem] text-[#dbe2f5] sm:whitespace-nowrap">Acompanhe novidades sobre o evento.</p>
           </div>
         </div>
 
