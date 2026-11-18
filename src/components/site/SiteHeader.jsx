@@ -10,6 +10,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  ScanLine,
   Ticket,
   UserPlus,
   X,
@@ -26,6 +27,7 @@ const LINKS = [
   { texto: "Inscrição", to: "/inscricao", Icone: UserPlus },
   { texto: "Certificado", to: "/certificado", Icone: Award },
   { texto: "Validar", to: "/validar", Icone: BadgeCheck },
+  { texto: "Check-in", to: "/checkin", Icone: ScanLine },
 ];
 
 const LINK_INSCRICAO = { texto: "Minha inscrição", to: "/minha-inscricao", Icone: Ticket };
@@ -38,10 +40,10 @@ export default function SiteHeader() {
   const { daEquipe } = useAcesso();
   const logado = !isLoadingAuth && Boolean(user);
 
-  // Logado, o menu tem mais itens: entre 1280 e 1439px os ícones somem para tudo caber numa linha.
-  const iconeClasse = `h-4 w-4 flex-none ${logado ? "hidden min-[1440px]:block" : ""}`;
+  // Logado, o menu tem mais itens: abaixo de 1536px os ícones somem para tudo caber numa linha.
+  const iconeClasse = `h-4 w-4 flex-none ${logado ? "hidden min-[1536px]:block" : ""}`;
   const linkClasse =
-    "inline-flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2.5 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo";
+    "inline-flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo 2xl:px-2.5";
 
   const extras = logado ? [LINK_INSCRICAO, ...(daEquipe ? [LINK_PAINEL] : [])] : [];
 
