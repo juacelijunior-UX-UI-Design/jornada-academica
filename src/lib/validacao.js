@@ -75,7 +75,7 @@ export function formatarTamanho(bytes) {
 }
 
 export function validarArquivo(arquivo) {
-  if (!arquivo) return "Anexe o arquivo do seu trabalho (documento ou slides).";
+  if (!arquivo) return "Anexe o resumo do trabalho (documento ou slides).";
   const nome = arquivo.name.toLowerCase();
   if (!ARQUIVO_EXTENSOES.some((ext) => nome.endsWith(ext))) return "Envie um arquivo PDF, DOC, DOCX, ODT, PPT, PPTX ou ODP.";
   if (arquivo.size === 0) return "O arquivo está vazio.";
