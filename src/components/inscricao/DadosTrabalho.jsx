@@ -31,6 +31,31 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
     setArquivo(f);
   }
 
+  const campoFormato = (
+    <Campo
+      id="formato"
+      label="Formato da apresentação"
+      erro={erros.formato}
+      ajuda={automatico ? "Definido pelo edital para esta disciplina." : undefined}
+    >
+      <select
+        id="formato"
+        className="jr-input disabled:bg-[#eef1f8] disabled:text-tinta-suave"
+        value={form.formato}
+        disabled={Boolean(automatico)}
+        aria-invalid={erros.formato ? "true" : undefined}
+        onChange={(e) => setCampo("formato", e.target.value)}
+      >
+        <option value="">Selecione o formato</option>
+        {Object.entries(FORMATOS).map(([valor, texto]) => (
+          <option key={valor} value={valor}>
+            {texto}
+          </option>
+        ))}
+      </select>
+    </Campo>
+  );
+
   return (
     <>
       <Campo id="titulo" label="Título do trabalho" erro={erros.titulo}>
@@ -45,7 +70,8 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
         />
       </Campo>
 
-      <div className={`grid gap-x-4 ${externo ? "" : "md:grid-cols-2"}`}>
+      {/* Aluno: Disciplina | Curso, e o Formato embaixo. Público externo: Curso | Formato. */}
+      <div className="grid gap-x-4 md:grid-cols-2">
         {!externo && (
         <Campo id="disciplina" label="Disciplina" erro={erros.disciplina}>
           <select
@@ -89,6 +115,8 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
             <option value={OUTROS}>Outros</option>
           </select>
         </Campo>
+
+        {externo && campoFormato}
       </div>
 
       {form.curso === OUTROS && (
@@ -104,28 +132,7 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
         </Campo>
       )}
 
-      <Campo
-        id="formato"
-        label="Formato da apresentação"
-        erro={erros.formato}
-        ajuda={automatico ? "Definido pelo edital para esta disciplina." : undefined}
-      >
-        <select
-          id="formato"
-          className="jr-input disabled:bg-[#eef1f8] disabled:text-tinta-suave"
-          value={form.formato}
-          disabled={Boolean(automatico)}
-          aria-invalid={erros.formato ? "true" : undefined}
-          onChange={(e) => setCampo("formato", e.target.value)}
-        >
-          <option value="">Selecione o formato</option>
-          {Object.entries(FORMATOS).map(([valor, texto]) => (
-            <option key={valor} value={valor}>
-              {texto}
-            </option>
-          ))}
-        </select>
-      </Campo>
+      {!externo && campoFormato}
 
       <Campo id="resumo" label="Resumo do trabalho" erro={erros.resumo}>
         <textarea
