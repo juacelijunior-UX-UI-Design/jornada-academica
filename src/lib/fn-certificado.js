@@ -5,6 +5,7 @@ import { CODIGO_VALIDO, garantirCertificado } from "@/lib/certificado.server";
 import {
   calcularResumo,
   certificadosLiberados,
+  dataLiberacaoCertificados,
   formatarDataBr,
   obterConfiguracao,
   todos,
@@ -15,6 +16,7 @@ export const validarCertificado = createServerFn({ method: "POST" }).handler(asy
   const codigo = String(data?.codigo || "").trim().toUpperCase().slice(0, 20);
   if (!CODIGO_VALIDO.test(codigo)) return { encontrado: false };
   const base44 = context.getBase44().asServiceRole;
+  if (!certificadosLiberados(await obterConfiguracao(base44))) return { encontrado: false };
   const cert = (await todos(base44.entities.Certificado.filter({ codigo })))[0];
   if (!cert) return { encontrado: false };
   let participante = null;
@@ -46,8 +48,8 @@ export const consultarCertificado = createServerFn({ method: "POST" }).handler(a
   if (!certificadosLiberados(config)) {
     return {
       status: "ainda_nao_liberado",
-      certificados_a_partir_de: config.certificados_a_partir_de,
-      liberado_em: formatarDataBr(config.certificados_a_partir_de),
+      certificados_a_partir_de: dataLiberacaoCertificados(config),
+      liberado_em: formatarDataBr(dataLiberacaoCertificados(config)),
     };
   }
 
