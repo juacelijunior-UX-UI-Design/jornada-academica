@@ -5,8 +5,10 @@ export default function TipoSeletor({ opcoes, valor, onMudar, rotulo, destaque =
       role="radiogroup"
       aria-label={rotuloId ? undefined : rotulo}
       aria-labelledby={rotuloId}
-      className={`grid grid-cols-2 gap-1.5 rounded-xl bg-white p-1.5 ${
-        destaque ? "shadow-[0_10px_30px_rgba(1,28,99,0.18)]" : "border border-linea"
+      className={`grid gap-1.5 rounded-xl bg-white p-1.5 ${
+        destaque
+          ? "grid-cols-2 shadow-[0_10px_30px_rgba(1,28,99,0.18)]"
+          : "grid-cols-1 border border-linea min-[440px]:grid-cols-2"
       }`}
     >
       {opcoes.map(({ valor: v, texto, Icone }) => {
