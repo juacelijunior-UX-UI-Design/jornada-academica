@@ -10,6 +10,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  Ticket,
   UserPlus,
   X,
 } from "lucide-react";
@@ -22,11 +23,12 @@ const LINKS = [
   { texto: "Início", to: "/", Icone: Home },
   { texto: "Programação", to: "/", hash: "programacao", Icone: CalendarDays },
   { texto: "Cronograma", to: "/", hash: "cronograma", Icone: ListChecks },
+  { texto: "Inscrição", to: "/inscricao", Icone: UserPlus },
   { texto: "Certificado", to: "/certificado", Icone: Award },
   { texto: "Validar", to: "/validar", Icone: BadgeCheck },
 ];
 
-const LINK_INSCRICAO = { texto: "Inscrição", to: "/minha-inscricao", Icone: UserPlus };
+const LINK_INSCRICAO = { texto: "Minha inscrição", to: "/minha-inscricao", Icone: Ticket };
 const LINK_PAINEL = { texto: "Painel", to: "/painel", Icone: LayoutDashboard };
 const LINK_ENTRAR = { texto: "Entrar", to: "/login", Icone: LogIn };
 
@@ -36,8 +38,8 @@ export default function SiteHeader() {
   const { daEquipe } = useAcesso();
   const logado = !isLoadingAuth && Boolean(user);
 
-  // Logado, o menu tem mais itens: entre 1280 e 1359px os ícones somem para tudo caber numa linha.
-  const iconeClasse = `h-4 w-4 flex-none ${logado ? "hidden min-[1360px]:block" : ""}`;
+  // Logado, o menu tem mais itens: entre 1280 e 1439px os ícones somem para tudo caber numa linha.
+  const iconeClasse = `h-4 w-4 flex-none ${logado ? "hidden min-[1440px]:block" : ""}`;
   const linkClasse =
     "inline-flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2.5 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo";
 
