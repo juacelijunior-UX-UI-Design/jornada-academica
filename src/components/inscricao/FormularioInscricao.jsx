@@ -31,7 +31,7 @@ const VAZIO = {
 };
 
 const TIPOS = [
-  { valor: "aluno", texto: "Sou aluno", Icone: GraduationCap },
+  { valor: "aluno", texto: "Sou aluno da instituição", Icone: GraduationCap },
   { valor: "externo", texto: "Público externo", Icone: Users },
 ];
 
