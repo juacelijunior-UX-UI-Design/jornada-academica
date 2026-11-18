@@ -138,6 +138,34 @@ export const EQUIPES = [
 ];
 
 export const EDITAL = "/assets/edital-vi-jornada-academica-2026.pdf";
+
+const ARQUIVOS = "https://base44.app/api/apps/6afc5f6bdef0a308e8558411/files/mp/public/6afc5f6bdef0a308e8558411";
+
+// Modelos de documentos (página /modelos e página de inscrição).
+export const MODELOS = [
+  {
+    titulo: "Modelo de apresentação oral",
+    rotulo: "Comunicação oral",
+    descricao: "Modelo de slides para comunicação oral (8 slides: título, introdução, objetivos, método, resultados, considerações finais, referências e agradecimento).",
+    arquivos: [
+      { tipo: "PDF", nome: "modelo-apresentacao-oral.pdf", url: `${ARQUIVOS}/81a078e10_modelo-apresentacao-oral.pdf` },
+      { tipo: "PPTX", nome: "modelo-comunicacao-oral.pptx", url: `${ARQUIVOS}/3409cfd7a_modelo-comunicacao-oral.pptx` },
+    ],
+  },
+  {
+    titulo: "Modelo de banner",
+    rotulo: "Banner",
+    descricao: "Modelo de banner com os campos de título, curso, orientador, autores, introdução, objetivos, método, resultados, considerações finais e referências.",
+    arquivos: [
+      { tipo: "PDF", nome: "modelo-banner.pdf", url: `${ARQUIVOS}/f27ada17a_modelo-banner.pdf` },
+      {
+        tipo: "PPTX",
+        nome: "modelo-banner.pptx",
+        url: "https://1drv.ms/p/c/04af3aafaa704b82/IQC1OeUiQAYkT6gxETbGBsyWAdFiP106Sr0mPo1k4Uc_MiE?e=92WJm3",
+      },
+    ],
+  },
+];
 export const LOGO_UNINASSAU = "/assets/logo-uninassau-horizontal.png";
 export const LOGO_JORNADA = "/assets/logo-6-jornada-recorte.png";
 export const FAIXAS = "/assets/faixas-vetoriais.png";
