@@ -1,4 +1,4 @@
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
 import { MAX_COAUTORES } from "@/lib/validacao";
 
 export default function Coautores({ coautores = [], setCoautores, erro }) {
@@ -14,16 +14,13 @@ export default function Coautores({ coautores = [], setCoautores, erro }) {
   };
 
   return (
-    <div className="mb-4 rounded-lg border border-linea bg-white/70 p-4">
-      <p className="m-0 font-semibold text-navy">
-        Co-autores do trabalho <span className="font-normal text-tinta-suave">(opcional)</span>
-      </p>
-      <p className="jr-legenda mt-1">
-        Acrescente até {MAX_COAUTORES} nomes, além do apresentador.
+    <div>
+      <p className="jr-legenda m-0">
+        Acrescente até {MAX_COAUTORES} nomes, além de você. Trabalho individual? Deixe sem co-autores.
       </p>
 
       {coautores.length > 0 && (
-        <ul className="m-0 mt-3 list-none space-y-2 p-0">
+        <ul className="m-0 mt-4 list-none space-y-2 p-0">
           {coautores.map((nome, indice) => (
             <li key={indice} className="flex items-center gap-2">
               <input
@@ -54,9 +51,9 @@ export default function Coautores({ coautores = [], setCoautores, erro }) {
         type="button"
         onClick={adicionar}
         disabled={cheio}
-        className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-royal bg-white px-4 py-2 font-semibold text-royal transition hover:bg-[#e9effc] disabled:cursor-not-allowed disabled:border-linea disabled:bg-transparent disabled:text-tinta-suave"
+        className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-2 border-navy bg-white px-4 font-semibold text-navy transition hover:bg-navy hover:text-white disabled:cursor-not-allowed disabled:border-linea disabled:bg-transparent disabled:text-tinta-suave"
       >
-        <Plus className="h-4 w-4" aria-hidden="true" />
+        <UserPlus className="h-4 w-4" aria-hidden="true" />
         {cheio ? `Limite de ${MAX_COAUTORES} co-autores atingido` : "Adicionar co-autor"}
       </button>
 
