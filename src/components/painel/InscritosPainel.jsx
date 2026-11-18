@@ -124,7 +124,7 @@ export default function InscritosPainel() {
                   <dt className="text-tinta-suave">Formato</dt>
                   <dd>{rotuloFormato(i)}</dd>
                   <dt className="text-tinta-suave">Presença</dt>
-                  <dd>{i.presencas} sessão(ões) · {i.percentual}%</dd>
+                  <dd>{i.presencas} {i.presencas === 1 ? "sessão" : "sessões"} · {i.percentual}%</dd>
                 </dl>
                 <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
                   {i.elegivel ? "Apto ao certificado" : "Presença pendente"}
@@ -132,37 +132,41 @@ export default function InscritosPainel() {
               </li>
             ))}
           </ul>
-          <div className="hidden overflow-x-auto xl:block">
-            <table className="w-full min-w-[52rem] text-left text-[0.95rem]">
+          <div className="hidden xl:block">
+            <table className="w-full table-auto text-left text-[0.95rem]">
               <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                 <tr>
                   <th className="px-4 py-2.5">Nome</th>
                   <th className="px-4 py-2.5">Curso</th>
                   <th className="px-4 py-2.5">Formato</th>
-                  <th className="px-4 py-2.5">Presença</th>
-                  <th className="px-4 py-2.5">Situação</th>
-                  <th className="px-4 py-2.5"><span className="sr-only">Editar</span></th>
+                  <th className="whitespace-nowrap px-4 py-2.5">Presença</th>
+                  <th className="whitespace-nowrap px-4 py-2.5">Situação</th>
+                  <th className="w-px px-4 py-2.5"><span className="sr-only">Editar</span></th>
                 </tr>
               </thead>
               <tbody>
                 {visiveis.map((i) => (
                   <tr key={i.id} className="border-t border-linea">
-                    <td className="px-4 py-3">
-                      <strong className="block text-navy">{i.nome}</strong>
-                      <span className="block text-[0.8rem] text-tinta-suave">{i.email}</span>
+                    <td className="px-4 py-3 align-middle">
+                      <strong className="block break-words text-navy">{i.nome}</strong>
+                      <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
                     </td>
                     <td className="px-4 py-3">{i.curso || "—"}</td>
                     <td className="px-4 py-3">{rotuloFormato(i)}</td>
-                    <td className="px-4 py-3">{i.presencas} sessão(ões) · {i.percentual}%</td>
-                    <td className="px-4 py-3">
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <span className="block">{i.presencas} {i.presencas === 1 ? "sessão" : "sessões"}</span>
+                      <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
                         {i.elegivel ? "Apto ao certificado" : "Presença pendente"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="whitespace-nowrap px-4 py-3 text-right">
                       <button
                         type="button"
                         onClick={() => setEditando(i)}
+                        aria-label={`Editar inscrição de ${i.nome}`}
                         className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-linea px-3 font-semibold text-royal transition hover:bg-fundo"
                       >
                         <Pencil className="h-4 w-4" aria-hidden="true" />
