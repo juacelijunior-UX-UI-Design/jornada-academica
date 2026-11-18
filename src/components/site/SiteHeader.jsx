@@ -1,34 +1,56 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Menu, X } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  CalendarDays,
+  Home,
+  Info,
+  LayoutDashboard,
+  ListChecks,
+  LogIn,
+  LogOut,
+  Menu,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { useAcesso } from "@/hooks/useAcesso";
 import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
 
 const LINKS = [
-  { texto: "Início", to: "/" },
-  { texto: "O evento", to: "/", hash: "sobre" },
-  { texto: "Programação", to: "/", hash: "programacao" },
-  { texto: "Cronograma", to: "/", hash: "cronograma" },
-  { texto: "Certificado", to: "/certificado" },
-  { texto: "Validar", to: "/validar" },
+  { texto: "Início", to: "/", Icone: Home },
+  { texto: "O evento", to: "/", hash: "sobre", Icone: Info },
+  { texto: "Programação", to: "/", hash: "programacao", Icone: CalendarDays },
+  { texto: "Cronograma", to: "/", hash: "cronograma", Icone: ListChecks },
+  { texto: "Certificado", to: "/certificado", Icone: Award },
+  { texto: "Validar", to: "/validar", Icone: BadgeCheck },
 ];
+
+const LINK_INSCRICAO = { texto: "Inscrição", to: "/minha-inscricao", Icone: UserPlus };
+const LINK_PAINEL = { texto: "Painel", to: "/painel", Icone: LayoutDashboard };
+const LINK_ENTRAR = { texto: "Entrar", to: "/login", Icone: LogIn };
 
 export default function SiteHeader() {
   const [aberto, setAberto] = useState(false);
   const { user, isLoadingAuth, logout } = useAuth();
   const { daEquipe } = useAcesso();
   const logado = !isLoadingAuth && Boolean(user);
+
+  // Logado, o menu tem mais itens: entre 1280 e 1359px os ícones somem para tudo caber numa linha.
+  const iconeClasse = `h-4 w-4 flex-none ${logado ? "hidden min-[1360px]:block" : ""}`;
   const linkClasse =
-    "border-b-[3px] border-transparent px-3 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo";
+    "inline-flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2.5 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo";
+
+  const extras = logado ? [LINK_INSCRICAO, ...(daEquipe ? [LINK_PAINEL] : [])] : [];
 
   return (
     <header className="border-b-4 border-amarelo bg-navy shadow-[0_2px_10px_rgba(1,28,99,0.08)]">
-      <div className="jr-container flex items-center justify-between gap-3 py-3">
+      <div className="jr-container flex max-w-[1400px] items-center justify-between gap-3 py-3">
         <Link
           to="/"
-          className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
+          className="flex flex-none items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
           aria-label="Página inicial da VI Jornada Acadêmica"
         >
           <Image
@@ -46,43 +68,28 @@ export default function SiteHeader() {
           />
         </Link>
 
-        <nav aria-label="Principal" className="hidden items-center gap-1 xl:flex">
-          {LINKS.map((l) => (
+        <nav aria-label="Principal" className="hidden items-center gap-0.5 xl:flex">
+          {[...LINKS, ...extras].map(({ texto, to, hash, Icone }) => (
             <Link
-              key={l.texto}
-              to={l.to}
-              hash={l.hash}
-              className="border-b-[3px] border-transparent px-3 py-2 text-[0.95rem] font-semibold text-white no-underline transition-colors hover:text-amarelo"
-              activeProps={{ className: "border-amarelo" }}
+              key={texto}
+              to={to}
+              hash={hash}
+              className={linkClasse}
+              activeProps={hash ? undefined : { className: "text-amarelo" }}
+              activeOptions={{ exact: to === "/" }}
             >
-              {l.texto}
+              <Icone className={iconeClasse} aria-hidden="true" />
+              {texto}
             </Link>
           ))}
           {logado ? (
-            <>
-              <Link to="/minha-inscricao" className={linkClasse}>
-                Inscrição
-              </Link>
-              {daEquipe && (
-                <Link to="/painel" className={linkClasse}>
-                  Painel
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={() => logout()}
-                className="ml-3 inline-flex items-center gap-2 border-b-[3px] border-transparent px-3 py-2 text-[0.95rem] font-semibold text-white hover:text-amarelo"
-              >
-                <LogOut className="h-4 w-4" aria-hidden="true" />
-                Sair
-              </button>
-            </>
+            <button type="button" onClick={() => logout()} className={`ml-2 ${linkClasse}`}>
+              <LogOut className={iconeClasse} aria-hidden="true" />
+              Sair
+            </button>
           ) : (
-            <Link
-              to="/login"
-              className="ml-3 inline-flex items-center gap-2 border-b-[3px] border-transparent px-3 py-2 text-[0.95rem] font-semibold text-white no-underline hover:text-amarelo"
-            >
-              <LogIn className="h-4 w-4" aria-hidden="true" />
+            <Link to={LINK_ENTRAR.to} className={`ml-2 ${linkClasse}`}>
+              <LogIn className={iconeClasse} aria-hidden="true" />
               Entrar
             </Link>
           )}
@@ -94,7 +101,7 @@ export default function SiteHeader() {
           aria-expanded={aberto}
           aria-controls="menu-mobile"
           aria-label={aberto ? "Fechar menu" : "Abrir menu"}
-          className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-white/60 text-white xl:hidden"
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-lg border-2 border-white/60 text-white xl:hidden"
         >
           {aberto ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -103,23 +110,16 @@ export default function SiteHeader() {
       {aberto && (
         <nav id="menu-mobile" aria-label="Principal" className="jr-container pb-4 xl:hidden">
           <ul className="flex flex-col rounded-lg bg-white/5 p-2">
-            {[
-              ...LINKS,
-              ...(logado
-                ? [
-                    { texto: "Inscrição", to: "/minha-inscricao" },
-                    ...(daEquipe ? [{ texto: "Painel", to: "/painel" }] : []),
-                  ]
-                : [{ texto: "Entrar", to: "/login" }]),
-            ].map((l) => (
-              <li key={l.texto}>
+            {[...LINKS, ...extras, ...(logado ? [] : [LINK_ENTRAR])].map(({ texto, to, hash, Icone }) => (
+              <li key={texto}>
                 <Link
-                  to={l.to}
-                  hash={l.hash}
+                  to={to}
+                  hash={hash}
                   onClick={() => setAberto(false)}
-                  className="block rounded-md px-3 py-3 font-semibold text-white no-underline hover:bg-white/10"
+                  className="flex items-center gap-3 rounded-md px-3 py-3 font-semibold text-white no-underline hover:bg-white/10"
                 >
-                  {l.texto}
+                  <Icone className="h-5 w-5 flex-none text-amarelo" aria-hidden="true" />
+                  {texto}
                 </Link>
               </li>
             ))}
@@ -128,8 +128,9 @@ export default function SiteHeader() {
                 <button
                   type="button"
                   onClick={() => logout()}
-                  className="block w-full rounded-md px-3 py-3 text-left font-semibold text-white hover:bg-white/10"
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left font-semibold text-white hover:bg-white/10"
                 >
+                  <LogOut className="h-5 w-5 flex-none text-amarelo" aria-hidden="true" />
                   Sair
                 </button>
               </li>
