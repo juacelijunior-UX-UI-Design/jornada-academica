@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Pencil, Search } from "lucide-react";
-import { idsPorCpf, listarInscritos } from "@/lib/fn-equipe";
+import { Check, Loader2, Pencil, Presentation, Search } from "lucide-react";
+import { toast } from "sonner";
+import { idsPorCpf, listarInscritos, marcarApresentacao } from "@/lib/fn-equipe";
 import InscritoEditor from "@/components/painel/InscritoEditor";
 
 const rotuloFormato = (i) =>
@@ -12,12 +13,73 @@ const rotuloFormato = (i) =>
       ? "Banner"
       : "Comunicação oral";
 
+// Situação do certificado: apto com 20 h (apresentou) ou 4 h (participante / não apresentou).
+function SeloSituacao({ i }) {
+  return (
+    <span
+      className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${
+        i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"
+      }`}
+    >
+      {i.elegivel ? `Apto · ${i.horas_certificado} h` : "Presença pendente"}
+    </span>
+  );
+}
+
+// Botão que marca/desmarca a apresentação do trabalho (só para submissões).
+function BotaoApresentou({ i, ocupado, onAlternar }) {
+  if (i.tipo === "participante") return <span className="text-tinta-suave">—</span>;
+  return (
+    <button
+      type="button"
+      onClick={() => onAlternar(i)}
+      disabled={ocupado}
+      aria-pressed={i.apresentou}
+      aria-label={`${i.apresentou ? "Desmarcar" : "Marcar"} apresentação de ${i.nome}`}
+      className={`inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3 text-[0.9rem] font-semibold transition disabled:opacity-60 ${
+        i.apresentou
+          ? "border-[#1e8e4e] bg-[#e8f6ee] text-[#166b3b] hover:bg-[#d6efe0]"
+          : "border-linea text-navy hover:bg-fundo"
+      }`}
+    >
+      {ocupado ? (
+        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+      ) : i.apresentou ? (
+        <Check className="h-4 w-4" aria-hidden="true" />
+      ) : (
+        <Presentation className="h-4 w-4" aria-hidden="true" />
+      )}
+      {i.apresentou ? "Apresentou" : "Marcar apresentação"}
+    </button>
+  );
+}
+
 const norm = (s) =>
   String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 export default function InscritosPainel() {
   const carregar = useServerFn(listarInscritos);
   const buscarCpf = useServerFn(idsPorCpf);
+  const marcar = useServerFn(marcarApresentacao);
+  const [marcando, setMarcando] = useState(null);
+
+  async function alternarApresentacao(i) {
+    if (marcando) return;
+    setMarcando(i.id);
+    try {
+      const res = await marcar({ data: { id: i.id, apresentou: !i.apresentou } });
+      if (!res?.ok) {
+        toast.error(res?.erro || "Não foi possível salvar.");
+        return;
+      }
+      toast.success(res.apresentou ? `${i.nome}: apresentação registrada (certificado de 20 h).` : `${i.nome}: apresentação desmarcada.`);
+      await refetch();
+    } catch {
+      toast.error("Não foi possível salvar. Tente novamente.");
+    } finally {
+      setMarcando(null);
+    }
+  }
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["inscritos-painel"],
     queryFn: () => carregar(),
@@ -126,9 +188,12 @@ export default function InscritosPainel() {
                   <dt className="text-tinta-suave">Presença</dt>
                   <dd>{i.presencas} {i.presencas === 1 ? "sessão" : "sessões"} · {i.percentual}%</dd>
                 </dl>
-                <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
-                  {i.elegivel ? "Apto ao certificado" : "Presença pendente"}
-                </span>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <SeloSituacao i={i} />
+                  {i.tipo !== "participante" && (
+                    <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -140,7 +205,8 @@ export default function InscritosPainel() {
                   <th className="px-4 py-2.5">Curso</th>
                   <th className="px-4 py-2.5">Formato</th>
                   <th className="whitespace-nowrap px-4 py-2.5">Presença</th>
-                  <th className="whitespace-nowrap px-4 py-2.5">Situação</th>
+                  <th className="whitespace-nowrap px-4 py-2.5">Apresentação</th>
+                  <th className="whitespace-nowrap px-4 py-2.5">Certificado</th>
                   <th className="w-px px-4 py-2.5"><span className="sr-only">Editar</span></th>
                 </tr>
               </thead>
@@ -158,9 +224,10 @@ export default function InscritosPainel() {
                       <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-[0.8rem] font-semibold ${i.elegivel ? "bg-[#e8f6ee] text-[#166b3b]" : "bg-[#eef1f8] text-tinta-suave"}`}>
-                        {i.elegivel ? "Apto ao certificado" : "Presença pendente"}
-                      </span>
+                      <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <SeloSituacao i={i} />
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <button
