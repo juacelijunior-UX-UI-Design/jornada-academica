@@ -182,14 +182,12 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
     if (!EMAIL.test(email)) return { ok: false, erro: "E-mail inválido." };
     if (telefone.length < 10) return { ok: false, erro: "Telefone com DDD inválido." };
 
-    await base44.entities.Participante.update(data.id, {
-      nome,
-      email,
-      telefone,
-      instituicao: String(data.instituicao || "").trim().slice(0, 150),
-      curso: String(data.curso || "").trim().slice(0, 100),
-      titulo: String(data.titulo || "").trim().slice(0, 200),
-    });
+    // Só altera os campos enviados: o participante (ouvinte) não tem instituição, curso nem título.
+    const alteracoes = { nome, email, telefone };
+    if ("instituicao" in data) alteracoes.instituicao = String(data.instituicao || "").trim().slice(0, 150);
+    if ("curso" in data) alteracoes.curso = String(data.curso || "").trim().slice(0, 100);
+    if ("titulo" in data) alteracoes.titulo = String(data.titulo || "").trim().slice(0, 200);
+    await base44.entities.Participante.update(data.id, alteracoes);
     return { ok: true };
   });
 
