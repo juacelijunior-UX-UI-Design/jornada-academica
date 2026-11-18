@@ -236,50 +236,60 @@ export default function InscritosPainel() {
               ))}
             </ul>
 
-            {/* Submissões: tabela no computador */}
+            {/* Submissões: tabela no computador (4 colunas, ações empilhadas para nada ser cortado) */}
             <div className="hidden xl:block">
-              <table className="w-full table-auto text-left text-[0.95rem]">
+              <table className="w-full table-fixed text-left text-[0.95rem]">
+                <colgroup>
+                  <col />
+                  <col className="w-[22%]" />
+                  <col className="w-[11rem]" />
+                  <col className="w-[13.5rem]" />
+                </colgroup>
                 <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                   <tr>
-                    <th className="px-4 py-2.5">Trabalho e apresentador</th>
-                    <th className="px-4 py-2.5">Curso e disciplina</th>
-                    <th className={th}>Presença</th>
-                    <th className={th}>Apresentação</th>
-                    <th className={th}>Certificado</th>
-                    <th className="w-px px-4 py-2.5">
-                      <span className="sr-only">Ações</span>
-                    </th>
+                    <th className="px-4 py-3">Trabalho e apresentador</th>
+                    <th className="px-4 py-3">Curso e disciplina</th>
+                    <th className="px-4 py-3">Presença e certificado</th>
+                    <th className="px-4 py-3">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {visiveis.map((i) => (
-                    <tr key={i.id} className="border-t border-linea align-middle">
-                      <td className="px-4 py-3">
-                        <strong className="block break-words font-heading text-navy">{i.titulo || "Trabalho sem título"}</strong>
-                        <span className="block text-[0.9rem]">{i.nome}</span>
+                    <tr key={i.id} className="border-t border-linea align-top">
+                      <td className="px-4 py-4">
+                        <button
+                          type="button"
+                          onClick={() => setVendo(i)}
+                          title={i.titulo}
+                          className="block w-full text-left font-heading text-[1rem] font-bold leading-snug text-navy [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden hover:text-royal hover:underline"
+                        >
+                          {i.titulo || "Trabalho sem título"}
+                        </button>
+                        <span className="mt-1.5 block text-[0.9rem] font-semibold text-tinta">{i.nome}</span>
                         <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="block">{i.curso || "—"}</span>
-                        <span className="block text-[0.85rem] text-tinta-suave">
-                          {[i.disciplina, rotuloFormato(i)].filter(Boolean).join(" · ")}
+                        <span className="mt-1.5 inline-flex items-center gap-1 text-[0.8rem] text-tinta-suave">
+                          <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                          {i.tem_arquivo ? "Arquivo enviado" : "Sem arquivo"}
+                          {i.coautores?.length ? ` · ${i.coautores.length} co-autor(es)` : ""}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <span className="block">{textoPresenca(i)}</span>
-                        <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
+                      <td className="px-4 py-4">
+                        <span className="block break-words">{i.curso || "—"}</span>
+                        <span className="mt-0.5 block text-[0.85rem] text-tinta-suave">{i.disciplina || "—"}</span>
+                        <span className="mt-0.5 block text-[0.85rem] text-tinta-suave">{rotuloFormato(i)}</span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
+                      <td className="px-4 py-4">
+                        <span className="block">{textoPresenca(i)} · {i.percentual}%</span>
+                        <span className="mt-2 block">
+                          <SeloSituacao i={i} />
+                        </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <SeloSituacao i={i} />
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <div className="flex justify-end gap-2">
+                      <td className="px-4 py-4">
+                        <div className="flex flex-col gap-2 [&>button]:w-full [&>button]:justify-center">
                           <BotaoAcao destaque onClick={() => setVendo(i)} Icone={Eye} rotulo={`Ver trabalho de ${i.nome}`}>
                             Ver trabalho
                           </BotaoAcao>
+                          <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
                           <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
                             Editar
                           </BotaoAcao>
@@ -318,7 +328,7 @@ export default function InscritosPainel() {
               <table className="w-full table-auto text-left text-[0.95rem]">
                 <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
                   <tr>
-                    <th className="px-4 py-2.5">Participante</th>
+                    <th className="w-[34%] px-4 py-2.5">Participante</th>
                     <th className={th}>Telefone</th>
                     <th className={th}>CPF</th>
                     <th className={th}>Presença</th>
