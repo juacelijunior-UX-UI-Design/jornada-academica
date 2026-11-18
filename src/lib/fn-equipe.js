@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
-import { PERFIS_EQUIPE, PERFIS_INSCRICAO } from "@/lib/perfis";
+import { PERFIS_EQUIPE, PERFIS_GESTAO, PERFIS_INSCRICAO } from "@/lib/perfis";
 
 const lista = (res) => (Array.isArray(res) ? res : (res?.items ?? []));
 
@@ -16,7 +16,8 @@ export const resumoPainel = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const base44 = context.getBase44().asServiceRole;
     const acesso = await acessoDe(base44, context.user);
-    if (!permitido(acesso.perfil, PERFIS_EQUIPE)) return { ...acesso, numeros: null };
+    // Números do evento: só para administrador, suporte e professor (o monitor não vê a Visão geral).
+    if (!permitido(acesso.perfil, PERFIS_GESTAO)) return { ...acesso, numeros: null };
     const [inscritos, presencas, certificados, sessoes] = await Promise.all([
       base44.entities.Participante.count({}),
       base44.entities.Presenca.count({}),
