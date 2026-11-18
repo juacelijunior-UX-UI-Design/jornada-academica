@@ -63,7 +63,7 @@ export default function SobreJornada() {
               </li>
             </ul>
 
-            <div className="mt-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-2 lg:mt-auto lg:pt-8">
+            <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:mt-auto lg:grid-cols-1 lg:pt-8 xl:grid-cols-2">
               <a
                 href={EDITAL}
                 target="_blank"
