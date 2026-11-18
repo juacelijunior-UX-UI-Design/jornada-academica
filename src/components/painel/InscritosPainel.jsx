@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Loader2, Pencil, Presentation, Search } from "lucide-react";
+import { Check, Eye, FileText, Loader2, Pencil, Presentation, Search, Send, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { idsPorCpf, listarInscritos, marcarApresentacao } from "@/lib/fn-equipe";
 import InscritoEditor from "@/components/painel/InscritoEditor";
+import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
+import TipoSeletor from "@/components/inscricao/TipoSeletor";
 
-const rotuloFormato = (i) =>
-  i.tipo === "participante"
-    ? "Participante (ouvinte)"
-    : i.formato === "banner"
-      ? "Banner"
-      : "Comunicação oral";
+const rotuloFormato = (i) => (i.formato === "banner" ? "Banner" : "Comunicação oral");
+const textoPresenca = (i) => `${i.presencas} ${i.presencas === 1 ? "sessão" : "sessões"}`;
+const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 // Situação do certificado: apto com 20 h (apresentou) ou 4 h (participante / não apresentou).
 function SeloSituacao({ i }) {
@@ -26,9 +25,8 @@ function SeloSituacao({ i }) {
   );
 }
 
-// Botão que marca/desmarca a apresentação do trabalho (só para submissões).
+// Botão que marca/desmarca a apresentação do trabalho.
 function BotaoApresentou({ i, ocupado, onAlternar }) {
-  if (i.tipo === "participante") return <span className="text-tinta-suave">—</span>;
   return (
     <button
       type="button"
@@ -54,13 +52,38 @@ function BotaoApresentou({ i, ocupado, onAlternar }) {
   );
 }
 
-const norm = (s) =>
-  String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+function BotaoAcao({ onClick, Icone, children, rotulo, destaque = false }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={rotulo}
+      className={`inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3 text-[0.9rem] font-semibold transition ${
+        destaque ? "border-navy bg-navy text-white hover:bg-royal" : "border-linea text-royal hover:bg-fundo"
+      }`}
+    >
+      <Icone className="h-4 w-4" aria-hidden="true" />
+      {children}
+    </button>
+  );
+}
+
+const th = "whitespace-nowrap px-4 py-2.5";
 
 export default function InscritosPainel() {
   const carregar = useServerFn(listarInscritos);
   const buscarCpf = useServerFn(idsPorCpf);
   const marcar = useServerFn(marcarApresentacao);
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["inscritos-painel"],
+    queryFn: () => carregar(),
+  });
+
+  const [aba, setAba] = useState("submissoes");
+  const [busca, setBusca] = useState("");
+  const [idsCpf, setIdsCpf] = useState(null);
+  const [editando, setEditando] = useState(null);
+  const [vendo, setVendo] = useState(null);
   const [marcando, setMarcando] = useState(null);
 
   async function alternarApresentacao(i) {
@@ -72,7 +95,9 @@ export default function InscritosPainel() {
         toast.error(res?.erro || "Não foi possível salvar.");
         return;
       }
-      toast.success(res.apresentou ? `${i.nome}: apresentação registrada (certificado de 20 h).` : `${i.nome}: apresentação desmarcada.`);
+      toast.success(
+        res.apresentou ? `${i.nome}: apresentação registrada (certificado de 20 h).` : `${i.nome}: apresentação desmarcada.`
+      );
       await refetch();
     } catch {
       toast.error("Não foi possível salvar. Tente novamente.");
@@ -80,14 +105,6 @@ export default function InscritosPainel() {
       setMarcando(null);
     }
   }
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["inscritos-painel"],
-    queryFn: () => carregar(),
-  });
-
-  const [busca, setBusca] = useState("");
-  const [idsCpf, setIdsCpf] = useState(null);
-  const [editando, setEditando] = useState(null);
 
   useEffect(() => {
     const termo = busca.trim();
@@ -111,20 +128,24 @@ export default function InscritosPainel() {
   }, [busca, buscarCpf]);
 
   const inscritos = useMemo(() => data?.inscritos ?? [], [data]);
+  const submissoes = useMemo(() => inscritos.filter((i) => i.tipo !== "participante"), [inscritos]);
+  const participantes = useMemo(() => inscritos.filter((i) => i.tipo === "participante"), [inscritos]);
 
   const visiveis = useMemo(() => {
+    const base = aba === "submissoes" ? submissoes : participantes;
     const termo = norm(busca.trim());
     const digitos = busca.replace(/\D/g, "");
-    if (!termo) return inscritos;
-    return inscritos.filter(
+    if (!termo) return base;
+    return base.filter(
       (i) =>
         norm(i.nome).includes(termo) ||
+        norm(i.email).includes(termo) ||
         norm(i.curso).includes(termo) ||
         norm(i.titulo).includes(termo) ||
         (digitos && String(i.matricula || "").includes(digitos)) ||
         (idsCpf?.has(i.id) ?? false)
     );
-  }, [inscritos, busca, idsCpf]);
+  }, [aba, submissoes, participantes, busca, idsCpf]);
 
   if (isLoading) {
     return (
@@ -135,125 +156,210 @@ export default function InscritosPainel() {
     );
   }
   if (isError || !data?.ok) {
-    return <div className="jr-alerta jr-alerta-erro" role="alert">{data?.erro || "Não foi possível carregar as inscrições."}</div>;
+    return (
+      <div className="jr-alerta jr-alerta-erro" role="alert">
+        {data?.erro || "Não foi possível carregar as inscrições."}
+      </div>
+    );
   }
+
+  const ehSub = aba === "submissoes";
+  const ABAS = [
+    { valor: "submissoes", texto: `Submissões (${submissoes.length})`, Icone: Send },
+    { valor: "participantes", texto: `Participantes (${participantes.length})`, Icone: UserPlus },
+  ];
 
   return (
     <div className="space-y-5">
+      <TipoSeletor destaque rotulo="Tipo de inscrição" opcoes={ABAS} valor={aba} onMudar={setAba} />
+
       <div className="jr-card p-5">
-        <label htmlFor="busca-inscritos" className="jr-label">Buscar aluno ou participante</label>
+        <label htmlFor="busca-inscritos" className="jr-label">
+          {ehSub ? "Buscar trabalho ou apresentador" : "Buscar participante"}
+        </label>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-tinta-suave" aria-hidden="true" />
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-tinta-suave"
+            aria-hidden="true"
+          />
           <input
             id="busca-inscritos"
             type="search"
             className="jr-input pl-10"
-            placeholder="Nome, curso, título, matrícula ou CPF"
+            placeholder={ehSub ? "Nome, título, curso, matrícula ou CPF" : "Nome, e-mail ou CPF"}
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />
         </div>
         <p className="jr-legenda mt-3">
-          {data.total} inscrito(s) · {visiveis.length} na lista · aprovação por {data.regra}
+          {visiveis.length} na lista ·{" "}
+          {ehSub
+            ? "certificado de 20 h para quem apresentou; 4 h para quem só teve presença"
+            : "certificado de 4 h com presença registrada"}
         </p>
       </div>
 
       <div className="jr-card overflow-hidden">
-        {visiveis.length ? (
+        {!visiveis.length ? (
+          <p className="p-6 text-tinta-suave">
+            {busca ? "Nada encontrado para esta busca." : ehSub ? "Nenhum trabalho submetido ainda." : "Nenhum participante inscrito ainda."}
+          </p>
+        ) : ehSub ? (
           <>
-          {/* Celular e tablet: cartões em vez de tabela larga */}
-          <ul className="divide-y divide-linea xl:hidden">
-            {visiveis.map((i) => (
-              <li key={i.id} className="p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <strong className="block break-words text-navy">{i.nome}</strong>
+            {/* Submissões: cartões no celular e tablet */}
+            <ul className="divide-y divide-linea xl:hidden">
+              {visiveis.map((i) => (
+                <li key={i.id} className="space-y-2 p-4">
+                  <p className="m-0 break-words font-heading font-bold text-navy">{i.titulo || "Trabalho sem título"}</p>
+                  <p className="m-0 text-[0.9rem]">
+                    <strong className="font-semibold">{i.nome}</strong>
                     <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setEditando(i)}
-                    aria-label={`Editar inscrição de ${i.nome}`}
-                    className="inline-flex min-h-11 flex-none items-center gap-1.5 rounded-lg border border-linea px-3 font-semibold text-royal transition hover:bg-fundo"
-                  >
-                    <Pencil className="h-4 w-4" aria-hidden="true" />
-                    Editar
-                  </button>
-                </div>
-                <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[0.9rem]">
-                  <dt className="text-tinta-suave">Curso</dt>
-                  <dd className="min-w-0 break-words">{i.curso || "—"}</dd>
-                  <dt className="text-tinta-suave">Formato</dt>
-                  <dd>{rotuloFormato(i)}</dd>
-                  <dt className="text-tinta-suave">Presença</dt>
-                  <dd>{i.presencas} {i.presencas === 1 ? "sessão" : "sessões"} · {i.percentual}%</dd>
-                </dl>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <SeloSituacao i={i} />
-                  {i.tipo !== "participante" && (
+                  </p>
+                  <p className="m-0 text-[0.9rem] text-tinta-suave">
+                    {[i.curso, i.disciplina, rotuloFormato(i)].filter(Boolean).join(" · ")}
+                  </p>
+                  <p className="m-0 flex items-center gap-1.5 text-[0.85rem] text-tinta-suave">
+                    <FileText className="h-4 w-4" aria-hidden="true" />
+                    {i.tem_arquivo ? "Arquivo enviado" : "Sem arquivo"} · {textoPresenca(i)}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <BotaoAcao destaque onClick={() => setVendo(i)} Icone={Eye} rotulo={`Ver trabalho de ${i.nome}`}>
+                      Ver trabalho
+                    </BotaoAcao>
                     <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="hidden xl:block">
-            <table className="w-full table-auto text-left text-[0.95rem]">
-              <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
-                <tr>
-                  <th className="px-4 py-2.5">Nome</th>
-                  <th className="px-4 py-2.5">Curso</th>
-                  <th className="px-4 py-2.5">Formato</th>
-                  <th className="whitespace-nowrap px-4 py-2.5">Presença</th>
-                  <th className="whitespace-nowrap px-4 py-2.5">Apresentação</th>
-                  <th className="whitespace-nowrap px-4 py-2.5">Certificado</th>
-                  <th className="w-px px-4 py-2.5"><span className="sr-only">Editar</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                {visiveis.map((i) => (
-                  <tr key={i.id} className="border-t border-linea">
-                    <td className="px-4 py-3 align-middle">
-                      <strong className="block break-words text-navy">{i.nome}</strong>
-                      <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
-                    </td>
-                    <td className="px-4 py-3">{i.curso || "—"}</td>
-                    <td className="px-4 py-3">{rotuloFormato(i)}</td>
-                    <td className="whitespace-nowrap px-4 py-3">
-                      <span className="block">{i.presencas} {i.presencas === 1 ? "sessão" : "sessões"}</span>
-                      <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3">
-                      <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3">
-                      <SeloSituacao i={i} />
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-right">
-                      <button
-                        type="button"
-                        onClick={() => setEditando(i)}
-                        aria-label={`Editar inscrição de ${i.nome}`}
-                        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-linea px-3 font-semibold text-royal transition hover:bg-fundo"
-                      >
-                        <Pencil className="h-4 w-4" aria-hidden="true" />
-                        Editar
-                      </button>
-                    </td>
+                    <SeloSituacao i={i} />
+                    <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
+                      Editar
+                    </BotaoAcao>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Submissões: tabela no computador */}
+            <div className="hidden xl:block">
+              <table className="w-full table-auto text-left text-[0.95rem]">
+                <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+                  <tr>
+                    <th className="px-4 py-2.5">Trabalho e apresentador</th>
+                    <th className="px-4 py-2.5">Curso e disciplina</th>
+                    <th className={th}>Presença</th>
+                    <th className={th}>Apresentação</th>
+                    <th className={th}>Certificado</th>
+                    <th className="w-px px-4 py-2.5">
+                      <span className="sr-only">Ações</span>
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {visiveis.map((i) => (
+                    <tr key={i.id} className="border-t border-linea align-middle">
+                      <td className="px-4 py-3">
+                        <strong className="block break-words font-heading text-navy">{i.titulo || "Trabalho sem título"}</strong>
+                        <span className="block text-[0.9rem]">{i.nome}</span>
+                        <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="block">{i.curso || "—"}</span>
+                        <span className="block text-[0.85rem] text-tinta-suave">
+                          {[i.disciplina, rotuloFormato(i)].filter(Boolean).join(" · ")}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <span className="block">{textoPresenca(i)}</span>
+                        <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <BotaoApresentou i={i} ocupado={marcando === i.id} onAlternar={alternarApresentacao} />
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <SeloSituacao i={i} />
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <div className="flex justify-end gap-2">
+                          <BotaoAcao destaque onClick={() => setVendo(i)} Icone={Eye} rotulo={`Ver trabalho de ${i.nome}`}>
+                            Ver trabalho
+                          </BotaoAcao>
+                          <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
+                            Editar
+                          </BotaoAcao>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </>
         ) : (
-          <p className="p-6 text-tinta-suave">Nenhuma inscrição encontrada para esta busca.</p>
+          <>
+            {/* Participantes: cartões no celular e tablet */}
+            <ul className="divide-y divide-linea lg:hidden">
+              {visiveis.map((i) => (
+                <li key={i.id} className="space-y-1.5 p-4">
+                  <strong className="block break-words text-navy">{i.nome}</strong>
+                  <span className="block break-all text-[0.85rem] text-tinta-suave">{i.email}</span>
+                  <span className="block text-[0.9rem]">
+                    {i.telefone || "—"} · CPF {i.cpf}
+                  </span>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <span className="text-[0.9rem] text-tinta-suave">{textoPresenca(i)}</span>
+                    <SeloSituacao i={i} />
+                    <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
+                      Editar
+                    </BotaoAcao>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Participantes: tabela no computador */}
+            <div className="hidden lg:block">
+              <table className="w-full table-auto text-left text-[0.95rem]">
+                <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+                  <tr>
+                    <th className="px-4 py-2.5">Participante</th>
+                    <th className={th}>Telefone</th>
+                    <th className={th}>CPF</th>
+                    <th className={th}>Presença</th>
+                    <th className={th}>Certificado</th>
+                    <th className="w-px px-4 py-2.5">
+                      <span className="sr-only">Editar</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visiveis.map((i) => (
+                    <tr key={i.id} className="border-t border-linea align-middle">
+                      <td className="px-4 py-3">
+                        <strong className="block break-words text-navy">{i.nome}</strong>
+                        <span className="block break-all text-[0.8rem] text-tinta-suave">{i.email}</span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">{i.telefone || "—"}</td>
+                      <td className="whitespace-nowrap px-4 py-3">{i.cpf}</td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <span className="block">{textoPresenca(i)}</span>
+                        <span className="block text-[0.8rem] text-tinta-suave">{i.percentual}%</span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <SeloSituacao i={i} />
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-right">
+                        <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
+                          Editar
+                        </BotaoAcao>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
-      {editando && (
-        <InscritoEditor inscrito={editando} onFechar={() => setEditando(null)} onSalvo={refetch} />
-      )}
+      {vendo && <TrabalhoDetalhes inscrito={vendo} onFechar={() => setVendo(null)} />}
+      {editando && <InscritoEditor inscrito={editando} onFechar={() => setEditando(null)} onSalvo={refetch} />}
     </div>
   );
 }
