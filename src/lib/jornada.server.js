@@ -1,5 +1,6 @@
 // Regras de negócio da Jornada executadas no servidor (configuração, datas, presença).
 import { arredondar2, percentualDe, estaElegivel } from "@/lib/regras";
+import { apresentouTrabalho, cargaHorariaCertificado } from "@/lib/evento";
 
 export const CONFIGURACAO_PADRAO = {
   modo_aprovacao: "presenca",
@@ -128,7 +129,9 @@ export async function calcularResumo(base44, { participanteId } = {}) {
         presencas: qtd,
         horas_presentes: arredondar2(horas),
         percentual: arredondar2(percentualDe(horas, cargaTotal)),
-        elegivel: estaElegivel({ horas, presencas: qtd }, cargaTotal, configuracao),
+        // Quem a equipe marcou como "Apresentou" esteve no evento: fica apto mesmo sem check-in.
+        elegivel: apresentouTrabalho(p) || estaElegivel({ horas, presencas: qtd }, cargaTotal, configuracao),
+        horas_certificado: cargaHorariaCertificado(p),
       };
     });
 
