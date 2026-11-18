@@ -1,7 +1,12 @@
-import { Download, Eye } from "lucide-react";
-import { EDITAL } from "@/lib/evento";
+import { Download, Eye, FileText, Presentation } from "lucide-react";
+import { EDITAL, MODELOS } from "@/lib/evento";
 
-// Cartão "Leia o edital antes de enviar", com as regras principais já divulgadas no site.
+const botao =
+  "inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 font-semibold no-underline transition";
+const botaoModelo =
+  "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-navy bg-white px-3.5 text-[0.9rem] font-semibold text-navy no-underline transition hover:bg-navy hover:text-white";
+
+// Cartão "Leia o edital antes de enviar": edital, regras principais e modelos de banner e comunicação oral.
 export default function EditalInscricao() {
   return (
     <section aria-labelledby="titulo-edital" className="jr-card p-5 sm:p-7">
@@ -20,7 +25,7 @@ export default function EditalInscricao() {
             href={EDITAL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-navy px-4 font-semibold text-white no-underline transition hover:bg-royal"
+            className={`${botao} flex-1 bg-navy text-white hover:bg-royal`}
           >
             <Eye className="h-4 w-4" aria-hidden="true" />
             Visualizar edital
@@ -28,7 +33,7 @@ export default function EditalInscricao() {
           <a
             href={EDITAL}
             download="edital-vi-jornada-academica-2026.pdf"
-            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg border-2 border-navy px-4 font-semibold text-navy no-underline transition hover:bg-navy hover:text-white"
+            className={`${botao} flex-1 border-2 border-navy text-navy hover:bg-navy hover:text-white`}
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Baixar edital (PDF)
@@ -46,6 +51,40 @@ export default function EditalInscricao() {
         <li>A inscrição é obrigatória para os alunos das disciplinas de APIExt (I a VI).</li>
         <li>Cada apresentação dura 10 minutos e é avaliada por pelo menos um professor ou profissional da área.</li>
       </ul>
+
+      <hr className="my-5 border-linea" />
+
+      <h3 className="font-heading text-[1.05rem] font-bold text-navy">Modelos de documentos</h3>
+      <p className="mt-1 text-[0.9rem] text-tinta-suave">Use o modelo do formato da sua apresentação.</p>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {MODELOS.map((m) => {
+          const Icone = m.rotulo === "Banner" ? FileText : Presentation;
+          return (
+            <div key={m.titulo} className="rounded-lg border border-linea bg-fundo/60 p-4">
+              <p className="m-0 flex items-center gap-2 font-semibold text-navy">
+                <Icone className="h-5 w-5 flex-none text-royal" aria-hidden="true" />
+                {m.rotulo}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {m.arquivos.map((a) => (
+                  <a
+                    key={a.tipo}
+                    href={a.url}
+                    download={a.nome}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Baixar modelo de ${m.rotulo.toLowerCase()} em ${a.tipo}`}
+                    className={botaoModelo}
+                  >
+                    <Download className="h-4 w-4" aria-hidden="true" />
+                    {a.tipo === "PPTX" ? "Slides (PPTX)" : "PDF"}
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
