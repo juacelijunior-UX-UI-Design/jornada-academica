@@ -14,7 +14,7 @@ const ICONES = {
 export default function PainelNav({ perfil }) {
   const itens = SECOES_PAINEL.filter((s) => podeAcessar(perfil, s.id));
   return (
-    <nav aria-label="Seções do painel">
+    <nav aria-label="Seções do painel" className="min-w-0">
       <ul className="jr-card flex gap-1 overflow-x-auto p-2 lg:flex-col lg:overflow-visible">
         {itens.map((s) => {
           const Icone = ICONES[s.id];
