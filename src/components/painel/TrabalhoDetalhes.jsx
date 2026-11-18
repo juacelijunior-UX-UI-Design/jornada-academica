@@ -69,7 +69,7 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
 
   return (
     <Dialog open onOpenChange={(v) => !v && onFechar?.()}>
-      <DialogContent className="flex max-h-[92vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl [&>button:last-child]:bg-transparent [&>button:last-child]:text-white [&>button:last-child]:opacity-90">
+      <DialogContent className="flex max-h-[92vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl [&>button:last-child]:bg-transparent [&>button:last-child]:text-white [&>button:last-child]:opacity-90">
         {/* Cabeçalho: fica fixo; o conteúdo abaixo rola */}
         <DialogHeader className="flex-none border-b-4 border-amarelo bg-navy px-6 pb-4 pt-5 text-left">
           <DialogTitle className="pr-8 font-heading text-[1.2rem] leading-snug text-white sm:text-[1.3rem]">
