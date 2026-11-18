@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Image } from "@/components/ui/image";
 import CoautoresDialog from "@/components/site/CoautoresDialog";
-import { DEV, EVENTO, FAIXAS, ORIENTADOR, REDES, SITE } from "@/lib/evento";
+import { DEV, EVENTO, FAIXAS, LOGO_JORNADA, ORIENTADOR, REDES, SITE } from "@/lib/evento";
 
 const NAVEGACAO = [
   { texto: "O evento", to: "/", hash: "sobre" },
@@ -37,11 +37,18 @@ export default function SiteFooter() {
       <div className="jr-container relative z-10">
         <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.75fr_1fr_1.2fr]">
           <div className="sm:col-span-2 lg:col-span-1">
-            <p className="mb-3 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-amarelo">VI edição</p>
-            <p className="m-0 font-heading text-[clamp(2rem,4.5vw,2.6rem)] font-extrabold uppercase leading-[0.95] text-white">
-              Jornada Acadêmica
-              <span className="block text-[#7f8fd6]">Uninassau</span>
-            </p>
+            <Link
+              to="/"
+              aria-label="Página inicial da VI Jornada Acadêmica"
+              className="inline-block rounded-xl bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
+            >
+              <Image
+                src={LOGO_JORNADA}
+                alt="VI Jornada Acadêmica da Uninassau Teresina"
+                fittingType="fit"
+                className="h-20 w-auto sm:h-24"
+              />
+            </Link>
             <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-[#dbe2f5]">
               “{EVENTO.lema.replace(/\.$/, "")}”. Inscrição e apresentação de trabalhos em dois dias de
               programação acadêmica, {EVENTO.datas}, na UNINASSAU Teresina, Piauí.
