@@ -42,18 +42,18 @@ const PASSOS = [
 
 export default function ComoParticipar() {
   return (
-    <section aria-labelledby="titulo-como-participar" className="pb-6">
+    <section id="como-participar" aria-labelledby="titulo-como-participar" className="pb-14 lg:pb-16">
       <div className="bg-navy py-7">
         <h2
           id="titulo-como-participar"
           className="jr-container text-center font-heading text-[clamp(1.6rem,4.5vw,2.25rem)] font-extrabold text-white"
         >
-          Como participar
+          Como participar?
         </h2>
       </div>
 
       <div className="jr-container pt-10">
-        <ol className="m-0 grid list-none gap-5 p-0 sm:grid-cols-2 xl:grid-cols-4">
+        <ol className="m-0 grid auto-rows-fr list-none gap-5 p-0 sm:grid-cols-2 xl:grid-cols-4">
           {PASSOS.map(({ titulo, texto }, i) => (
             <li
               key={titulo}
