@@ -31,7 +31,7 @@ function VisaoGeral() {
       <h1 className="font-heading text-[clamp(1.4rem,4vw,2rem)] font-extrabold text-navy">Painel do evento</h1>
       <p className="mb-6 mt-1 text-tinta-suave">{ACESSOS[perfil] || ""}</p>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {cartoes.map(({ rotulo, valor, Icone, to }) => (
           <Link key={rotulo} to={to} className="jr-card p-5 no-underline transition hover:-translate-y-0.5">
             <Icone className="h-5 w-5 text-royal" aria-hidden="true" />
@@ -43,7 +43,7 @@ function VisaoGeral() {
 
       <div className="jr-card mt-5 p-5">
         <h2 className="mb-1 font-heading text-[1.1rem] font-bold text-navy">Perfil {PERFIS[perfil]}</h2>
-        <p className="jr-legenda">Use o menu ao lado para abrir cada área liberada para você.</p>
+        <p className="jr-legenda">Use o menu para abrir cada área liberada para você.</p>
       </div>
     </>
   );
