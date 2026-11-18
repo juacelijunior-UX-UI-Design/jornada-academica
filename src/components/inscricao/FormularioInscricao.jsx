@@ -103,7 +103,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
           matricula: form.matricula,
           instituicao: form.instituicao.trim(),
           curso: form.curso === OUTROS ? form.curso_outro.trim() : form.curso,
-          disciplina: form.disciplina,
+          disciplina: form.tipo === "externo" ? "" : form.disciplina,
           formato: form.formato,
           titulo: form.titulo,
           resumo: form.resumo,
@@ -154,7 +154,13 @@ export default function FormularioInscricao({ aberta, motivo }) {
               rotulo="Você é aluno ou público externo?"
               opcoes={TIPOS}
               valor={form.tipo}
-              onMudar={(v) => setCampo("tipo", v)}
+              onMudar={(v) => {
+                if (v === form.tipo) return;
+                setCampo("tipo", v);
+                // Disciplina só vale para alunos da instituição; ao trocar, o formato é escolhido de novo.
+                setCampo("disciplina", "");
+                setCampo("formato", "");
+              }}
             />
           </div>
 
