@@ -1,6 +1,6 @@
 // Regras de negócio da Jornada executadas no servidor (configuração, datas, presença).
 import { arredondar2, percentualDe, estaElegivel } from "@/lib/regras";
-import { apresentouTrabalho, cargaHorariaCertificado } from "@/lib/evento";
+import { DATA_LIBERACAO_CERTIFICADOS, apresentouTrabalho, cargaHorariaCertificado } from "@/lib/evento";
 
 export const CONFIGURACAO_PADRAO = {
   modo_aprovacao: "presenca",
@@ -85,11 +85,16 @@ export function agoraSaoPaulo() {
   return `${p.year}-${p.month}-${p.day}T${p.hour === "24" ? "00" : p.hour}:${p.minute}`;
 }
 
-// Os certificados abrem no dia configurado, às 00:01 (horário de São Paulo).
+// Dia em que os certificados abrem: o configurado no painel, mas nunca antes de 14/12/2026.
+export function dataLiberacaoCertificados(config) {
+  const configurada = String(config?.certificados_a_partir_de || "").slice(0, 10);
+  return configurada > DATA_LIBERACAO_CERTIFICADOS ? configurada : DATA_LIBERACAO_CERTIFICADOS;
+}
+
+// Os certificados abrem nesse dia, às 00:01 (horário de São Paulo).
+// O modo de teste (ignorar_datas) NÃO libera certificados: vale só para as datas de inscrição.
 export function certificadosLiberados(config, agora = agoraSaoPaulo()) {
-  if (config.ignorar_datas) return true;
-  if (!config.certificados_a_partir_de) return true;
-  return agora >= `${String(config.certificados_a_partir_de).slice(0, 10)}T00:01`;
+  return agora >= `${dataLiberacaoCertificados(config)}T00:01`;
 }
 
 export function descreverRegra(config) {
