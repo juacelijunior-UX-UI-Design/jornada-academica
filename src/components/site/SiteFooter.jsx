@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { Image } from "@/components/ui/image";
 import CoautoresDialog from "@/components/site/CoautoresDialog";
-import { DEV, EVENTO, ORIENTADOR, REDES, SITE } from "@/lib/evento";
+import { DEV, EVENTO, FAIXAS, ORIENTADOR, REDES, SITE } from "@/lib/evento";
 
 const NAVEGACAO = [
   { texto: "O evento", to: "/", hash: "sobre" },
@@ -17,8 +18,23 @@ const link = "text-[#dbe2f5] no-underline transition-colors hover:text-amarelo";
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-16 bg-[#0d1f73] pb-8 pt-14 text-white">
-      <div className="jr-container">
+    <footer className="relative mt-16 overflow-hidden border-t-4 border-amarelo bg-[#0d1f73] pb-16 pt-14 text-white">
+      <Image
+        src={FAIXAS}
+        alt=""
+        aria-hidden="true"
+        fittingType="fit"
+        className="pointer-events-none absolute bottom-0 left-0 w-[min(55vw,320px)] opacity-90"
+      />
+      <Image
+        src={FAIXAS}
+        alt=""
+        aria-hidden="true"
+        fittingType="fit"
+        className="pointer-events-none absolute bottom-0 right-0 w-[min(55vw,320px)] -scale-x-100 opacity-90"
+      />
+
+      <div className="jr-container relative z-10">
         <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.75fr_1fr_1.2fr]">
           <div className="sm:col-span-2 lg:col-span-1">
             <p className="mb-3 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-amarelo">VI edição</p>
