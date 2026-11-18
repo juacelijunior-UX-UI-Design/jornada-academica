@@ -1,4 +1,5 @@
-import { FileCheck2, Paperclip, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { CloudUpload, FileCheck2, Trash2 } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
 import {
   CURSOS,
@@ -13,14 +14,14 @@ import { TITULO_MAX, formatarTamanho, tamanhoResumo, validarArquivo } from "@/li
 export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArquivo, setErro }) {
   const automatico = FORMATO_AUTOMATICO[form.disciplina];
   const total = tamanhoResumo(form.resumo);
+  const [arrastando, setArrastando] = useState(false);
 
-  function escolherArquivo(e) {
-    const f = e.target.files?.[0] || null;
+  function aceitarArquivo(f, input) {
     if (!f) return setArquivo(null);
     const erro = validarArquivo(f);
     if (erro) {
       setArquivo(null);
-      e.target.value = "";
+      if (input) input.value = "";
       setErro("arquivo", erro);
       return;
     }
@@ -30,28 +31,19 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
 
   return (
     <>
-      <div className="grid gap-x-4 md:grid-cols-2">
-        <Campo id="curso" label="Curso" erro={erros.curso}>
-          <select
-            id="curso"
-            className="jr-input"
-            value={form.curso}
-            aria-invalid={erros.curso ? "true" : undefined}
-            onChange={(e) => {
-              setCampo("curso", e.target.value);
-              if (e.target.value !== OUTROS) setCampo("curso_outro", "");
-            }}
-          >
-            <option value="">Selecione seu curso</option>
-            {CURSOS.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-            <option value={OUTROS}>Outros</option>
-          </select>
-        </Campo>
+      <Campo id="titulo" label="Título do trabalho" erro={erros.titulo}>
+        <input
+          id="titulo"
+          className="jr-input"
+          type="text"
+          maxLength={TITULO_MAX}
+          value={form.titulo}
+          aria-invalid={erros.titulo ? "true" : undefined}
+          onChange={(e) => setCampo("titulo", e.target.value)}
+        />
+      </Campo>
 
+      <div className="grid gap-x-4 md:grid-cols-2">
         <Campo id="disciplina" label="Disciplina" erro={erros.disciplina}>
           <select
             id="disciplina"
@@ -70,6 +62,27 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
                 {d}
               </option>
             ))}
+          </select>
+        </Campo>
+
+        <Campo id="curso" label="Curso" erro={erros.curso}>
+          <select
+            id="curso"
+            className="jr-input"
+            value={form.curso}
+            aria-invalid={erros.curso ? "true" : undefined}
+            onChange={(e) => {
+              setCampo("curso", e.target.value);
+              if (e.target.value !== OUTROS) setCampo("curso_outro", "");
+            }}
+          >
+            <option value="">Selecione o curso</option>
+            {CURSOS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+            <option value={OUTROS}>Outros</option>
           </select>
         </Campo>
       </div>
@@ -110,50 +123,55 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
         </select>
       </Campo>
 
-      <Campo id="titulo" label="Título do trabalho" erro={erros.titulo}>
-        <input
-          id="titulo"
-          className="jr-input"
-          type="text"
-          maxLength={TITULO_MAX}
-          value={form.titulo}
-          aria-invalid={erros.titulo ? "true" : undefined}
-          onChange={(e) => setCampo("titulo", e.target.value)}
-        />
-      </Campo>
-
       <Campo id="resumo" label="Resumo do trabalho" erro={erros.resumo}>
         <textarea
           id="resumo"
-          className="jr-input min-h-[9rem] resize-y leading-relaxed"
-          rows={7}
+          className="jr-input min-h-[12rem] resize-y leading-relaxed"
+          rows={9}
           maxLength={RESUMO_MAX}
           value={form.resumo}
           aria-invalid={erros.resumo ? "true" : undefined}
           onChange={(e) => setCampo("resumo", e.target.value)}
         />
-        <p className={`mt-1 mb-0 text-right text-[0.8125rem] ${total > RESUMO_MAX - 100 ? "text-vermelho-texto" : "text-tinta-suave"}`}>
-          {total}/{RESUMO_MAX}
+        <p
+          className={`mb-0 mt-1 text-right text-[0.8125rem] ${
+            total > RESUMO_MAX - 100 ? "text-vermelho-texto" : "text-tinta-suave"
+          }`}
+        >
+          {total} / {RESUMO_MAX}
         </p>
       </Campo>
 
-      <Campo
-        id="arquivo"
-        label="Arquivo do trabalho"
-        erro={erros.arquivo}
-        ajuda="Formatos aceitos: PDF, DOC, DOCX ou ODT, de até 10 MB."
-      >
-        <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border-[1.5px] border-dashed border-linea bg-white px-3.5 py-2.5 text-tinta hover:border-royal">
-          <Paperclip className="h-5 w-5 flex-none text-royal" aria-hidden="true" />
-          <span className="truncate text-[0.95rem]">
-            {arquivo ? arquivo.name : "Escolher arquivo do computador"}
+      <Campo id="arquivo" label="Arquivo do trabalho" erro={erros.arquivo}>
+        <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            setArrastando(true);
+          }}
+          onDragLeave={() => setArrastando(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setArrastando(false);
+            aceitarArquivo(e.dataTransfer.files?.[0] || null);
+          }}
+          className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-7 text-center transition-colors ${
+            arrastando ? "border-royal bg-[#e9effc]" : "border-linea bg-white hover:border-royal"
+          }`}
+        >
+          <CloudUpload className="h-8 w-8 text-navy" aria-hidden="true" />
+          <span className="mt-2 font-semibold text-tinta">
+            {arquivo ? arquivo.name : "Arraste o arquivo para cá ou escolha no computador"}
           </span>
+          <span className="mt-3 inline-flex min-h-10 items-center rounded-lg border border-linea bg-fundo px-4 text-[0.9rem] font-semibold text-navy">
+            {arquivo ? "Trocar arquivo" : "Escolher arquivo"}
+          </span>
+          <span className="jr-legenda mt-2">PDF, DOC, DOCX ou ODT, de até 10 MB.</span>
           <input
             id="arquivo"
             type="file"
             accept=".pdf,.doc,.docx,.odt"
-            className="hidden"
-            onChange={escolherArquivo}
+            className="sr-only"
+            onChange={(e) => aceitarArquivo(e.target.files?.[0] || null, e.target)}
           />
         </label>
         {arquivo && (
@@ -173,28 +191,6 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
           </div>
         )}
       </Campo>
-
-      <div className="mb-4 rounded-lg bg-[#e9effc] p-4 text-[0.95rem] text-navy">
-        Usaremos seus dados somente para a inscrição, o controle de presença e a emissão do
-        certificado da VI Jornada Acadêmica.
-      </div>
-
-      <div className="mb-5">
-        <label className="flex cursor-pointer items-start gap-3 text-[0.95rem]">
-          <input
-            type="checkbox"
-            checked={form.aceite}
-            onChange={(e) => setCampo("aceite", e.target.checked)}
-            className="mt-1 h-5 w-5 flex-none accent-[#0040ce]"
-          />
-          <span>Li e concordo com o uso dos meus dados para essa finalidade.</span>
-        </label>
-        {erros.aceite && (
-          <p className="jr-erro" role="alert">
-            {erros.aceite}
-          </p>
-        )}
-      </div>
     </>
   );
 }
