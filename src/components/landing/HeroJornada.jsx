@@ -65,8 +65,8 @@ export default function HeroJornada() {
               ))}
             </ul>
 
-            <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Botao to="/inscricao" variante="cta" className="min-h-[3.25rem] whitespace-nowrap px-5 text-[1.05rem] sm:px-7">
+            <div className="mt-7 grid max-w-[36rem] grid-cols-[repeat(auto-fit,minmax(16.5rem,1fr))] gap-3">
+              <Botao to="/inscricao" variante="cta" className="min-h-[3.25rem] w-full whitespace-nowrap px-4 text-[1.05rem]">
                 <FilePlus2 className="h-5 w-5" aria-hidden="true" />
                 Inscrever meu trabalho
               </Botao>
@@ -74,7 +74,7 @@ export default function HeroJornada() {
                 href={EDITAL}
                 download="edital-vi-jornada-academica-2026.pdf"
                 variante="edital"
-                className="min-h-[3.25rem] whitespace-nowrap px-5 sm:px-6"
+                className="min-h-[3.25rem] w-full whitespace-nowrap px-4 text-[1.05rem]"
               >
                 <Download className="h-5 w-5" aria-hidden="true" />
                 Baixar edital (PDF)
