@@ -59,7 +59,7 @@ function PainelLayout() {
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
               Ver o site
             </Link>
-            <div className={`min-w-0 text-right text-[0.85rem] leading-tight ${liberado ? "lg:hidden" : ""}`}>
+            <div className={`hidden min-w-0 text-right text-[0.85rem] leading-tight sm:block ${liberado ? "lg:hidden" : ""}`}>
               <span className="block max-w-[9rem] truncate font-semibold sm:max-w-xs">{nome}</span>
               <span className="text-white/70">{perfilNome}</span>
             </div>
