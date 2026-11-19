@@ -78,16 +78,13 @@ function Dado({ Icone, rotulo, children, largo = false }) {
   );
 }
 
-const iniciais = (nome) =>
-  String(nome || "?")
-    .split(/\s+/)
-    .filter((p) => p.length > 2 || /^[A-ZÀ-Ú]/.test(p))
-    .filter(Boolean)
-    .slice(0, 1)
-    .concat(String(nome || "").trim().split(/\s+/).slice(-1))
-    .map((p) => p[0]?.toUpperCase() || "")
-    .join("")
-    .slice(0, 2) || "?";
+// Iniciais do primeiro e do último nome ("Alecsandro ... Albuquerque" -> "AA").
+function iniciais(nome) {
+  const partes = String(nome || "").trim().split(/\s+/).filter(Boolean);
+  if (!partes.length) return "?";
+  const ultima = partes.length > 1 ? partes[partes.length - 1][0] : "";
+  return `${partes[0][0]}${ultima}`.toUpperCase();
+}
 
 // Janela com todos os dados do trabalho submetido, para a banca avaliar e baixar o arquivo.
 export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
