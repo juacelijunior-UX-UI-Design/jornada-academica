@@ -19,7 +19,7 @@ export default function PainelNav({ perfil }) {
     .filter((g) => g.itens.length > 0);
 
   const linkClasse =
-    "flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.92rem] font-semibold leading-snug no-underline transition-colors";
+    "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[0.92rem] font-semibold leading-snug no-underline transition-colors";
 
   return (
     <nav aria-label="Seções do painel" className="min-w-0">
@@ -32,7 +32,7 @@ export default function PainelNav({ perfil }) {
               <Link
                 to={s.to}
                 activeOptions={{ exact: s.to === "/painel" }}
-                className={`${linkClasse} text-white/85 hover:bg-white/10 hover:text-white`}
+                className={`${linkClasse} whitespace-nowrap text-white/85 hover:bg-white/10 hover:text-white`}
                 activeProps={{ className: "bg-amarelo !text-navy hover:bg-amarelo" }}
               >
                 <Icone className="h-4 w-4 flex-none" aria-hidden="true" />
@@ -56,7 +56,7 @@ export default function PainelNav({ perfil }) {
                     <Link
                       to={s.to}
                       activeOptions={{ exact: s.to === "/painel" }}
-                      className={`${linkClasse} whitespace-normal text-white/85 hover:bg-white/10 hover:text-white`}
+                      className={`${linkClasse} text-white/85 hover:bg-white/10 hover:text-white`}
                       activeProps={{ className: "bg-amarelo !text-navy shadow-sm hover:bg-amarelo" }}
                     >
                       <Icone className="h-[1.1rem] w-[1.1rem] flex-none" aria-hidden="true" />

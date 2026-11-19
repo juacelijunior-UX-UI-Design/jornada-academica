@@ -70,8 +70,8 @@ function Pendencia({ Icone, texto, acao, to, tom = "info" }) {
     ok: "bg-[#e8f6ee] text-[#166b3b]",
   };
   return (
-    <li className="flex flex-wrap items-center justify-between gap-3 py-3">
-      <span className="flex min-w-0 items-center gap-3">
+    <li className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3 sm:flex-nowrap">
+      <span className="flex min-w-0 flex-1 items-center gap-3">
         <span className={`grid h-9 w-9 flex-none place-items-center rounded-lg ${cores[tom]}`}>
           <Icone className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
         </span>
