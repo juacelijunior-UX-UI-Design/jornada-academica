@@ -16,13 +16,58 @@ export const PERFIS_INSCRICAO = ["administrador", "suporte", "professor"];
 export const PERFIS_CHAMADA = ["administrador", "suporte", "professor", "monitor"];
 export const PERFIS_CONFIG = ["administrador", "suporte"];
 
+// A ordem aqui é a ordem do menu; `grupo` separa o menu em blocos.
+export const GRUPOS_PAINEL = { inicio: "Início", evento: "Evento", admin: "Administração" };
+
 export const SECOES_PAINEL = [
-  { id: "visao", titulo: "Visão geral", to: "/painel", perfis: PERFIS_GESTAO },
-  { id: "usuarios", titulo: "Usuários e perfis", to: "/painel/usuarios", perfis: ["administrador"] },
-  { id: "inscricoes", titulo: "Inscrições", to: "/painel/inscricoes", perfis: PERFIS_INSCRICAO },
-  { id: "chamada", titulo: "Chamada", to: "/painel/chamada", perfis: PERFIS_CHAMADA },
-  { id: "checkin", titulo: "Check-in por QR", to: "/painel/checkin", perfis: PERFIS_CHAMADA },
-  { id: "configuracoes", titulo: "Configurações e certificados", to: "/painel/configuracoes", perfis: PERFIS_CONFIG },
+  {
+    id: "visao",
+    titulo: "Visão geral",
+    to: "/painel",
+    grupo: "inicio",
+    perfis: PERFIS_GESTAO,
+    resumo: "Números do evento, pendências e atalhos.",
+  },
+  {
+    id: "inscricoes",
+    titulo: "Inscrições",
+    to: "/painel/inscricoes",
+    grupo: "evento",
+    perfis: PERFIS_INSCRICAO,
+    resumo: "Submissões, trabalhos, apresentações e participantes.",
+  },
+  {
+    id: "checkin",
+    titulo: "Check-in por QR",
+    to: "/painel/checkin",
+    grupo: "evento",
+    perfis: PERFIS_CHAMADA,
+    resumo: "Leia o QR Code do ingresso e registre a presença.",
+  },
+  {
+    id: "chamada",
+    titulo: "Chamada",
+    to: "/painel/chamada",
+    grupo: "evento",
+    perfis: PERFIS_CHAMADA,
+    resumo: "Marque a presença por atividade, pela lista de nomes.",
+  },
+  {
+    id: "configuracoes",
+    titulo: "Configurações e certificados",
+    to: "/painel/configuracoes",
+    grupo: "admin",
+    perfis: PERFIS_CONFIG,
+    resumo: "Regra de aprovação, datas, assinaturas e emissão.",
+  },
+  {
+    id: "usuarios",
+    titulo: "Usuários e perfis",
+    to: "/painel/usuarios",
+    grupo: "admin",
+    perfis: ["administrador"],
+    resumo: "Pedidos de check-in, equipe e contas do site.",
+  },
 ];
 
 export const podeAcessar = (perfil, secao) => {
