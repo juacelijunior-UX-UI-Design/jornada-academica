@@ -80,7 +80,7 @@ function Pendencia({ Icone, texto, acao, to, tom = "info" }) {
       {to && (
         <Link
           to={to}
-          className="inline-flex flex-none items-center gap-1 text-[0.9rem] font-semibold text-royal no-underline hover:underline"
+          className="inline-flex w-full flex-none items-center gap-1 pl-12 text-[0.9rem] font-semibold text-royal no-underline hover:underline sm:w-auto sm:pl-0"
         >
           {acao}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
