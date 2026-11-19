@@ -41,7 +41,7 @@ export function LoginPage() {
   if (mfaChallenge) return <MfaScreen><MfaFlow challenge={mfaChallenge} returnTo={returnTo} /></MfaScreen>;
 
   return (
-    <AuthLayout icon={LogIn} title="Bem-vindo de volta" subtitle="Entre na sua conta">
+    <AuthLayout icon={LogIn} title="Entrar" subtitle="Acesse sua conta da VI Jornada Acadêmica">
       <GoogleButton returnTo={returnTo} onError={setError} />
       <OrDivider />
       <AuthError>{error}</AuthError>

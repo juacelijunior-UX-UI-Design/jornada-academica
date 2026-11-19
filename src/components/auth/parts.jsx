@@ -27,10 +27,10 @@ export function traduzirErro(mensagem) {
 
 export function AuthError({ children }) {
   if (!children) return null;
-  children = traduzirErro(children);
+  const mensagem = traduzirErro(children);
   return (
     <div role="alert" className="mb-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
-      {children}
+      {mensagem}
     </div>
   );
 }

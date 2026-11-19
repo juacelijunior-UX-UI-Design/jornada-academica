@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { loadSignInOptions } from "@/lib/authMfaFlow";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import { traduzirErro } from "@/components/auth/parts";
 
 // Building blocks shared by MfaFlow, MfaMethodSetup and MfaManage.
 
@@ -220,7 +221,7 @@ export function MfaNotice({ error, signInPath = "/login" }) {
             Entrar de novo
           </a>
         </>
-      ) : (error.message || "A verificação falhou. Tente de novo.")}
+      ) : (traduzirErro(error.message) || "A verificação falhou. Tente de novo.")}
     </div>
   );
 }

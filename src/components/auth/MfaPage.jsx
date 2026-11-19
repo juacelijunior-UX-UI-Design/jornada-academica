@@ -79,7 +79,7 @@ function ConfirmIdentity({ returnTo, onChallenge, initialError }) {
 
   return (
     <>
-      <MfaHeader title={info && `Bem-vindo a ${info.name || "este sistema"}`} description="Entre para continuar" />
+      <MfaHeader title={info && `Acesse ${info.name || "o sistema"}`} description="Entre para continuar" />
       <MfaNotice error={error} />
       {!options && !error && <Loader2 className="mx-auto w-6 h-6 animate-spin text-muted-foreground" />}
       {options && (
