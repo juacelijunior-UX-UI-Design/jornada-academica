@@ -280,7 +280,7 @@ export default function ChamadaPainel() {
               );
             })}
           </ul>
-          <div className="hidden overflow-x-auto md:block">
+          <div className="hidden overflow-x-auto rounded-lg md:block">
             <table className="w-full min-w-[38rem] border-collapse text-left">
               <caption className="sr-only">
                 Participantes da sessão {sessao?.titulo}
