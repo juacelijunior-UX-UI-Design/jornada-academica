@@ -10,10 +10,15 @@ export const PERFIS = {
 };
 
 export const PERFIS_EQUIPE = ["administrador", "suporte", "professor", "monitor"];
-// Equipe sem o Monitor de Frequência (o monitor só vê Chamada e Check-in).
-export const PERFIS_GESTAO = ["administrador", "suporte", "professor"];
+// Visão geral: só administração e suporte (o professor só avalia submissões; o monitor só faz presença).
+export const PERFIS_GESTAO = ["administrador", "suporte"];
+// Aba Inscrições: o professor entra, mas só na parte de Submissões (avaliar, ver trabalho, marcar apresentação).
 export const PERFIS_INSCRICAO = ["administrador", "suporte", "professor"];
-export const PERFIS_CHAMADA = ["administrador", "suporte", "professor", "monitor"];
+// Participantes (ouvintes) e edição dos dados pessoais dos inscritos: só administração e suporte.
+export const PERFIS_PARTICIPANTES = ["administrador", "suporte"];
+// Quem aprova ou nega as submissões.
+export const PERFIS_AVALIACAO = ["administrador", "suporte", "professor"];
+export const PERFIS_CHAMADA = ["administrador", "suporte", "monitor"];
 export const PERFIS_CONFIG = ["administrador", "suporte"];
 
 // A ordem aqui é a ordem do menu; `grupo` separa o menu em blocos.
@@ -34,7 +39,7 @@ export const SECOES_PAINEL = [
     to: "/painel/inscricoes",
     grupo: "evento",
     perfis: PERFIS_INSCRICAO,
-    resumo: "Submissões, trabalhos, apresentações e participantes.",
+    resumo: "Submissões, avaliação dos trabalhos, apresentações e participantes.",
   },
   {
     id: "checkin",

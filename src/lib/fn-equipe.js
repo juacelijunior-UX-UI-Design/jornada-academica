@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
-import { PERFIS_EQUIPE, PERFIS_GESTAO, PERFIS_INSCRICAO } from "@/lib/perfis";
+import { PERFIS_AVALIACAO, PERFIS_EQUIPE, PERFIS_GESTAO, PERFIS_INSCRICAO, PERFIS_PARTICIPANTES } from "@/lib/perfis";
 
 const lista = (res) => (Array.isArray(res) ? res : (res?.items ?? []));
 
@@ -152,9 +152,16 @@ export const listarInscritos = createServerFn({ method: "GET" })
     const { perfil } = await acessoDe(base44, context.user);
     if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não gerencia inscrições." };
 
-    const { alunos, configuracao, carga_horaria_total } = await calcularResumo(base44);
+    const { alunos: todosInscritos, configuracao, carga_horaria_total } = await calcularResumo(base44);
+    // O professor só vê as submissões (trabalhos); participantes ouvintes ficam com administração e suporte.
+    const veParticipantes = permitido(perfil, PERFIS_PARTICIPANTES);
+    const alunos = veParticipantes ? todosInscritos : todosInscritos.filter((a) => a.tipo !== "participante");
     return {
       ok: true,
+      perfil,
+      pode_ver_participantes: veParticipantes,
+      pode_editar: veParticipantes,
+      pode_avaliar: permitido(perfil, PERFIS_AVALIACAO),
       regra: descreverRegra(configuracao),
       carga_horaria_total,
       total: alunos.length,
@@ -183,6 +190,10 @@ export const listarInscritos = createServerFn({ method: "GET" })
         elegivel: a.elegivel,
         apresentou: a.apresentou === true,
         horas_certificado: a.horas_certificado,
+        avaliacao: a.avaliacao === "aprovado" || a.avaliacao === "negado" ? a.avaliacao : "pendente",
+        avaliacao_motivo: a.avaliacao_motivo || "",
+        avaliado_por: a.avaliado_por || "",
+        avaliado_em: a.avaliado_em || "",
       })),
     };
   });
@@ -192,7 +203,7 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const base44 = context.getBase44().asServiceRole;
     const { perfil } = await acessoDe(base44, context.user);
-    if (!permitido(perfil, PERFIS_INSCRICAO)) return { ok: false, erro: "Seu perfil não edita inscrições." };
+    if (!permitido(perfil, PERFIS_PARTICIPANTES)) return { ok: false, erro: "Seu perfil não edita inscrições." };
     if (!data?.id) return { ok: false, erro: "Registro inválido." };
 
     const nome = String(data.nome || "").trim().slice(0, 150);
@@ -258,12 +269,52 @@ export const marcarApresentacao = createServerFn({ method: "POST" })
     if (p.tipo === "participante") return { ok: false, erro: "Participantes (ouvintes) não apresentam trabalho." };
 
     const apresentou = data.apresentou === true;
+    if (apresentou && p.avaliacao === "negado") {
+      return { ok: false, erro: "Este trabalho foi negado na avaliação. Aprove-o antes de marcar a apresentação." };
+    }
     await base44.entities.Participante.update(p.id, {
       apresentou,
       apresentou_em: apresentou ? new Date().toISOString() : null,
       apresentou_por: apresentou ? String(context.user?.email || "") : "",
     });
     return { ok: true, apresentou };
+  });
+
+// Aprova, nega ou volta para "aguardando" uma submissão. Feito pelo professor (ou administração/suporte).
+export const avaliarSubmissao = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_AVALIACAO)) return { ok: false, erro: "Seu perfil não avalia submissões." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+    const decisao = ["aprovado", "negado", "pendente"].includes(data.decisao) ? data.decisao : null;
+    if (!decisao) return { ok: false, erro: "Decisão inválida." };
+
+    let p = null;
+    try {
+      p = await base44.entities.Participante.get(data.id);
+    } catch {
+      p = null;
+    }
+    if (!p) return { ok: false, erro: "Inscrição não encontrada." };
+    if (p.tipo === "participante") return { ok: false, erro: "Participantes (ouvintes) não têm trabalho para avaliar." };
+
+    const motivo = decisao === "pendente" ? "" : String(data.motivo || "").trim().slice(0, 500);
+    const alteracoes = {
+      avaliacao: decisao,
+      avaliacao_motivo: motivo,
+      avaliado_em: decisao === "pendente" ? null : new Date().toISOString(),
+      avaliado_por: decisao === "pendente" ? "" : String(context.user?.email || ""),
+    };
+    // Trabalho negado não pode continuar marcado como apresentado.
+    if (decisao === "negado" && p.apresentou) {
+      alteracoes.apresentou = false;
+      alteracoes.apresentou_em = null;
+      alteracoes.apresentou_por = "";
+    }
+    await base44.entities.Participante.update(p.id, alteracoes);
+    return { ok: true, avaliacao: decisao, desmarcou_apresentacao: Boolean(alteracoes.apresentou === false) };
   });
 
 // Usado pelo painel para conferir o CPF digitado (a lista traz o CPF mascarado).
