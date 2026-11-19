@@ -1,23 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CalendarCheck } from "lucide-react";
-import PainelShell from "@/components/painel/PainelShell";
-import PainelCabecalho from "@/components/painel/PainelCabecalho";
-import ChamadaPainel from "@/components/painel/ChamadaPainel";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
+// Endereço antigo do "Painel de chamada": agora tudo fica no painel, que abre na área liberada para cada perfil
+// (o professor vai direto para as Submissões).
 export const Route = createFileRoute("/_authed/professor")({
-  head: () => ({ meta: [{ title: "Painel de chamada | VI Jornada Acadêmica" }] }),
-  component: ProfessorPage,
+  component: () => <Navigate to="/painel" replace />,
 });
-
-function ProfessorPage() {
-  return (
-    <PainelShell>
-      <PainelCabecalho
-        Icone={CalendarCheck}
-        titulo="Painel de chamada"
-        descricao="Escolha a sessão e marque a presença de quem está na sala. A presença registrada não pode ser desfeita por aqui."
-      />
-      <ChamadaPainel />
-    </PainelShell>
-  );
-}
