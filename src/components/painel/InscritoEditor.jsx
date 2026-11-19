@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { atualizarInscrito } from "@/lib/fn-equipe";
+import { INSTITUICAO_ALUNO } from "@/lib/evento";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const CAMPOS = [
@@ -18,12 +19,14 @@ export default function InscritoEditor({ inscrito, onFechar, onSalvo }) {
   const salvar = useServerFn(atualizarInscrito);
   // Participante (ouvinte) não tem trabalho: só nome, e-mail e telefone.
   const participante = inscrito.tipo === "participante";
+  // Aluno da instituição: a instituição é sempre a Uninassau (campo já preenchido e travado).
+  const aluno = inscrito.tipo === "aluno";
   const campos = CAMPOS.filter((c) => !(participante && c.soSubmissao));
   const [form, setForm] = useState({
     nome: inscrito.nome,
     email: inscrito.email,
     telefone: inscrito.telefone || "",
-    instituicao: inscrito.instituicao || "",
+    instituicao: aluno ? INSTITUICAO_ALUNO : inscrito.instituicao || "",
     curso: inscrito.curso || "",
     titulo: inscrito.titulo || "",
   });
@@ -67,11 +70,15 @@ export default function InscritoEditor({ inscrito, onFechar, onSalvo }) {
               <label htmlFor={`edit-${c.id}`} className="jr-label">{c.label}</label>
               <input
                 id={`edit-${c.id}`}
-                className="jr-input"
+                className="jr-input read-only:cursor-default read-only:bg-fundo read-only:text-tinta-suave"
                 maxLength={c.max}
                 value={form[c.id]}
+                readOnly={aluno && c.id === "instituicao"}
                 onChange={(e) => setForm((a) => ({ ...a, [c.id]: e.target.value }))}
               />
+              {aluno && c.id === "instituicao" && (
+                <p className="jr-legenda mt-1">Preenchido automaticamente: inscrição como aluno da instituição.</p>
+              )}
             </div>
           ))}
           <DialogFooter>

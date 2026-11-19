@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
+import { INSTITUICAO_ALUNO } from "@/lib/evento";
 import { PERFIS_AVALIACAO, PERFIS_EQUIPE, PERFIS_GESTAO, PERFIS_INSCRICAO, PERFIS_PARTICIPANTES } from "@/lib/perfis";
 
 const lista = (res) => (Array.isArray(res) ? res : (res?.items ?? []));
@@ -172,7 +173,7 @@ export const listarInscritos = createServerFn({ method: "GET" })
         email: a.email,
         telefone: a.telefone,
         matricula: a.matricula || "",
-        instituicao: a.instituicao || "",
+        instituicao: a.tipo === "aluno" ? a.instituicao || INSTITUICAO_ALUNO : a.instituicao || "",
         curso: a.curso || "",
         disciplina: a.disciplina || "",
         formato: a.formato,

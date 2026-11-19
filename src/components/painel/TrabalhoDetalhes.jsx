@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { linkArquivoTrabalho } from "@/lib/fn-equipe";
+import { INSTITUICAO_ALUNO } from "@/lib/evento";
 import { formatarTamanho } from "@/lib/validacao";
 
 const dataBr = (d) =>
@@ -212,17 +213,16 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar, rodape = null 
                 <Dado Icone={BadgeCheck} rotulo="Inscrição">
                   {externo ? "Público externo" : "Aluno da instituição"}
                 </Dado>
-                {externo
-                  ? i.instituicao && (
-                      <Dado Icone={Building2} rotulo="Instituição">
-                        {i.instituicao}
-                      </Dado>
-                    )
-                  : i.matricula && (
-                      <Dado Icone={Hash} rotulo="Matrícula">
-                        {i.matricula}
-                      </Dado>
-                    )}
+                {(i.instituicao || !externo) && (
+                  <Dado Icone={Building2} rotulo="Instituição">
+                    {i.instituicao || INSTITUICAO_ALUNO}
+                  </Dado>
+                )}
+                {!externo && i.matricula && (
+                  <Dado Icone={Hash} rotulo="Matrícula">
+                    {i.matricula}
+                  </Dado>
+                )}
                 {i.criado_em && (
                   <>
                     <Dado Icone={CalendarDays} rotulo="Inscrito em">

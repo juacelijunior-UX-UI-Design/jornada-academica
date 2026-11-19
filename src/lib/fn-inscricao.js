@@ -14,6 +14,7 @@ import {
   mascararCpf,
 } from "@/lib/validacao";
 import { conteudoQr, enviarConfirmacao, garantirToken } from "@/lib/ingresso.server";
+import { INSTITUICAO_ALUNO } from "@/lib/evento";
 import { motivoInscricoesFechadas, obterConfiguracao, todos } from "@/lib/jornada.server";
 
 const soDigitosOuVazio = (v) => (typeof v === "string" ? v : "");
@@ -55,7 +56,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     telefone: normalizarTelefone(data.telefone),
     cpf,
     matricula: data.tipo === "externo" ? "" : soDigitosOuVazio(apenasDigitos(data.matricula)),
-    instituicao: data.tipo === "externo" ? String(data.instituicao || "").trim() : undefined,
+    instituicao: data.tipo === "externo" ? String(data.instituicao || "").trim() : INSTITUICAO_ALUNO,
     curso: String(data.curso).trim(),
     disciplina: externo ? undefined : data.disciplina,
     formato,

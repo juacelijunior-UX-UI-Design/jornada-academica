@@ -18,6 +18,9 @@ export const DATA_LIBERACAO_CERTIFICADOS = "2026-12-14";
 // - submeteu trabalho (aluno da instituição ou público externo) E a equipe marcou "Apresentou": 20 horas;
 // - submeteu mas não apresentou (com presença registrada): 4 horas, como participante;
 // - inscrição só como participante (ouvinte, sem trabalho): 4 horas.
+// Instituição de quem se inscreve como "aluno da instituição".
+export const INSTITUICAO_ALUNO = "Uninassau";
+
 export const CARGA_HORARIA_APRESENTACAO = 20;
 export const CARGA_HORARIA_PARTICIPANTE = 4;
 
