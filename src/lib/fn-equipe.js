@@ -18,13 +18,32 @@ export const resumoPainel = createServerFn({ method: "GET" })
     const acesso = await acessoDe(base44, context.user);
     // Números do evento: só para administrador, suporte e professor (o monitor não vê a Visão geral).
     if (!permitido(acesso.perfil, PERFIS_GESTAO)) return { ...acesso, numeros: null };
-    const [inscritos, presencas, certificados, sessoes] = await Promise.all([
-      base44.entities.Participante.count({}),
-      base44.entities.Presenca.count({}),
-      base44.entities.Certificado.count({}),
-      base44.entities.Sessao.count({}),
-    ]);
-    return { ...acesso, numeros: { inscritos, presencas, certificados, sessoes } };
+    const ehAdmin = acesso.perfil === "administrador";
+    const contar = (entidade, filtro = {}) => base44.entities[entidade].count(filtro).catch(() => 0);
+    const [inscritos, participantes, apresentados, presencas, certificados, sessoes, pedidosCheckin] =
+      await Promise.all([
+        contar("Participante"),
+        contar("Participante", { tipo: "participante" }),
+        contar("Participante", { apresentou: true }),
+        contar("Presenca"),
+        contar("Certificado"),
+        contar("Sessao"),
+        ehAdmin ? contar("SolicitacaoCheckin", { status: "pendente" }) : Promise.resolve(0),
+      ]);
+    const submissoes = Math.max(0, inscritos - participantes);
+    return {
+      ...acesso,
+      numeros: {
+        inscritos,
+        submissoes,
+        participantes,
+        apresentados,
+        presencas,
+        certificados,
+        sessoes,
+        pedidosCheckin,
+      },
+    };
   });
 
 export const listarUsuarios = createServerFn({ method: "GET" })
