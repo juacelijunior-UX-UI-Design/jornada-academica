@@ -251,7 +251,7 @@ export default function InscritosPainel() {
                   <col className="w-[11rem]" />
                   <col className="w-[15rem]" />
                 </colgroup>
-                <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+                <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
                   <tr>
                     <th className="px-4 py-3">Trabalho e apresentador</th>
                     <th className="px-4 py-3">Curso e disciplina</th>
@@ -338,7 +338,7 @@ export default function InscritosPainel() {
                   <col className="w-[11rem]" />
                   <col className="w-[8rem]" />
                 </colgroup>
-                <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+                <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
                   <tr>
                     <th className="px-4 py-3">Participante</th>
                     <th className="px-4 py-3">Telefone e CPF</th>
