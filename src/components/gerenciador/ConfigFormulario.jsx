@@ -116,7 +116,7 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
           )}
 
           <Bloco Icone={CheckSquare} titulo="Regra de aprovação" descricao="Quem fica apto a receber o certificado.">
-            <div className="grid gap-x-4 md:grid-cols-2">
+            <div className="grid gap-x-4 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
               <Campo id="modo_aprovacao" label="Critério de aprovação" erro={erros.modo_aprovacao}>
                 <select
                   id="modo_aprovacao"
@@ -132,7 +132,7 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
 
               {form.modo_aprovacao === "presenca" ? (
                 <div className="mb-4 flex items-end">
-                  <p className="m-0 rounded-lg bg-fundo px-3 py-2.5 text-[0.9rem] text-tinta">{dica}</p>
+                  <p className="m-0 w-full rounded-lg bg-fundo px-3 py-2.5 text-[0.9rem] text-tinta">{dica}</p>
                 </div>
               ) : (
                 <Campo
