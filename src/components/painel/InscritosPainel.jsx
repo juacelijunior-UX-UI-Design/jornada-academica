@@ -8,7 +8,7 @@ import AvaliacaoSubmissao, { SITUACOES_AVALIACAO, SeloAvaliacao as SeloAvaliacao
 import InscritoEditor from "@/components/painel/InscritoEditor";
 import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
-import CartaoFaixa, { SeloFaixa } from "@/components/painel/CartaoFaixa";
+import CartaoFaixa from "@/components/painel/CartaoFaixa";
 
 const rotuloFormato = (i) => (i.formato === "banner" ? "Banner" : "Comunicação oral");
 const telefoneBr = (t) => {
@@ -242,7 +242,6 @@ export default function InscritosPainel() {
       <CartaoFaixa
         Icone={Search}
         titulo={ehSub ? "Buscar trabalho ou apresentador" : "Buscar participante"}
-        extra={<SeloFaixa>{visiveis.length} na lista</SeloFaixa>}
       >
         <label htmlFor="busca-inscritos" className="sr-only">
           {ehSub ? "Buscar trabalho ou apresentador" : "Buscar participante"}
