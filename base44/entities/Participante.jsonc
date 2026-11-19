@@ -24,6 +24,34 @@
       "description": "URI privada do arquivo do trabalho.",
       "type": "string"
     },
+    "avaliacao": {
+      "description": "Decis\u00e3o do professor sobre a submiss\u00e3o. Vazio = aguardando avalia\u00e7\u00e3o.",
+      "enum": [
+        "pendente",
+        "aprovado",
+        "negado"
+      ],
+      "enumColors": [
+        "yellow",
+        "green",
+        "red"
+      ],
+      "type": "string"
+    },
+    "avaliacao_motivo": {
+      "description": "Justificativa opcional de quem avaliou (principalmente ao negar).",
+      "maxLength": 500,
+      "type": "string"
+    },
+    "avaliado_em": {
+      "description": "Quando a submiss\u00e3o foi avaliada.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "avaliado_por": {
+      "description": "E-mail de quem avaliou a submiss\u00e3o.",
+      "type": "string"
+    },
     "coautores": {
       "description": "Nomes dos co-autores do trabalho (at\u00e9 9).",
       "items": {
