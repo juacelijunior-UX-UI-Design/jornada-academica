@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Camera, CameraOff, Loader2 } from "lucide-react";
+import { Camera, CameraOff, Loader2, ScanLine, UserCheck } from "lucide-react";
+import CartaoFaixa, { SeloFaixa } from "@/components/painel/CartaoFaixa";
 import { carregarCheckin, registrarCheckin } from "@/lib/fn-ingresso";
 import { mascaraCpf } from "@/lib/validacao";
 import LeitorQr from "@/components/checkin/LeitorQr";
@@ -88,7 +89,12 @@ export default function CheckinPainel() {
 
   return (
     <div className="space-y-6">
-      <div className="jr-card p-5">
+      <CartaoFaixa
+        Icone={ScanLine}
+        titulo="Registrar presença"
+        descricao="Escolha a atividade e leia o QR Code do ingresso, ou digite o CPF."
+        extra={<SeloFaixa>{registros.length} presença(s) nesta atividade</SeloFaixa>}
+      >
         <label htmlFor="sessao" className="jr-label">Atividade</label>
         <select id="sessao" className="jr-input" value={sessaoId} onChange={(e) => setSessaoId(e.target.value)}>
           {dados.sessoes.map((s) => (
@@ -98,12 +104,21 @@ export default function CheckinPainel() {
           ))}
         </select>
 
-        <div className="mt-5 grid gap-6 md:grid-cols-2">
-          <div>
+        <div className="mt-5 grid items-stretch gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          <div className="flex min-w-0 flex-col rounded-xl border border-linea bg-fundo/50 p-4">
+            <p className="m-0 mb-3 flex items-center gap-2 font-semibold text-navy">
+              <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-navy text-[0.8rem] font-bold text-amarelo">1</span>
+              Pela câmera
+            </p>
+            <p className="m-0 mb-3 text-[0.88rem] text-tinta-suave">
+              Aponte para o QR Code do ingresso. A câmera fecha sozinha após registrar.
+            </p>
             <button
               type="button"
               onClick={() => setCamera((v) => !v)}
-              className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-royal px-5 font-semibold text-white hover:bg-navy"
+              className={`mt-auto inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg px-5 font-semibold transition ${
+                camera ? "border-2 border-navy bg-white text-navy hover:bg-fundo" : "bg-royal text-white hover:bg-navy"
+              }`}
             >
               {camera ? <CameraOff className="h-5 w-5" /> : <Camera className="h-5 w-5" />}
               {camera
@@ -112,16 +127,31 @@ export default function CheckinPainel() {
                   ? "Ler próximo QR Code"
                   : "Ler QR Code com a câmera"}
             </button>
-            {camera && <LeitorQr onLeitura={(texto) => confirmar({ qr: texto })} />}
+            {camera && (
+              <div className="mt-3">
+                <LeitorQr onLeitura={(texto) => confirmar({ qr: texto })} />
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-center gap-3 md:flex-col" aria-hidden="true">
+            <span className="h-px flex-1 bg-linea md:h-auto md:w-px" />
+            <span className="rounded-full border border-linea bg-white px-2.5 py-1 text-[0.75rem] font-bold uppercase text-tinta-suave">ou</span>
+            <span className="h-px flex-1 bg-linea md:h-auto md:w-px" />
           </div>
 
           <form
+            className="flex min-w-0 flex-col rounded-xl border border-linea bg-fundo/50 p-4"
             onSubmit={(e) => {
               e.preventDefault();
               confirmar({ cpf });
             }}
           >
-            <label htmlFor="cpf-rapido" className="jr-label">Ou digite o CPF</label>
+            <p className="m-0 mb-3 flex items-center gap-2 font-semibold text-navy">
+              <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-navy text-[0.8rem] font-bold text-amarelo">2</span>
+              Pelo CPF
+            </p>
+            <label htmlFor="cpf-rapido" className="jr-label">CPF do participante:</label>
             <input
               id="cpf-rapido"
               className="jr-input"
@@ -133,9 +163,9 @@ export default function CheckinPainel() {
             <button
               type="submit"
               disabled={enviando}
-              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-amarelo px-5 font-semibold text-navy hover:bg-[#e8b800] disabled:opacity-60"
+              className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-5 font-semibold text-navy hover:bg-[#e8b800] disabled:opacity-60"
             >
-              {enviando && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+              {enviando ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <UserCheck className="h-4 w-4" aria-hidden="true" />}
               Registrar presença
             </button>
           </form>
@@ -146,7 +176,7 @@ export default function CheckinPainel() {
             {aviso.texto}
           </div>
         )}
-      </div>
+      </CartaoFaixa>
 
       <section>
         <h2 className="mb-3 font-heading text-[1.2rem] font-extrabold text-navy">

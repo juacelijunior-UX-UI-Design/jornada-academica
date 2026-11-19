@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Eye, FileText, Loader2, Pencil, Presentation, Search, Send, UserPlus } from "lucide-react";
+import { Award, Check, Eye, FileText, Loader2, Pencil, Presentation, Search, Send, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { idsPorCpf, listarInscritos, marcarApresentacao } from "@/lib/fn-equipe";
 import InscritoEditor from "@/components/painel/InscritoEditor";
 import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
+import CartaoFaixa, { SeloFaixa } from "@/components/painel/CartaoFaixa";
 
 const rotuloFormato = (i) => (i.formato === "banner" ? "Banner" : "Comunicação oral");
 const telefoneBr = (t) => {
@@ -179,8 +180,12 @@ export default function InscritosPainel() {
     <div className="space-y-5">
       <TipoSeletor destaque rotulo="Tipo de inscrição" opcoes={ABAS} valor={aba} onMudar={setAba} />
 
-      <div className="jr-card p-5">
-        <label htmlFor="busca-inscritos" className="jr-label">
+      <CartaoFaixa
+        Icone={Search}
+        titulo={ehSub ? "Buscar trabalho ou apresentador" : "Buscar participante"}
+        extra={<SeloFaixa>{visiveis.length} na lista</SeloFaixa>}
+      >
+        <label htmlFor="busca-inscritos" className="sr-only">
           {ehSub ? "Buscar trabalho ou apresentador" : "Buscar participante"}
         </label>
         <div className="relative">
@@ -197,6 +202,26 @@ export default function InscritosPainel() {
             onChange={(e) => setBusca(e.target.value)}
           />
         </div>
+        <div className="mt-3 flex flex-wrap gap-2 text-[0.82rem]">
+          {ehSub ? (
+            <>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9effc] px-3 py-1 font-semibold text-navy">
+                <Award className="h-3.5 w-3.5 text-royal" aria-hidden="true" />
+                20 h: submeteu e apresentou
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff6d9] px-3 py-1 font-semibold text-[#7a5800]">
+                <Award className="h-3.5 w-3.5" aria-hidden="true" />
+                4 h: não apresentou, mas teve presença
+              </span>
+            </>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff6d9] px-3 py-1 font-semibold text-[#7a5800]">
+              <Award className="h-3.5 w-3.5" aria-hidden="true" />
+              4 h: com presença registrada
+            </span>
+          )}
+        </div>
+      </CartaoFaixa>
         <p className="jr-legenda mt-3">
           {visiveis.length} na lista ·{" "}
           {ehSub

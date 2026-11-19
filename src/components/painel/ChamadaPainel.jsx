@@ -1,7 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Clock, Loader2, Search, UserCheck } from "lucide-react";
+import { Award, CalendarCheck, Clock, Loader2, Search, UserCheck, Users } from "lucide-react";
+import CartaoFaixa from "@/components/painel/CartaoFaixa";
+
+// Número da chamada (inscritos, presentes...), em quadrinho.
+function Indicador({ Icone, rotulo, valor, texto = false }) {
+  return (
+    <div className="flex min-w-0 items-start gap-2.5 rounded-lg border border-linea bg-fundo/50 px-3 py-2.5">
+      <Icone className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
+      <div className="min-w-0">
+        <span className="block text-[0.72rem] font-bold uppercase tracking-[0.06em] text-tinta-suave">{rotulo}:</span>
+        <span
+          className={`block break-words text-navy ${
+            texto ? "text-[0.88rem] font-semibold leading-snug" : "font-heading text-[1.35rem] font-extrabold leading-tight"
+          }`}
+        >
+          {valor}
+        </span>
+      </div>
+    </div>
+  );
+}
 import { toast } from "sonner";
 import { buscarPorCpf, carregarChamada, registrarPresencas } from "@/lib/fn-painel";
 
@@ -153,7 +173,11 @@ export default function ChamadaPainel() {
 
   return (
     <div className="space-y-5">
-      <div className="jr-card p-5 sm:p-6">
+      <CartaoFaixa
+        Icone={CalendarCheck}
+        titulo="Sessão e busca"
+        descricao="Escolha a atividade e encontre a pessoa pelo nome, matrícula ou CPF."
+      >
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="sessao" className="jr-label">
@@ -201,22 +225,13 @@ export default function ChamadaPainel() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.95rem] text-tinta-suave">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-royal" aria-hidden="true" />
-            {data?.regra}
-          </span>
-          <span>
-            <strong className="text-navy">{participantes.length}</strong> inscritos
-          </span>
-          <span>
-            <strong className="text-navy">{totalPresentes}</strong> presentes nesta sessão
-          </span>
-          <span>
-            <strong className="text-navy">{data?.total_elegiveis ?? 0}</strong> elegíveis
-          </span>
+        <div className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+          <Indicador Icone={Clock} rotulo="Regra" valor={data?.regra} texto />
+          <Indicador Icone={Users} rotulo="Inscritos" valor={participantes.length} />
+          <Indicador Icone={UserCheck} rotulo="Presentes nesta sessão" valor={totalPresentes} />
+          <Indicador Icone={Award} rotulo="Elegíveis ao certificado" valor={data?.total_elegiveis ?? 0} />
         </div>
-      </div>
+      </CartaoFaixa>
 
       <div className="jr-card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-linea p-4">
