@@ -5,7 +5,6 @@ import {
   Building2,
   CalendarDays,
   ClipboardList,
-  Clock,
   Download,
   FileText,
   Hash,
@@ -224,14 +223,9 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar, rodape = null 
                   </Dado>
                 )}
                 {i.criado_em && (
-                  <>
-                    <Dado Icone={CalendarDays} rotulo="Inscrito em">
-                      {dataBr(i.criado_em)}
-                    </Dado>
-                    <Dado Icone={Clock} rotulo="Horário">
-                      {horaBr(i.criado_em)}
-                    </Dado>
-                  </>
+                  <Dado Icone={CalendarDays} rotulo="Inscrito em">
+                    {dataBr(i.criado_em)} às {horaBr(i.criado_em)}
+                  </Dado>
                 )}
                 <Dado Icone={Mail} rotulo="E-mail" largo>
                   <a href={`mailto:${i.email}`} title={i.email} className="break-all">
