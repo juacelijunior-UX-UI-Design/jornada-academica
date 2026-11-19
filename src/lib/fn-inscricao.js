@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import {
   FORMATO_AUTOMATICO,
   DISCIPLINAS,
+  INSTITUICAO_ALUNO,
 } from "@/lib/evento";
 import {
   MAX_COAUTORES,
@@ -14,7 +15,6 @@ import {
   mascararCpf,
 } from "@/lib/validacao";
 import { conteudoQr, enviarConfirmacao, garantirToken } from "@/lib/ingresso.server";
-import { INSTITUICAO_ALUNO } from "@/lib/evento";
 import { motivoInscricoesFechadas, obterConfiguracao, todos } from "@/lib/jornada.server";
 
 const soDigitosOuVazio = (v) => (typeof v === "string" ? v : "");
