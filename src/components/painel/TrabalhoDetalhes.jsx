@@ -87,7 +87,7 @@ function iniciais(nome) {
 }
 
 // Janela com todos os dados do trabalho submetido, para a banca avaliar e baixar o arquivo.
-export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
+export default function TrabalhoDetalhes({ inscrito: i, onFechar, rodape = null }) {
   const abrirLink = useServerFn(linkArquivoTrabalho);
   const [abrindo, setAbrindo] = useState(false);
   const formato = i.formato === "banner" ? "Banner" : "Comunicação oral";
@@ -255,7 +255,15 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
           </div>
         </div>
 
-        <div className="flex flex-none justify-end border-t border-linea bg-fundo/50 px-6 py-3">
+        <div className="flex flex-none flex-wrap items-end justify-between gap-3 border-t border-linea bg-fundo/50 px-6 py-3">
+          {rodape ? (
+            <div className="min-w-0">
+              <p className="m-0 mb-1.5 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-tinta-suave">Avaliação do trabalho:</p>
+              {rodape}
+            </div>
+          ) : (
+            <span />
+          )}
           <button
             type="button"
             onClick={() => onFechar?.()}

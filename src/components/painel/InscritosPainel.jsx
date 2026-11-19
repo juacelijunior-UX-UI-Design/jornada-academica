@@ -116,7 +116,6 @@ export default function InscritosPainel() {
       };
       toast.success(textos[decisao]);
       await refetch();
-      setVendo((v) => (v && v.id === i.id ? null : v));
       return true;
     } catch {
       toast.error("Não foi possível salvar a avaliação. Tente novamente.");
