@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Award, Check, Eye, FileText, Filter, Loader2, Pencil, Presentation, Search, Send, UserPlus, X } from "lucide-react";
+import { Check, Eye, FileText, Filter, Loader2, Pencil, Presentation, Search, Send, UserPlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { avaliarSubmissao, idsPorCpf, listarInscritos, marcarApresentacao } from "@/lib/fn-equipe";
 import AvaliacaoSubmissao, { SITUACOES_AVALIACAO, SeloAvaliacao as SeloAvaliacaoLeitura } from "@/components/painel/AvaliacaoSubmissao";
@@ -305,25 +305,6 @@ export default function InscritosPainel() {
             )}
           </div>
         )}
-        <div className="mt-3 flex flex-wrap gap-2 text-[0.82rem]">
-          {ehSub ? (
-            <>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9effc] px-3 py-1 font-semibold text-navy">
-                <Award className="h-3.5 w-3.5 text-royal" aria-hidden="true" />
-                20 h: submeteu e apresentou
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff6d9] px-3 py-1 font-semibold text-[#7a5800]">
-                <Award className="h-3.5 w-3.5" aria-hidden="true" />
-                4 h: não apresentou, mas teve presença
-              </span>
-            </>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff6d9] px-3 py-1 font-semibold text-[#7a5800]">
-              <Award className="h-3.5 w-3.5" aria-hidden="true" />
-              4 h: com presença registrada
-            </span>
-          )}
-        </div>
       </CartaoFaixa>
 
       <div className="jr-card overflow-hidden">
