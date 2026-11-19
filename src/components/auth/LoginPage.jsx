@@ -32,7 +32,7 @@ export function LoginPage() {
       // A hard redirect: the app re-initializes with the new session.
       window.location.href = returnTo;
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      setError(err.message || "E-mail ou senha inválidos.");
       setBusy(false);
     }
   }
@@ -41,23 +41,23 @@ export function LoginPage() {
   if (mfaChallenge) return <MfaScreen><MfaFlow challenge={mfaChallenge} returnTo={returnTo} /></MfaScreen>;
 
   return (
-    <AuthLayout icon={LogIn} title="Welcome back" subtitle="Log in to your account">
+    <AuthLayout icon={LogIn} title="Bem-vindo de volta" subtitle="Entre na sua conta">
       <GoogleButton returnTo={returnTo} onError={setError} />
       <OrDivider />
       <AuthError>{error}</AuthError>
       <form onSubmit={submit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="login-email">Email</Label>
+          <Label htmlFor="login-email">E-mail</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-            <Input id="login-email" type="email" autoComplete="email" autoFocus placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 pl-10" required />
+            <Input id="login-email" type="email" autoComplete="email" autoFocus placeholder="voce@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 pl-10" required />
           </div>
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="login-password">Password</Label>
+            <Label htmlFor="login-password">Senha</Label>
             <AuthLink to="/forgot-password" returnTo={returnTo} className="text-xs text-primary hover:underline">
-              Forgot password?
+              Esqueceu a senha?
             </AuthLink>
           </div>
           <div className="relative">
@@ -65,14 +65,14 @@ export function LoginPage() {
             <Input id="login-password" type="password" autoComplete="current-password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 pl-10" required />
           </div>
         </div>
-        <SubmitButton busy={busy} busyLabel="Logging in...">
-          Log in
+        <SubmitButton busy={busy} busyLabel="Entrando...">
+          Entrar
         </SubmitButton>
       </form>
       <p className="mt-6 text-center text-sm text-muted-foreground">
-        Don't have an account?{" "}
+        Ainda não tem conta?{" "}
         <AuthLink to="/register" returnTo={returnTo}>
-          Create one
+          Criar conta
         </AuthLink>
       </p>
     </AuthLayout>

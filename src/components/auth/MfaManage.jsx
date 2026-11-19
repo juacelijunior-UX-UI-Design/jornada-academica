@@ -5,9 +5,9 @@ import { MfaMethodSetup } from "@/components/auth/MfaMethodSetup";
 import { CodeField, MfaHeader, MfaNotice, ResendLine, useCooldown } from "@/components/auth/MfaParts";
 
 const METHODS = [
-  { id: "totp", name: "Authenticator app", icon: Smartphone,
-    description: "Use an app like Google Authenticator or Duo to generate secure sign-in codes." },
-  { id: "sms", name: "Text messages", icon: MessageSquare, description: "Get sign-in codes sent to your phone by text message." },
+  { id: "totp", name: "App autenticador", icon: Smartphone,
+    description: "Use um app como Google Authenticator ou Duo para gerar códigos de acesso seguros." },
+  { id: "sms", name: "Mensagens SMS", icon: MessageSquare, description: "Receba os códigos de acesso por SMS no celular." },
 ];
 const SMS_RESEND_SECONDS = 30;
 
@@ -34,8 +34,8 @@ export function MfaManage({ session, returnTo }) {
 
   return (
     <div className="session-record-block">
-      <MfaHeader title="Two-factor authentication"
-        description="Add an extra layer of protection when signing in. You'll be asked for a code each time you sign in." />
+      <MfaHeader title="Verificação em duas etapas"
+        description="Adicione uma proteção extra ao entrar. Um código será pedido a cada acesso." />
       {view.name === "setup" && <MfaMethodSetup session={session} method={view.method} signInPath="/mfa" onDone={back} onBack={() => setView({ name: "list" })} />}
       {view.name === "disable" && <Disable session={session} method={view.method} onDone={back} onBack={() => setView({ name: "list" })} />}
       {view.name === "list" && (
@@ -50,17 +50,17 @@ export function MfaManage({ session, returnTo }) {
                 <div className="flex-1 min-w-[10rem]">
                   <p className="font-medium">{name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {enrolled ? (id === "sms" && status.phone_hint ? `Enabled · ${status.phone_hint}` : "Enabled") : description}
+                    {enrolled ? (id === "sms" && status.phone_hint ? `Ativado · ${status.phone_hint}` : "Ativado") : description}
                   </p>
                 </div>
                 {/* On a narrow screen the actions drop below the method instead of squeezing it. */}
                 <div className="flex gap-2 ml-auto">
                   <Button size="sm" variant="outline" onClick={() => setView({ name: "setup", method: id })}>
-                    {enrolled ? "Replace" : "Enable"}
+                    {enrolled ? "Trocar" : "Ativar"}
                   </Button>
                   {enrolled && (
                     <Button size="sm" variant="ghost" onClick={() => setView({ name: "disable", method: id })}>
-                      Disable
+                      Desativar
                     </Button>
                   )}
                 </div>
@@ -68,7 +68,7 @@ export function MfaManage({ session, returnTo }) {
             );
           })}
           <Button className="w-full h-12 font-medium" onClick={() => { window.location.href = returnTo; }}>
-            Done
+            Concluir
           </Button>
         </div>
       )}
@@ -113,7 +113,7 @@ function Disable({ session, method, onDone, onBack }) {
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-center">
-        {method === "totp" ? "Enter a code from your authenticator app" : "Verify with a code sent to your phone"}
+        {method === "totp" ? "Digite um código do seu app autenticador" : "Confirme com um código enviado ao seu celular"}
       </h2>
       <MfaNotice error={error} signInPath="/mfa" />
       {codeSent ? (
@@ -124,14 +124,14 @@ function Disable({ session, method, onDone, onBack }) {
       ) : (
         <Button className="w-full h-11" disabled={busy} onClick={sendCode}>
           {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-          Send Code
+          Enviar código
         </Button>
       )}
       <div className="grid grid-cols-2 gap-3 pt-2">
-        <Button variant="outline" className="h-11" disabled={busy} onClick={onBack}>Cancel</Button>
+        <Button variant="outline" className="h-11" disabled={busy} onClick={onBack}>Cancelar</Button>
         <Button className="h-11" disabled={busy || !codeSent || code.length < 6} onClick={() => confirm()}>
           {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-          Verify & Disable
+          Verificar e desativar
         </Button>
       </div>
     </div>

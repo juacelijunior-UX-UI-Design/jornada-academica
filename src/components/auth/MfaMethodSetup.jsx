@@ -8,7 +8,7 @@ import {
 } from "@/components/auth/MfaParts";
 
 const SMS_RESEND_SECONDS = 30;
-const FULL_CODE = "Enter the full 6-digit code";
+const FULL_CODE = "Digite o código completo de 6 dígitos";
 
 // Sets up one method: method is "totp" (authenticator app) or "sms" (text messages).
 // onDone receives the server's result once the code is confirmed; onBack leaves the setup.
@@ -74,7 +74,7 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
       await session.sendPhoneCode(fullPhone);
       setCooldown(SMS_RESEND_SECONDS);
     } catch (err) {
-      setResendError(err.message || "Failed to resend");
+      setResendError(err.message || "Não foi possível reenviar");
     }
   };
 
@@ -89,7 +89,7 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
     setError(null);
     const result = await run(
       () => (method === "totp" ? session.confirmAuthenticator(value) : session.confirmPhone(value)),
-      (err) => (err.mustSignInAgain ? setError(err) : setFieldError(err.message || "Invalid code")),
+      (err) => (err.mustSignInAgain ? setError(err) : setFieldError(err.message || "Código inválido")),
     );
     if (result) onDone(result);
   };
@@ -115,15 +115,15 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
   if (method === "totp" && step === "start") {
     return (
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-center">Set up your authenticator app</h2>
+        <h2 className="text-lg font-semibold text-center">Configurar app autenticador</h2>
         <MfaNotice error={error} signInPath={signInPath} />
         {!setup && !error && <Loader2 className="mx-auto w-6 h-6 animate-spin text-muted-foreground" />}
         {setup && (isTouchDevice() ? (
           <div className="space-y-3 text-sm">
             <ol className="list-decimal pl-5 space-y-1 text-muted-foreground">
-              <li>Copy the key below.</li>
-              <li>In your authenticator app, add an account and paste the key.</li>
-              <li>Come back here and enter the code the app shows.</li>
+              <li>Copie a chave abaixo.</li>
+              <li>No app autenticador, adicione uma conta e cole a chave.</li>
+              <li>Volte aqui e digite o código que o app mostrar.</li>
             </ol>
             <code className="block rounded-lg border border-border px-3 py-3 text-center font-mono font-medium tracking-wider break-all">
               {setup.secret_formatted}
@@ -132,16 +132,16 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 text-sm">
-            <p className="font-medium">Scan the QR code with your authenticator app</p>
+            <p className="font-medium">Escaneie o QR Code com o seu app autenticador</p>
             <img src={setup.qr_code} alt="QR code for authenticator app setup" className="w-36 h-36 rounded-lg border border-border bg-white p-1" />
-            <p className="text-muted-foreground mt-3">Can't scan the code? Enter it manually:</p>
+            <p className="text-muted-foreground mt-3">Não consegue escanear? Digite a chave manualmente:</p>
             <div className="flex flex-wrap items-center justify-center gap-1">
               <code className="font-mono font-medium tracking-wider break-all">{setup.secret_formatted}</code>
               <CopyKeyButton text={setup.secret_formatted} />
             </div>
           </div>
         ))}
-        {actions("Cancel", onBack, "Continue", () => setStep("code"), !setup)}
+        {actions("Cancelar", onBack, "Continuar", () => setStep("code"), !setup)}
       </div>
     );
   }
@@ -150,10 +150,10 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
     const phoneError = fieldError ?? (error && !error.mustSignInAgain ? error.message : null);
     return (
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-center">Enter your phone number</h2>
-        <p className="text-sm text-muted-foreground text-center">A verification code will be sent to this number to confirm it's yours.</p>
+        <h2 className="text-lg font-semibold text-center">Informe seu número de celular</h2>
+        <p className="text-sm text-muted-foreground text-center">Enviaremos um código de verificação para confirmar que o número é seu.</p>
         <div className="space-y-1.5">
-          <Label htmlFor="mfa-phone">Phone number</Label>
+          <Label htmlFor="mfa-phone">Número de celular</Label>
           <PhoneField
             countryCode={countryCode} onCountryCodeChange={setCountryCode}
             phoneNumber={phoneNumber} onPhoneNumberChange={(value) => { setPhoneNumber(value); setFieldError(null); }}
@@ -161,7 +161,7 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
           />
         </div>
         {error?.mustSignInAgain && <MfaNotice error={error} signInPath={signInPath} />}
-        {actions("Cancel", onBack, "Send Code", sendCode, phoneNumber.length < 4)}
+        {actions("Cancelar", onBack, "Enviar código", sendCode, phoneNumber.length < 4)}
       </div>
     );
   }
@@ -169,7 +169,7 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-center">
-        {method === "totp" ? "Enter a code from your authenticator app" : "Verify your phone number"}
+        {method === "totp" ? "Digite um código do seu app autenticador" : "Confirme seu número de celular"}
       </h2>
       {method === "sms" && <p className="text-sm text-muted-foreground text-center">A 6-digit code sent to {countryCode} {phoneNumber}</p>}
       <div className="flex flex-col items-center gap-2">
@@ -177,11 +177,11 @@ export function MfaMethodSetup({ session, method, onDone, onBack, signInPath }) 
           onComplete={confirm} hasError={Boolean(fieldError)} />
         {fieldError && <p className="text-sm text-destructive">{fieldError}</p>}
         {method === "totp"
-          ? <p className="text-xs text-muted-foreground">Codes refresh every 30 seconds.</p>
+          ? <p className="text-xs text-muted-foreground">Os códigos mudam a cada 30 segundos.</p>
           : <ResendLine cooldown={cooldown} onResend={resend} error={resendError} />}
       </div>
       <MfaNotice error={error} signInPath={signInPath} />
-      {actions("Back", backToStart, "Verify", () => confirm())}
+      {actions("Voltar", backToStart, "Verificar", () => confirm())}
     </div>
   );
 }

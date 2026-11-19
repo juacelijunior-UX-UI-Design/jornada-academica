@@ -7,10 +7,10 @@ import { AuthLayout } from "./AuthLayout";
 export function UserNotRegistered() {
   const { logout } = useAuth();
   return (
-    <AuthLayout icon={UserX} title="Access not granted" subtitle="Your account is not registered for this app.">
-      <p className="mb-6 text-center text-sm text-foreground">Ask the app owner for an invitation, or sign in with a different account.</p>
+    <AuthLayout icon={UserX} title="Acesso não liberado" subtitle="Sua conta não está cadastrada neste sistema.">
+      <p className="mb-6 text-center text-sm text-foreground">Peça um convite à administração da Jornada ou entre com outra conta.</p>
       <Button variant="outline" className="h-12 w-full font-medium" onClick={logout}>
-        Sign out
+        Sair
       </Button>
     </AuthLayout>
   );
