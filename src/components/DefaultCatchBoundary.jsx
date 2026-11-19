@@ -6,13 +6,15 @@ export function DefaultCatchBoundary({ error }) {
   const isRoot = useMatch({ strict: false, select: (state) => state.id === rootRouteId });
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 py-24">
+    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 py-24 text-center">
+      <p className="font-heading text-2xl font-extrabold text-navy">Algo deu errado</p>
+      <p className="text-tinta-suave">Tente de novo em instantes. Se o problema continuar, volte para o início.</p>
       <ErrorComponent error={error} />
       <div className="flex gap-2">
         <Button variant="outline" onClick={() => router.invalidate()}>
-          Try again
+          Tentar de novo
         </Button>
-        <Button asChild>{isRoot ? <Link to="/">Home</Link> : <Link to="/" onClick={(e) => { e.preventDefault(); window.history.back(); }}>Go back</Link>}</Button>
+        <Button asChild>{isRoot ? <Link to="/">Início</Link> : <Link to="/" onClick={(e) => { e.preventDefault(); window.history.back(); }}>Voltar</Link>}</Button>
       </div>
     </div>
   );
