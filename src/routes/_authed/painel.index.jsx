@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authed/painel/")({
 const ACESSOS = {
   administrador: "Você gerencia usuários, perfis, inscrições, configurações e certificados.",
   suporte: "Você edita inscrições, configurações e certificados, sem gerenciar usuários.",
-  professor: "Você acompanha os inscritos, marca apresentações e registra a chamada.",
+  professor: "Você avalia as submissões: aprova ou nega os trabalhos e marca quem apresentou.",
   monitor: "Você faz a leitura dos QR Codes no check-in e registra a chamada.",
 };
 
