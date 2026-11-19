@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Users } from "lucide-react";
+import PainelCabecalho from "@/components/painel/PainelCabecalho";
 import UsuariosPainel from "@/components/painel/UsuariosPainel";
 
 export const Route = createFileRoute("/_authed/painel/usuarios")({
@@ -9,10 +11,11 @@ export const Route = createFileRoute("/_authed/painel/usuarios")({
 function UsuariosPage() {
   return (
     <>
-      <h1 className="font-heading text-[clamp(1.3rem,4vw,1.8rem)] font-extrabold text-navy">Usuários e perfis</h1>
-      <p className="mb-5 mt-1 text-tinta-suave">
-        Convide pessoas, crie contas e defina o que cada perfil pode fazer no painel.
-      </p>
+      <PainelCabecalho
+        Icone={Users}
+        titulo="Usuários e perfis"
+        descricao="Aprove pedidos de check-in, convide pessoas para a equipe e defina o que cada perfil pode fazer."
+      />
       <UsuariosPainel />
     </>
   );

@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Award, CheckCircle2, ClipboardList, Clock, FileCheck2, Loader2, Lock, Presentation, UserRound } from "lucide-react";
+import { Award, CheckCircle2, ClipboardList, Clock, FileCheck2, Loader2, Lock, Presentation, Settings, UserRound } from "lucide-react";
 import { carregarAdmin } from "@/lib/fn-admin";
 import { CARGA_HORARIA_APRESENTACAO, CARGA_HORARIA_PARTICIPANTE } from "@/lib/evento";
 import ConfigFormulario from "@/components/gerenciador/ConfigFormulario";
 import EmissaoCard from "@/components/gerenciador/EmissaoCard";
+import PainelCabecalho from "@/components/painel/PainelCabecalho";
 
 export const Route = createFileRoute("/_authed/painel/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações e certificados | Painel da Jornada" }] }),
@@ -62,10 +63,11 @@ function ConfiguracoesPage() {
 
   return (
     <>
-      <h1 className="font-heading text-[clamp(1.3rem,4vw,1.8rem)] font-extrabold text-navy">Configurações e certificados</h1>
-      <p className="mb-5 mt-1 text-tinta-suave">
-        Regra de aprovação, datas, assinaturas e emissão dos certificados.
-      </p>
+      <PainelCabecalho
+        Icone={Settings}
+        titulo="Configurações e certificados"
+        descricao="Regra de aprovação, datas, assinaturas e emissão dos certificados."
+      />
 
       {isLoading && (
         <p className="jr-card flex items-center gap-3 p-6 text-tinta-suave">
