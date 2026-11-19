@@ -6,7 +6,7 @@ const botao =
 const botaoModelo =
   "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-navy bg-white px-3.5 text-[0.9rem] font-semibold text-navy no-underline transition hover:bg-navy hover:text-white";
 
-// Cartão "Leia o edital antes de enviar": edital, regras principais e modelos de banner e comunicação oral.
+// Cartão "Leia o edital antes de enviar": edital, regras principais e o modelo de banner em PDF.
 export default function EditalInscricao() {
   return (
     <section aria-labelledby="titulo-edital" className="jr-card p-5 sm:p-7">
