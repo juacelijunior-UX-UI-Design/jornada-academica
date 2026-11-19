@@ -1,4 +1,4 @@
-import { Download, Eye, FileText } from "lucide-react";
+import { Download, Eye, FileText, Presentation } from "lucide-react";
 import { EDITAL, MODELOS } from "@/lib/evento";
 
 const botao =
@@ -6,7 +6,8 @@ const botao =
 const botaoModelo =
   "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-navy bg-white px-3.5 text-[0.9rem] font-semibold text-navy no-underline transition hover:bg-navy hover:text-white";
 
-// Cartão "Leia o edital antes de enviar": edital, regras principais e o modelo de banner em PDF.
+// Cartão "Leia o edital antes de enviar": edital, regras principais e modelos
+// (comunicação oral em PDF e PPTX; banner só em PDF).
 export default function EditalInscricao() {
   return (
     <section aria-labelledby="titulo-edital" className="jr-card p-5 sm:p-7">
@@ -58,12 +59,14 @@ export default function EditalInscricao() {
 
       <hr className="my-5 border-linea" />
 
-      <h3 className="font-heading text-[1.05rem] font-bold text-navy">Modelo de banner</h3>
-      <p className="mt-1 text-[0.9rem] text-tinta-suave">Baixe o modelo oficial do banner em PDF.</p>
-      <div className="mt-4 grid max-w-md gap-3">
-        {/* Só o modelo de banner, e só em PDF */}
-        {MODELOS.filter((m) => m.rotulo === "Banner").map((m) => {
-          const Icone = FileText;
+      <h3 className="font-heading text-[1.05rem] font-bold text-navy">Modelos de documentos</h3>
+      <p className="mt-1 text-[0.9rem] text-tinta-suave">Use o modelo do formato da sua apresentação.</p>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {MODELOS.map((m) => {
+          const banner = m.rotulo === "Banner";
+          const Icone = banner ? FileText : Presentation;
+          // Banner: só o PDF novo. Comunicação oral: PDF e slides (PPTX).
+          const arquivos = banner ? m.arquivos.filter((a) => a.tipo === "PDF") : m.arquivos;
           return (
             <div key={m.titulo} className="rounded-lg border border-linea bg-fundo/60 p-4">
               <p className="m-0 flex items-center gap-2 font-semibold text-navy">
@@ -71,7 +74,7 @@ export default function EditalInscricao() {
                 {m.rotulo}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {m.arquivos.filter((a) => a.tipo === "PDF").map((a) => (
+                {arquivos.map((a) => (
                   <a
                     key={a.tipo}
                     href={a.url}
@@ -82,7 +85,7 @@ export default function EditalInscricao() {
                     className={botaoModelo}
                   >
                     <Download className="h-4 w-4" aria-hidden="true" />
-                    Baixar modelo (PDF)
+                    {a.tipo === "PPTX" ? "Slides (PPTX)" : "PDF"}
                   </a>
                 ))}
               </div>
