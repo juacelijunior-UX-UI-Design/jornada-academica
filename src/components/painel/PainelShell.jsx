@@ -10,7 +10,7 @@ export default function PainelShell({ children }) {
   return (
     <div className="min-h-dvh bg-fundo">
       <header className="sticky top-0 z-30 border-b-4 border-amarelo bg-navy">
-        <div className="jr-container flex items-center justify-between gap-3 py-2.5">
+        <div className="jr-container flex flex-wrap items-center justify-between gap-3 py-2.5">
           <Link
             to="/"
             className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
