@@ -1,6 +1,20 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Download, FileText, Loader2, Mail, Phone, UserRound, Users } from "lucide-react";
+import {
+  BadgeCheck,
+  Building2,
+  CalendarDays,
+  ClipboardList,
+  Clock,
+  Download,
+  FileText,
+  Hash,
+  Loader2,
+  Mail,
+  Phone,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { linkArquivoTrabalho } from "@/lib/fn-equipe";
@@ -10,6 +24,15 @@ const dataBr = (d) =>
   d
     ? new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(d) ? d : `${d}Z`).toLocaleDateString("pt-BR", {
         timeZone: "America/Fortaleza",
+      })
+    : "";
+
+const horaBr = (d) =>
+  d
+    ? new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(d) ? d : `${d}Z`).toLocaleTimeString("pt-BR", {
+        timeZone: "America/Fortaleza",
+        hour: "2-digit",
+        minute: "2-digit",
       })
     : "";
 
@@ -29,14 +52,42 @@ function Secao({ titulo, children, className = "" }) {
   );
 }
 
-function Linha({ rotulo, children }) {
+// Cartão com faixa de título (usado em Autoria e em Inscrição e contato).
+function Cartao({ Icone, titulo, children }) {
   return (
-    <div className="grid items-baseline gap-x-3 py-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
-      <dt className="whitespace-nowrap text-[0.85rem] font-semibold text-tinta-suave">{rotulo}:</dt>
-      <dd className="min-w-0 break-words text-[0.95rem] text-tinta">{children}</dd>
+    <section className="overflow-hidden rounded-xl border border-linea bg-white shadow-[0_2px_10px_rgba(1,28,99,0.06)]">
+      <h3 className="m-0 flex items-center gap-2 border-b border-linea bg-fundo/60 px-4 py-2.5 font-heading text-[0.8rem] font-bold uppercase tracking-[0.12em] text-navy">
+        <Icone className="h-4 w-4 text-royal" aria-hidden="true" />
+        {titulo}
+      </h3>
+      <div className="p-4">{children}</div>
+    </section>
+  );
+}
+
+// Um dado da inscrição: ícone, rótulo com ":" e valor embaixo.
+function Dado({ Icone, rotulo, children, largo = false }) {
+  return (
+    <div className={`flex min-w-0 items-start gap-2.5 rounded-lg border border-linea px-3 py-2.5 ${largo ? "sm:col-span-2" : ""}`}>
+      <Icone className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
+      <div className="min-w-0">
+        <dt className="text-[0.72rem] font-bold uppercase tracking-[0.08em] text-tinta-suave">{rotulo}:</dt>
+        <dd className="m-0 mt-0.5 break-words text-[0.95rem] font-medium text-tinta">{children}</dd>
+      </div>
     </div>
   );
 }
+
+const iniciais = (nome) =>
+  String(nome || "?")
+    .split(/\s+/)
+    .filter((p) => p.length > 2 || /^[A-ZÀ-Ú]/.test(p))
+    .filter(Boolean)
+    .slice(0, 1)
+    .concat(String(nome || "").trim().split(/\s+/).slice(-1))
+    .map((p) => p[0]?.toUpperCase() || "")
+    .join("")
+    .slice(0, 2) || "?";
 
 // Janela com todos os dados do trabalho submetido, para a banca avaliar e baixar o arquivo.
 export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
@@ -122,68 +173,88 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
             </p>
           </Secao>
 
-          <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-            <Secao titulo="Autoria">
-              <div className="rounded-lg border border-linea p-4">
-                <p className="m-0 flex items-start gap-2">
-                  <UserRound className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
-                  <span className="min-w-0">
-                    <span className="block text-[0.85rem] font-semibold text-tinta-suave">Apresentador:</span>
-                    <strong className="mt-1 block break-words font-semibold text-navy">{i.nome}</strong>
-                  </span>
-                </p>
-                <div className="mt-3 flex items-start gap-2 border-t border-linea pt-3">
-                  <Users className="mt-0.5 h-4 w-4 flex-none text-royal" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <span className="block text-[0.85rem] font-semibold text-tinta-suave">
-                      {i.coautores?.length ? `Co-autores (${i.coautores.length}):` : "Co-autores:"}
-                    </span>
-                    {i.coautores?.length ? (
-                      <ol className="m-0 mt-1 list-decimal space-y-1 pl-5 text-[0.95rem] text-tinta">
-                        {i.coautores.map((c) => (
-                          <li key={c} className="break-words">
-                            {c}
-                          </li>
-                        ))}
-                      </ol>
-                    ) : (
-                      <span className="block text-[0.95rem] text-tinta-suave">Nenhum (trabalho individual)</span>
-                    )}
-                  </div>
-                </div>
+          <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
+            <Cartao Icone={Users} titulo="Autoria">
+              <div className="flex items-center gap-3 rounded-lg bg-fundo/70 p-3">
+                <span
+                  aria-hidden="true"
+                  className="grid h-10 w-10 flex-none place-items-center rounded-full bg-navy font-heading text-[0.9rem] font-extrabold text-amarelo"
+                >
+                  {iniciais(i.nome)}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[0.72rem] font-bold uppercase tracking-[0.1em] text-tinta-suave">Apresentador:</span>
+                  <strong className="block break-words font-semibold leading-snug text-navy">{i.nome}</strong>
+                </span>
               </div>
-            </Secao>
 
-            <Secao titulo="Inscrição e contato">
-              <dl className="m-0 divide-y divide-linea rounded-lg border border-linea px-4 py-1">
-                <Linha rotulo="Inscrição">{externo ? "Público externo" : "Aluno da instituição"}</Linha>
-                {externo ? (
-                  i.instituicao && <Linha rotulo="Instituição">{i.instituicao}</Linha>
-                ) : (
-                  i.matricula && <Linha rotulo="Matrícula">{i.matricula}</Linha>
+              <p className="mb-2 mt-4 flex items-center justify-between text-[0.72rem] font-bold uppercase tracking-[0.1em] text-tinta-suave">
+                <span>Coautores:</span>
+                <span className="rounded-full bg-fundo px-2 py-0.5 text-[0.75rem] tracking-normal text-navy">
+                  {i.coautores?.length || 0}
+                </span>
+              </p>
+              {i.coautores?.length ? (
+                <ol className="m-0 list-none space-y-1.5 p-0">
+                  {i.coautores.map((c, n) => (
+                    <li key={c} className="flex items-start gap-2.5 text-[0.95rem] text-tinta">
+                      <span className="mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full bg-[#e9effc] text-[0.7rem] font-bold text-royal">
+                        {n + 1}
+                      </span>
+                      <span className="min-w-0 break-words">{c}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="m-0 text-[0.95rem] text-tinta-suave">Nenhum (trabalho individual).</p>
+              )}
+            </Cartao>
+
+            <Cartao Icone={ClipboardList} titulo="Inscrição e contato">
+              <dl className="m-0 grid gap-2.5 sm:grid-cols-2">
+                <Dado Icone={BadgeCheck} rotulo="Inscrição">
+                  {externo ? "Público externo" : "Aluno da instituição"}
+                </Dado>
+                {externo
+                  ? i.instituicao && (
+                      <Dado Icone={Building2} rotulo="Instituição">
+                        {i.instituicao}
+                      </Dado>
+                    )
+                  : i.matricula && (
+                      <Dado Icone={Hash} rotulo="Matrícula">
+                        {i.matricula}
+                      </Dado>
+                    )}
+                {i.criado_em && (
+                  <>
+                    <Dado Icone={CalendarDays} rotulo="Data da inscrição">
+                      {dataBr(i.criado_em)}
+                    </Dado>
+                    <Dado Icone={Clock} rotulo="Horário da inscrição">
+                      {horaBr(i.criado_em)}
+                    </Dado>
+                  </>
                 )}
-                <Linha rotulo="E-mail">
-                  <a
-                    href={`mailto:${i.email}`}
-                    title={i.email}
-                    className="flex min-w-0 items-center gap-1.5 whitespace-nowrap"
-                  >
-                    <Mail className="h-3.5 w-3.5 flex-none" aria-hidden="true" />
-                    <span className="truncate">{i.email}</span>
+                <Dado Icone={Mail} rotulo="E-mail" largo>
+                  <a href={`mailto:${i.email}`} title={i.email} className="break-all">
+                    {i.email}
                   </a>
-                </Linha>
+                </Dado>
                 {i.telefone && (
-                  <Linha rotulo="Telefone">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Phone className="h-3.5 w-3.5 flex-none text-tinta-suave" aria-hidden="true" />
+                  <Dado Icone={Phone} rotulo="Telefone">
+                    <a href={`tel:+55${String(i.telefone).replace(/\D/g, "")}`} className="whitespace-nowrap">
                       {telefoneBr(i.telefone)}
-                    </span>
-                  </Linha>
+                    </a>
+                  </Dado>
                 )}
-                {i.cpf && <Linha rotulo="CPF">{i.cpf}</Linha>}
-                {i.criado_em && <Linha rotulo="Inscrito em">{dataBr(i.criado_em)}</Linha>}
+                {i.cpf && (
+                  <Dado Icone={ShieldCheck} rotulo="CPF">
+                    {i.cpf}
+                  </Dado>
+                )}
               </dl>
-            </Secao>
+            </Cartao>
           </div>
         </div>
 
