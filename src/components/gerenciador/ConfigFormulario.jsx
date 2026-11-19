@@ -160,7 +160,7 @@ export default function ConfigFormulario({ config, cargaTotal, onSalvo }) {
           </Bloco>
 
           <Bloco Icone={CalendarDays} titulo="Datas" descricao="Período de inscrições e liberação dos certificados.">
-            <div className="grid gap-x-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-x-4 sm:grid-cols-2">
               <Campo id="inscricoes_de" label="Inscrições: início" erro={erros.inscricoes_de}>
                 <input
                   id="inscricoes_de"
