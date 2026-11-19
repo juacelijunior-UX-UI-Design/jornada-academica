@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ConsultaCertificado from "@/components/certificado/ConsultaCertificado";
+import BannerPagina from "@/components/site/BannerPagina";
 
 export const Route = createFileRoute("/_site/certificado")({
   head: () => ({
@@ -18,13 +19,7 @@ export const Route = createFileRoute("/_site/certificado")({
 function CertificadoPage() {
   return (
     <>
-      <section className="bg-navy pb-32 pt-10">
-        <div className="jr-container">
-          <p className="text-[0.95rem] font-semibold uppercase tracking-[0.08em] text-amarelo">
-            Certificados · disponíveis a partir de 14/12/2026
-          </p>
-        </div>
-      </section>
+      <BannerPagina sobreposto selo="Certificados · disponíveis a partir de 14/12/2026" />
 
       <div className="jr-container -mt-24 pb-20">
         <div className="jr-card mx-auto max-w-[46rem] border-t-[5px] border-amarelo p-6 shadow-[0_8px_28px_rgba(1,28,99,0.2)] max-sm:p-5 sm:p-9">

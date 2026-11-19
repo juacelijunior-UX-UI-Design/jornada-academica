@@ -5,6 +5,7 @@ import FormularioParticipante from "@/components/inscricao/FormularioParticipant
 import EditalInscricao from "@/components/inscricao/EditalInscricao";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
 import { situacaoInscricoes } from "@/lib/fn-inscricao";
+import BannerPagina from "@/components/site/BannerPagina";
 
 const ABAS = [
   { valor: "submissao", texto: "Submissão", Icone: Send },
@@ -38,14 +39,11 @@ function InscricaoPage() {
 
   return (
     <>
-      <section className="bg-navy bg-[linear-gradient(100deg,#011c63_0%,#0b2a86_50%,#1746b8_100%)] pb-16 pt-10 text-white sm:pt-12">
-        <div className="jr-container">
-          <h1 className="font-heading text-[clamp(2rem,6vw,2.75rem)] font-extrabold text-white">Inscrição</h1>
-          <p className="mt-1 max-w-2xl text-white/80">
-            Submeta um trabalho ou inscreva-se como participante da VI Jornada Acadêmica · 09 e 10/12/2026.
-          </p>
-        </div>
-      </section>
+      <BannerPagina
+        selo="VI Jornada Acadêmica · 09 e 10/12/2026"
+        titulo="Inscrição"
+        descricao="Submeta um trabalho ou inscreva-se como participante do evento."
+      />
 
       <div className="jr-container -mt-8 pb-20">
         <div className="mx-auto max-w-[60rem] space-y-6">
