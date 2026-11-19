@@ -225,10 +225,10 @@ export default function TrabalhoDetalhes({ inscrito: i, onFechar }) {
                     )}
                 {i.criado_em && (
                   <>
-                    <Dado Icone={CalendarDays} rotulo="Data da inscrição">
+                    <Dado Icone={CalendarDays} rotulo="Inscrito em">
                       {dataBr(i.criado_em)}
                     </Dado>
-                    <Dado Icone={Clock} rotulo="Horário da inscrição">
+                    <Dado Icone={Clock} rotulo="Horário">
                       {horaBr(i.criado_em)}
                     </Dado>
                   </>
