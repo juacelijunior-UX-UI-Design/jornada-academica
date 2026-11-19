@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
+import { ExternalLink, LogOut } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { LOGO_JORNADA, LOGO_UNINASSAU } from "@/lib/evento";
@@ -9,8 +9,8 @@ export default function PainelShell({ children }) {
 
   return (
     <div className="min-h-dvh bg-fundo">
-      <header className="border-b-4 border-amarelo bg-navy">
-        <div className="jr-container flex flex-wrap items-center justify-between gap-3 py-3">
+      <header className="sticky top-0 z-30 border-b-4 border-amarelo bg-navy">
+        <div className="jr-container flex items-center justify-between gap-3 py-2.5">
           <Link
             to="/"
             className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
@@ -31,10 +31,17 @@ export default function PainelShell({ children }) {
             />
           </Link>
 
-          <div className="flex min-w-0 items-center gap-3 text-white">
+          <div className="flex min-w-0 items-center gap-2 text-white sm:gap-3">
+            <Link
+              to="/"
+              className="hidden min-h-10 items-center gap-1.5 rounded-lg px-3 text-[0.9rem] font-semibold text-white/85 no-underline transition hover:bg-white/10 hover:text-white sm:inline-flex"
+            >
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              Ver o site
+            </Link>
             <div className="min-w-0 text-right text-[0.85rem] leading-tight">
-              <span className="block max-w-[11rem] truncate font-semibold sm:max-w-xs">{user?.full_name || user?.email}</span>
-              <Link to="/" className="text-[0.8rem] text-white/70 no-underline hover:text-amarelo">
+              <span className="block max-w-[9rem] truncate font-semibold sm:max-w-xs">{user?.full_name || user?.email}</span>
+              <Link to="/" className="text-[0.8rem] text-white/70 no-underline hover:text-amarelo sm:hidden">
                 Voltar ao site
               </Link>
             </div>
@@ -50,7 +57,7 @@ export default function PainelShell({ children }) {
         </div>
       </header>
 
-      <main className="jr-container py-8">{children}</main>
+      <main className="jr-container py-6 lg:py-8">{children}</main>
     </div>
   );
 }
