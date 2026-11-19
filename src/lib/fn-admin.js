@@ -37,6 +37,9 @@ export const carregarAdmin = createServerFn({ method: "GET" })
       regra: descreverRegra(configuracao),
       total_inscritos: alunos.length,
       total_elegiveis: alunos.filter((a) => a.elegivel).length,
+      // Aptos por carga horária: 20 h (apresentou o trabalho) e 4 h (participante ou não apresentou).
+      aptos_20h: alunos.filter((a) => a.elegivel && a.horas_certificado === 20).length,
+      aptos_4h: alunos.filter((a) => a.elegivel && a.horas_certificado !== 20).length,
       total_certificados: certificados.length,
       carga_horaria_total,
       liberado: certificadosLiberados(configuracao),
