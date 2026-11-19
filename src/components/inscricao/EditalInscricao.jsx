@@ -1,4 +1,4 @@
-import { Download, Eye, FileText, Presentation } from "lucide-react";
+import { Download, Eye, FileText } from "lucide-react";
 import { EDITAL, MODELOS } from "@/lib/evento";
 
 const botao =
