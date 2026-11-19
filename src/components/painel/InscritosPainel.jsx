@@ -222,13 +222,6 @@ export default function InscritosPainel() {
           )}
         </div>
       </CartaoFaixa>
-        <p className="jr-legenda mt-3">
-          {visiveis.length} na lista ·{" "}
-          {ehSub
-            ? "certificado de 20 h para quem apresentou; 4 h para quem só teve presença"
-            : "certificado de 4 h com presença registrada"}
-        </p>
-      </div>
 
       <div className="jr-card overflow-hidden">
         {!visiveis.length ? (
