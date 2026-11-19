@@ -157,7 +157,7 @@ export const EDITAL = "/assets/edital-vi-jornada-academica-2026.pdf";
 
 const ARQUIVOS = "https://base44.app/api/apps/6afc5f6bdef0a308e8558411/files/mp/public/6afc5f6bdef0a308e8558411";
 
-// Modelos de documentos (a página de inscrição mostra só o modelo de banner em PDF).
+// Modelos de documentos da página de inscrição (comunicação oral em PDF e PPTX; banner só em PDF).
 export const MODELOS = [
   {
     titulo: "Modelo de apresentação oral",
