@@ -76,7 +76,7 @@ export default function EmissaoCard({ admin, onAtualizar }) {
         certificado na página Certificado, com CPF e e-mail.
       </p>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
         <button
           type="button"
           onClick={() => executar(true)}
