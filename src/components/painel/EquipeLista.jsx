@@ -38,7 +38,7 @@ export default function EquipeLista({ membros, onAtualizar }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-linea">
       <table className="w-full min-w-[34rem] text-left text-[0.95rem]">
-        <thead className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+        <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
           <tr>
             <th className="px-3 py-2.5">Nome</th>
             <th className="px-3 py-2.5">E-mail</th>

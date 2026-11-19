@@ -285,8 +285,8 @@ export default function ChamadaPainel() {
               <caption className="sr-only">
                 Participantes da sessão {sessao?.titulo}
               </caption>
-              <thead>
-                <tr className="bg-fundo text-[0.8rem] uppercase tracking-wide text-tinta-suave">
+              <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
+                <tr>
                   <th scope="col" className="px-4 py-2.5">
                     <span className="sr-only">Selecionar</span>
                   </th>

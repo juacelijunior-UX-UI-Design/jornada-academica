@@ -13,13 +13,13 @@ export default function ListaCheckins({ registros }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-linea bg-white">
       <table className="w-full min-w-[34rem] text-left text-[0.95rem]">
-        <thead className="bg-fundo text-navy">
+        <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
           <tr>
-            <th className="px-3 py-2">Participante</th>
-            <th className="px-3 py-2">Dia</th>
-            <th className="px-3 py-2">Horário</th>
-            <th className="px-3 py-2">Status</th>
-            <th className="px-3 py-2">Registrado por</th>
+            <th className="px-3 py-2.5">Participante</th>
+            <th className="px-3 py-2.5">Dia</th>
+            <th className="px-3 py-2.5">Horário</th>
+            <th className="px-3 py-2.5">Status</th>
+            <th className="px-3 py-2.5">Registrado por</th>
           </tr>
         </thead>
         <tbody>
