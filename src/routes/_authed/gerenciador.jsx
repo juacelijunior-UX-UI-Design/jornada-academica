@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2 } from "lucide-react";
+import { Loader2, Settings } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { carregarAdmin } from "@/lib/fn-admin";
 import PainelShell from "@/components/painel/PainelShell";
+import PainelCabecalho from "@/components/painel/PainelCabecalho";
 import ConfigFormulario from "@/components/gerenciador/ConfigFormulario";
 import EmissaoCard from "@/components/gerenciador/EmissaoCard";
 
@@ -37,13 +38,11 @@ function GerenciadorPage() {
 
   return (
     <PainelShell>
-      <h1 className="font-heading text-[clamp(1.5rem,4vw,2rem)] font-extrabold text-navy">
-        Gerenciador do evento
-      </h1>
-      <p className="mb-6 mt-1 text-tinta-suave">
-        Defina a regra de aprovação, as datas e as assinaturas do certificado, e emita os
-        certificados de quem atingiu a presença mínima.
-      </p>
+      <PainelCabecalho
+        Icone={Settings}
+        titulo="Gerenciador do evento"
+        descricao="Defina a regra de aprovação, as datas e as assinaturas do certificado, e emita os certificados de quem atingiu a presença mínima."
+      />
 
       {isLoading && (
         <p className="jr-card flex items-center gap-3 p-6 text-tinta-suave">

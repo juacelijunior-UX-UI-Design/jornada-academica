@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Ticket } from "lucide-react";
 import PainelShell from "@/components/painel/PainelShell";
+import PainelCabecalho from "@/components/painel/PainelCabecalho";
 import IngressoCard from "@/components/ingresso/IngressoCard";
 import DadosInscricao from "@/components/ingresso/DadosInscricao";
 import Botao from "@/components/site/Botao";
@@ -16,10 +18,11 @@ function MinhaInscricaoPage() {
 
   return (
     <PainelShell>
-      <h1 className="font-heading text-[clamp(1.5rem,4vw,2rem)] font-extrabold text-navy">Minha inscrição</h1>
-      <p className="mb-6 mt-1 text-tinta-suave">
-        Seus dados de inscrição e o QR Code de identificação para registrar presença no evento.
-      </p>
+      <PainelCabecalho
+        Icone={Ticket}
+        titulo="Minha inscrição"
+        descricao="Seus dados de inscrição e o QR Code de identificação para registrar presença no evento."
+      />
 
       {dados.encontrado ? (
         <div className="grid items-start gap-5 lg:grid-cols-[1fr_380px]">
