@@ -75,7 +75,7 @@ export default function EditalInscricao() {
               </p>
               {banner && (
                 <p className="m-0 mt-1.5 text-[0.88rem] text-tinta">
-                  <strong className="font-semibold">Tamanho:</strong> {BANNER_DIMENSOES}
+                  <strong className="font-semibold">Dimensões:</strong> {BANNER_DIMENSOES}
                 </p>
               )}
               <div className="mt-3 flex flex-wrap gap-2">
