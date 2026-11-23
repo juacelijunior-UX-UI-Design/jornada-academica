@@ -158,6 +158,9 @@ export const EQUIPES = [
 
 export const EDITAL = "/assets/edital-vi-jornada-academica-2026.pdf";
 
+// Medidas do banner impresso.
+export const BANNER_DIMENSOES = "120 cm de altura × 90 cm de largura";
+
 const ARQUIVOS = "https://base44.app/api/apps/6afc5f6bdef0a308e8558411/files/mp/public/6afc5f6bdef0a308e8558411";
 
 // Modelos de documentos da página de inscrição (comunicação oral em PDF e PPTX; banner só em PDF).
