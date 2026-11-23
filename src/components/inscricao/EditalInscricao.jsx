@@ -1,5 +1,5 @@
 import { Download, Eye, FileText, Presentation } from "lucide-react";
-import { EDITAL, MODELOS } from "@/lib/evento";
+import { BANNER_DIMENSOES, EDITAL, MODELOS } from "@/lib/evento";
 
 const botao =
   "inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 font-semibold no-underline transition";
@@ -73,6 +73,11 @@ export default function EditalInscricao() {
                 <Icone className="h-5 w-5 flex-none text-royal" aria-hidden="true" />
                 {m.rotulo}
               </p>
+              {banner && (
+                <p className="m-0 mt-1.5 text-[0.88rem] text-tinta">
+                  <strong className="font-semibold">Tamanho:</strong> {BANNER_DIMENSOES}
+                </p>
+              )}
               <div className="mt-3 flex flex-wrap gap-2">
                 {arquivos.map((a) => (
                   <a
