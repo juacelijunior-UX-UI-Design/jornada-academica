@@ -8,7 +8,7 @@ const FORMATOS = [
     itens: [
       "Apresentação de 10 minutos, avaliada por pelo menos um professor ou profissional da área.",
       <>
-        Tamanho do banner: <strong className="font-bold">{BANNER_DIMENSOES}</strong>.
+        Dimensões do banner: <strong className="font-bold">{BANNER_DIMENSOES}</strong>.
       </>,
       <>
         Posicione o banner 30 minutos antes do turno: <strong className="font-bold">manhã até 8h</strong> e{" "}
