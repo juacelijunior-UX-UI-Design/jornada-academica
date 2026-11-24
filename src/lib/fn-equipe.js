@@ -281,6 +281,35 @@ export const marcarApresentacao = createServerFn({ method: "POST" })
     return { ok: true, apresentou };
   });
 
+// Exclui uma inscrição (participante ou submissão) junto com as presenças e certificados dela.
+// Só administrador e suporte. Não tem como desfazer.
+export const excluirInscrito = createServerFn({ method: "POST" })
+  .middleware([requireUser])
+  .handler(async ({ data, context }) => {
+    const base44 = context.getBase44().asServiceRole;
+    const { perfil } = await acessoDe(base44, context.user);
+    if (!permitido(perfil, PERFIS_PARTICIPANTES)) return { ok: false, erro: "Seu perfil não exclui inscrições." };
+    if (!data?.id) return { ok: false, erro: "Registro inválido." };
+
+    let p = null;
+    try {
+      p = await base44.entities.Participante.get(data.id);
+    } catch {
+      p = null;
+    }
+    if (!p) return { ok: false, erro: "Inscrição não encontrada. Ela pode já ter sido excluída." };
+
+    const [presencas, certificados] = await Promise.all([
+      todos(base44.entities.Presenca.filter({ participante_id: p.id })),
+      todos(base44.entities.Certificado.filter({ participante_id: p.id })),
+    ]);
+    for (const r of presencas) await base44.entities.Presenca.delete(r.id);
+    for (const r of certificados) await base44.entities.Certificado.delete(r.id);
+    await base44.entities.Participante.delete(p.id);
+
+    return { ok: true, nome: p.nome, presencas: presencas.length, certificados: certificados.length };
+  });
+
 // Aprova, nega ou volta para "aguardando" uma submissão. Feito pelo professor (ou administração/suporte).
 export const avaliarSubmissao = createServerFn({ method: "POST" })
   .middleware([requireUser])
