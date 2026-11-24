@@ -1,11 +1,22 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Download, FileText, Info, Loader2, TriangleAlert } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  FileText,
+  IdCard,
+  Info,
+  Loader2,
+  Mail,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 import { consultarCertificado } from "@/lib/fn-certificado";
 import { cpfValido, mascaraCpf } from "@/lib/validacao";
 import CertificadoDocumento from "@/components/certificado/CertificadoDocumento";
 
-const num = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+const num = (n) =>
+  Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 
 function Caixa({ tipo, titulo, texto }) {
   const estilos = {
@@ -15,7 +26,10 @@ function Caixa({ tipo, titulo, texto }) {
   }[tipo];
   const { Icone } = estilos;
   return (
-    <div className={`jr-alerta ${estilos.classe}`} role={tipo === "erro" ? "alert" : "status"}>
+    <div
+      className={`jr-alerta ${estilos.classe}`}
+      role={tipo === "erro" ? "alert" : "status"}
+    >
       <Icone className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
       <div>
         <strong className="block">{titulo}</strong>
@@ -50,7 +64,8 @@ export default function ConsultaCertificado() {
     if (enviando) return;
     const novos = {};
     if (!cpfValido(cpf)) novos.cpf = "CPF inválido.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) novos.email = "E-mail inválido.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      novos.email = "E-mail inválido.";
     setErros(novos);
     if (Object.keys(novos).length) return;
     setMostrarDocumento(false);
@@ -77,8 +92,19 @@ export default function ConsultaCertificado() {
         backgroundColor: "#ffffff",
         useCORS: true,
       });
-      const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 700] });
-      pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG", 0, 0, 1123, 700);
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [1123, 700],
+      });
+      pdf.addImage(
+        canvas.toDataURL("image/jpeg", 0.96),
+        "JPEG",
+        0,
+        0,
+        1123,
+        700,
+      );
       pdf.save("certificado-vi-jornada-academica.pdf");
     } finally {
       setGerando(false);
@@ -90,41 +116,54 @@ export default function ConsultaCertificado() {
       <form onSubmit={enviar} noValidate>
         <div className="mb-4">
           <label htmlFor="cpf" className="jr-label">
-            CPF
+            CPF:
           </label>
-          <input
-            id="cpf"
-            className="jr-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            placeholder="000.000.000-00"
-            value={cpf}
-            aria-invalid={erros.cpf ? "true" : undefined}
-            onChange={(e) => {
-              setCpf(mascaraCpf(e.target.value));
-              setErros((a) => ({ ...a, cpf: undefined }));
-            }}
-          />
+          <div className="relative">
+            <IdCard
+              className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-tinta-suave"
+              aria-hidden="true"
+            />
+            <input
+              id="cpf"
+              className="jr-input pl-11"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              placeholder="000.000.000-00"
+              value={cpf}
+              aria-invalid={erros.cpf ? "true" : undefined}
+              onChange={(e) => {
+                setCpf(mascaraCpf(e.target.value));
+                setErros((a) => ({ ...a, cpf: undefined }));
+              }}
+            />
+          </div>
           {erros.cpf && <p className="jr-erro">{erros.cpf}</p>}
         </div>
 
         <div className="mb-5">
           <label htmlFor="email" className="jr-label">
-            E-mail
+            E-mail:
           </label>
-          <input
-            id="email"
-            className="jr-input"
-            type="email"
-            autoComplete="email"
-            value={email}
-            aria-invalid={erros.email ? "true" : undefined}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErros((a) => ({ ...a, email: undefined }));
-            }}
-          />
+          <div className="relative">
+            <Mail
+              className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-tinta-suave"
+              aria-hidden="true"
+            />
+            <input
+              id="email"
+              className="jr-input pl-11"
+              placeholder="o mesmo e-mail da inscrição"
+              type="email"
+              autoComplete="email"
+              value={email}
+              aria-invalid={erros.email ? "true" : undefined}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErros((a) => ({ ...a, email: undefined }));
+              }}
+            />
+          </div>
           {erros.email && <p className="jr-erro">{erros.email}</p>}
         </div>
 
@@ -133,8 +172,12 @@ export default function ConsultaCertificado() {
           disabled={enviando}
           className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-6 py-3 font-semibold text-navy transition hover:bg-[#e8b800] disabled:cursor-not-allowed disabled:bg-[#e3e8f4] disabled:text-[#3f4a6b]"
         >
-          {enviando && <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />}
-          {enviando ? "Consultando..." : "Consultar"}
+          {enviando ? (
+            <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+          ) : (
+            <Search className="h-5 w-5" aria-hidden="true" />
+          )}
+          {enviando ? "Consultando..." : "Consultar certificado"}
         </button>
       </form>
 
@@ -147,11 +190,11 @@ export default function ConsultaCertificado() {
                 titulo={`Parabéns, ${resultado.primeiro_nome}!`}
                 texto={`Você atingiu a presença mínima. ${linhaPresenca(resultado.presenca, resultado.minimo)}`}
               />
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setMostrarDocumento((v) => !v)}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-royal px-5 font-semibold text-royal hover:bg-royal hover:text-white"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-2 border-royal px-5 font-semibold text-royal hover:bg-royal hover:text-white"
                 >
                   <FileText className="h-5 w-5" aria-hidden="true" />
                   {mostrarDocumento ? "Ocultar certificado" : "Ver certificado"}
@@ -160,9 +203,13 @@ export default function ConsultaCertificado() {
                   type="button"
                   onClick={() => setMostrarDocumento(true)}
                   disabled={gerando}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-royal px-5 font-semibold text-white hover:bg-navy disabled:opacity-60"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-royal px-5 font-semibold text-white hover:bg-navy disabled:opacity-60"
                 >
-                  {gerando ? <Loader2 className="h-5 w-5 animate-spin" /> : <Download className="h-5 w-5" />}
+                  {gerando ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Download className="h-5 w-5" />
+                  )}
                   {gerando ? "Gerando PDF..." : "Baixar certificado (PDF)"}
                 </button>
               </div>
@@ -202,7 +249,11 @@ export default function ConsultaCertificado() {
           )}
 
           {resultado.status === "erro" && (
-            <Caixa tipo="erro" titulo="Não foi possível consultar" texto="Tente novamente em instantes." />
+            <Caixa
+              tipo="erro"
+              titulo="Não foi possível consultar"
+              texto="Tente novamente em instantes."
+            />
           )}
         </div>
       )}
@@ -210,7 +261,10 @@ export default function ConsultaCertificado() {
       {resultado?.status === "aprovado" && (
         <div className={mostrarDocumento ? "mt-8" : "hidden"}>
           <div className="overflow-x-auto rounded-lg border border-linea bg-white p-3">
-            <CertificadoDocumento ref={documentoRef} dados={resultado.certificado} />
+            <CertificadoDocumento
+              ref={documentoRef}
+              dados={resultado.certificado}
+            />
           </div>
           <div className="mt-3 flex justify-end">
             <button
@@ -219,7 +273,11 @@ export default function ConsultaCertificado() {
               disabled={gerando}
               className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-royal px-5 font-semibold text-white hover:bg-navy disabled:opacity-60"
             >
-              {gerando ? <Loader2 className="h-5 w-5 animate-spin" /> : <Download className="h-5 w-5" />}
+              {gerando ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Download className="h-5 w-5" />
+              )}
               {gerando ? "Gerando PDF..." : "Baixar certificado (PDF)"}
             </button>
           </div>
