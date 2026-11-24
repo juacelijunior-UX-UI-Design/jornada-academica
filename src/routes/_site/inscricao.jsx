@@ -47,7 +47,7 @@ function InscricaoPage() {
       />
 
       <div className="jr-container -mt-8 max-w-[1240px] pb-20">
-        <div className="max-w-[44rem] lg:max-w-[calc(100%-23.25rem)]">
+        <div className="lg:max-w-[calc(100%-23.5rem)]">
           <TipoSeletor destaque rotulo="Tipo de inscrição" opcoes={ABAS} valor={atual} onMudar={mudarAba} />
         </div>
 
