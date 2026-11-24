@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Loader2, QrCode, ShoppingBasket, UserCheck } from "lucide-react";
+import { CheckCircle2, Loader2, QrCode, ShoppingBasket, UserCheck, UserPlus } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
 import IngressoCard from "@/components/ingresso/IngressoCard";
 import { CARGA_HORARIA_PARTICIPANTE } from "@/lib/evento";
