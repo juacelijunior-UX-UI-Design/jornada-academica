@@ -82,8 +82,8 @@ export default function FormularioParticipante() {
         </div>
 
         {resultado.qr && (
-          <div className="my-6">
-            <IngressoCard ingresso={{ nome: resultado.nome, cpf: resultado.cpf, qr: resultado.qr }} />
+          <div className="my-6 rounded-xl bg-fundo p-4 sm:p-6">
+            <IngressoCard ingresso={{ nome: resultado.nome, cpf: resultado.cpf, qr: resultado.qr, tipo: "participante" }} />
           </div>
         )}
 
