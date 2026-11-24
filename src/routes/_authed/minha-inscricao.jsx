@@ -46,11 +46,8 @@ function MinhaInscricaoPage() {
 
       {dados.encontrado ? (
         <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <DadosInscricao inscricao={dados.inscricao} />
-
-          <div className="space-y-5 lg:sticky lg:top-24">
-            <IngressoCard ingresso={dados.inscricao} />
-
+          <div className="min-w-0 space-y-5">
+            <DadosInscricao inscricao={dados.inscricao} />
             <CartaoFaixa Icone={Info} titulo="Informações importantes">
               <ul className="m-0 list-none space-y-3.5 p-0">
                 <Info1 Icone={CalendarDays} rotulo="Datas do evento">
@@ -82,6 +79,10 @@ function MinhaInscricaoPage() {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </CartaoFaixa>
+          </div>
+
+          <div className="lg:sticky lg:top-24">
+            <IngressoCard ingresso={dados.inscricao} />
           </div>
         </div>
       ) : (
