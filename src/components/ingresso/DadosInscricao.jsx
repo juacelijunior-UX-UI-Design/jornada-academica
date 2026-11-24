@@ -98,7 +98,7 @@ export default function DadosInscricao({ inscricao: i }) {
           </Dado>
         )}
         {i.criado_em && (
-          <Dado Icone={CalendarDays} rotulo="Inscrito em" largo={!(instituicao && !(aluno && i.matricula)) ? false : false}>
+          <Dado Icone={CalendarDays} rotulo="Inscrito em">
             {dataHoraBr(i.criado_em)}
           </Dado>
         )}
