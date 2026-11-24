@@ -214,7 +214,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
             <DadosPessoais form={form} setCampo={setCampo} erros={erros} />
           </Secao>
 
-          <Secao numero={3} titulo="Coautores" descricao="Opcional: até 9 nomes, além de você.">
+          <Secao numero={3} titulo="Coautores" descricao="Opcional.">
             <Coautores
               coautores={form.coautores ?? []}
               setCoautores={(lista) => setCampo("coautores", lista)}
