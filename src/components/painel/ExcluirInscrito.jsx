@@ -95,10 +95,10 @@ export default function ExcluirInscrito({ inscrito: i, onFechar, onExcluido }) {
             type="button"
             onClick={confirmar}
             disabled={!liberado || apagando}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#c81d28] px-4 font-semibold text-white hover:bg-[#a3141e] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#c81d28] px-4 font-semibold text-white hover:bg-[#a3141e] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {apagando ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
-            {apagando ? "Excluindo..." : "Excluir definitivamente"}
+            {apagando ? "Excluindo..." : "Sim, excluir"}
           </button>
         </div>
       </DialogContent>
