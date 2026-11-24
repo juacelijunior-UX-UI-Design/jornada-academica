@@ -11,6 +11,7 @@ import DadosPessoais from "@/components/inscricao/DadosPessoais";
 import DadosTrabalho from "@/components/inscricao/DadosTrabalho";
 import Coautores from "@/components/inscricao/Coautores";
 import PainelSucesso from "@/components/inscricao/PainelSucesso";
+import CartaoFaixa from "@/components/painel/CartaoFaixa";
 
 const VAZIO = {
   tipo: "aluno",
@@ -37,12 +38,25 @@ const TIPOS = [
 
 const ORDEM_CAMPOS = ["titulo", "disciplina", "curso", "curso_outro", "formato", "resumo", "arquivo", "nome", "email", "telefone", "cpf", "matricula", "instituicao"];
 
-function Secao({ numero, titulo, children }) {
+// Etapa do formulário: número em círculo, título e descrição curta.
+function Secao({ numero, titulo, descricao, children }) {
   return (
-    <section className="mt-10 first:mt-0">
-      <h2 className="mb-4 font-heading text-[1.2rem] font-bold text-navy">
-        {numero}. {titulo}
-      </h2>
+    <section className="mt-8 border-t border-linea pt-7 first:mt-0 first:border-t-0 first:pt-0">
+      <div className="mb-5 flex items-start gap-3">
+        <span
+          aria-hidden="true"
+          className="grid h-9 w-9 flex-none place-items-center rounded-full bg-navy font-heading text-[0.95rem] font-extrabold text-amarelo shadow-[0_3px_8px_rgba(1,28,99,0.25)]"
+        >
+          {numero}
+        </span>
+        <div className="min-w-0 pt-0.5">
+          <h2 className="m-0 font-heading text-[1.15rem] font-bold leading-tight text-navy">
+            <span className="sr-only">Etapa {numero}: </span>
+            {titulo}
+          </h2>
+          {descricao && <p className="m-0 mt-0.5 text-[0.88rem] text-tinta-suave">{descricao}</p>}
+        </div>
+      </div>
       {children}
     </section>
   );
@@ -147,10 +161,19 @@ export default function FormularioInscricao({ aberta, motivo }) {
   }
 
   return (
-      <div className="jr-card p-5 sm:p-10">
+      <CartaoFaixa
+        Icone={Send}
+        titulo="Submissão de trabalho"
+        descricao="Preencha as 4 etapas abaixo e envie a sua inscrição."
+        corpoClassName="p-5 sm:p-8"
+      >
         <form onSubmit={enviar} noValidate>
+          <p id="rotulo-tipo" className="m-0 mb-2 text-[0.75rem] font-bold uppercase tracking-[0.12em] text-navy">
+            Você é:
+          </p>
           <div className="mb-8">
             <TipoSeletor
+              rotuloId="rotulo-tipo"
               rotulo="Você é aluno ou público externo?"
               opcoes={TIPOS}
               valor={form.tipo}
@@ -176,7 +199,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
             </div>
           )}
 
-          <Secao numero={1} titulo="Trabalho">
+          <Secao numero={1} titulo="Trabalho" descricao="Título, curso, formato, resumo e arquivo.">
             <DadosTrabalho
               form={form}
               setCampo={setCampo}
@@ -187,11 +210,11 @@ export default function FormularioInscricao({ aberta, motivo }) {
             />
           </Secao>
 
-          <Secao numero={2} titulo="Seus dados (apresentador)">
+          <Secao numero={2} titulo="Seus dados" descricao="Quem vai apresentar o trabalho.">
             <DadosPessoais form={form} setCampo={setCampo} erros={erros} />
           </Secao>
 
-          <Secao numero={3} titulo="Co-autores do trabalho">
+          <Secao numero={3} titulo="Coautores" descricao="Opcional: até 9 nomes, além de você.">
             <Coautores
               coautores={form.coautores ?? []}
               setCoautores={(lista) => setCampo("coautores", lista)}
@@ -199,7 +222,7 @@ export default function FormularioInscricao({ aberta, motivo }) {
             />
           </Secao>
 
-          <Secao numero={4} titulo="Confirmação">
+          <Secao numero={4} titulo="Confirmação" descricao="Revise e envie.">
             <label className="flex cursor-pointer items-start gap-3 text-[0.95rem]">
               <input
                 type="checkbox"
@@ -245,6 +268,6 @@ export default function FormularioInscricao({ aberta, motivo }) {
             </Link>
           </p>
         </form>
-      </div>
+      </CartaoFaixa>
   );
 }

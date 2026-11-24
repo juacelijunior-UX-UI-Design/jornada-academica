@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { signInWithProvider } from "@/lib/authMfaFlow";
 import { criarParticipacao } from "@/lib/fn-inscricao";
 import { mascaraCpf, mascaraTelefone, validarParticipante } from "@/lib/validacao";
+import CartaoFaixa from "@/components/painel/CartaoFaixa";
 
 const ORDEM = ["nome", "cpf", "telefone", "email"];
 
@@ -116,11 +117,15 @@ export default function FormularioParticipante() {
   });
 
   return (
-    <div className="jr-card p-5 sm:p-10">
-      <h2 className="font-heading text-[1.25rem] font-bold text-navy">Inscrição de participante</h2>
-      <p className="mt-1 text-[0.95rem] text-tinta-suave">
-        Para quem vai assistir às apresentações. Você recebe o QR Code de ingresso na hora e, com a presença
-        registrada no evento, o certificado de {CARGA_HORARIA_PARTICIPANTE} horas.
+    <CartaoFaixa
+      Icone={UserPlus}
+      titulo="Inscrição de participante"
+      descricao="Para quem vai assistir às apresentações."
+      corpoClassName="p-5 sm:p-8"
+    >
+      <p className="m-0 text-[0.95rem] text-tinta">
+        Você recebe o QR Code de ingresso na hora e, com a presença registrada no evento, o certificado de{" "}
+        <strong>{CARGA_HORARIA_PARTICIPANTE} horas</strong>.
       </p>
 
       {erroGeral && (
@@ -224,6 +229,6 @@ export default function FormularioParticipante() {
           {enviando ? "Enviando..." : "Inscrever-me"}
         </button>
       </form>
-    </div>
+    </CartaoFaixa>
   );
 }
