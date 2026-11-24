@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Eye, FileText, Filter, Loader2, Pencil, Presentation, Search, Send, UserPlus, X } from "lucide-react";
+import { Check, Eye, FileText, Filter, Loader2, Pencil, Presentation, Search, Send, Trash2, UserPlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { avaliarSubmissao, idsPorCpf, listarInscritos, marcarApresentacao } from "@/lib/fn-equipe";
 import AvaliacaoSubmissao, { SITUACOES_AVALIACAO, SeloAvaliacao as SeloAvaliacaoLeitura } from "@/components/painel/AvaliacaoSubmissao";
 import InscritoEditor from "@/components/painel/InscritoEditor";
+import ExcluirInscrito from "@/components/painel/ExcluirInscrito";
 import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
 import CartaoFaixa from "@/components/painel/CartaoFaixa";
@@ -78,6 +79,20 @@ function BotaoAcao({ onClick, Icone, children, rotulo, destaque = false }) {
   );
 }
 
+function BotaoExcluir({ onClick, nome }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Excluir inscrição de ${nome}`}
+      className="inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#f3b7bd] px-3 text-[0.9rem] font-semibold text-[#c81d28] transition hover:bg-[#fdecee]"
+    >
+      <Trash2 className="h-4 w-4" aria-hidden="true" />
+      Excluir
+    </button>
+  );
+}
+
 const th = "whitespace-nowrap px-4 py-2.5";
 
 export default function InscritosPainel() {
@@ -97,6 +112,7 @@ export default function InscritosPainel() {
   const [vendo, setVendo] = useState(null);
   const [marcando, setMarcando] = useState(null);
   const [avaliando, setAvaliando] = useState(null);
+  const [excluindo, setExcluindo] = useState(null);
   const [area, setArea] = useState("");
   const [situacao, setSituacao] = useState("");
 
@@ -345,6 +361,7 @@ export default function InscritosPainel() {
                         Editar
                       </BotaoAcao>
                     )}
+                    {podeEditar && <BotaoExcluir onClick={() => setExcluindo(i)} nome={i.nome} />}
                   </div>
                 </li>
               ))}
@@ -419,6 +436,7 @@ export default function InscritosPainel() {
                               Editar
                             </BotaoAcao>
                           )}
+                          {podeEditar && <BotaoExcluir onClick={() => setExcluindo(i)} nome={i.nome} />}
                         </div>
                       </td>
                     </tr>
@@ -444,6 +462,7 @@ export default function InscritosPainel() {
                     <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
                       Editar
                     </BotaoAcao>
+                    <BotaoExcluir onClick={() => setExcluindo(i)} nome={i.nome} />
                   </div>
                 </li>
               ))}
@@ -486,10 +505,11 @@ export default function InscritosPainel() {
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="[&>button]:w-full [&>button]:justify-center">
+                        <div className="flex flex-col gap-2 [&>button]:w-full [&>button]:justify-center">
                           <BotaoAcao onClick={() => setEditando(i)} Icone={Pencil} rotulo={`Editar inscrição de ${i.nome}`}>
                             Editar
                           </BotaoAcao>
+                          <BotaoExcluir onClick={() => setExcluindo(i)} nome={i.nome} />
                         </div>
                       </td>
                     </tr>
@@ -516,6 +536,16 @@ export default function InscritosPainel() {
               </div>
             ) : null
           }
+        />
+      )}
+      {excluindo && (
+        <ExcluirInscrito
+          inscrito={excluindo}
+          onFechar={() => setExcluindo(null)}
+          onExcluido={() => {
+            setVendo((v) => (v && v.id === excluindo.id ? null : v));
+            refetch();
+          }}
         />
       )}
       {editando && <InscritoEditor inscrito={editando} onFechar={() => setEditando(null)} onSalvo={refetch} />}
