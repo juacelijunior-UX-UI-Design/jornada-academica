@@ -475,7 +475,7 @@ export default function InscritosPainel() {
                   <col />
                   <col className="w-[12rem]" />
                   <col className="w-[11rem]" />
-                  <col className="w-[8rem]" />
+                  <col className="w-[9.5rem]" />
                 </colgroup>
                 <thead className="border-b-[3px] border-amarelo bg-navy text-[0.8rem] font-bold uppercase tracking-wide text-white">
                   <tr>
