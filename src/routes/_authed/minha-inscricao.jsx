@@ -81,7 +81,8 @@ function MinhaInscricaoPage() {
             </CartaoFaixa>
           </div>
 
-          <div className="lg:sticky lg:top-24">
+          {/* No celular o ingresso vem primeiro; no computador fica fixo na coluna da direita. */}
+          <div className="order-first lg:sticky lg:top-24 lg:order-none">
             <IngressoCard ingresso={dados.inscricao} />
           </div>
         </div>
