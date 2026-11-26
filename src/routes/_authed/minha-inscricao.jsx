@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Award, CalendarDays, Info, MapPin, SearchX, Ticket } from "lucide-react";
+import { ArrowRight, Award, CalendarDays, Info, MapPin, QrCode, SearchX, Ticket } from "lucide-react";
 import PainelShell from "@/components/painel/PainelShell";
 import PainelCabecalho from "@/components/painel/PainelCabecalho";
 import CartaoFaixa from "@/components/painel/CartaoFaixa";
@@ -56,6 +56,12 @@ function MinhaInscricaoPage() {
                 <Info1 Icone={MapPin} rotulo="Local">
                   {EVENTO.local}
                 </Info1>
+                {!participante && (
+                  <Info1 Icone={QrCode} rotulo="Outras atividades">
+                    Seu QR Code vale para todo o evento: palestras, minicursos e outras sessões, além da sua
+                    apresentação. Faça o check-in na entrada de cada atividade.
+                  </Info1>
+                )}
                 <Info1 Icone={Award} rotulo="Certificado">
                   {participante ? (
                     <>
@@ -65,7 +71,7 @@ function MinhaInscricaoPage() {
                   ) : (
                     <>
                       {CARGA_HORARIA_APRESENTACAO} horas para quem apresentar o trabalho ({CARGA_HORARIA_PARTICIPANTE} h
-                      sem apresentação, com presença). Disponível a partir de{" "}
+                      sem apresentação, com presença). As outras atividades não somam horas. Disponível a partir de{" "}
                       <strong className="font-semibold">{LIBERACAO_BR}</strong>.
                     </>
                   )}
