@@ -30,7 +30,7 @@ export const apresentouTrabalho = (p) => ehSubmissao(p) && p.apresentou === true
 export const cargaHorariaCertificado = (p) =>
   apresentouTrabalho(p) ? CARGA_HORARIA_APRESENTACAO : CARGA_HORARIA_PARTICIPANTE;
 export const ARQUIVO_MAX_MB = 10;
-export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
+export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt"];
 export const OUTROS = "__outros__";
 
 export const DISCIPLINAS = [

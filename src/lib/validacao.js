@@ -4,7 +4,7 @@ export const OUTROS = "__outros__";
 export const RESUMO_MAX = 2000;
 export const TITULO_MAX = 200;
 export const ARQUIVO_MAX_MB = 10;
-export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt", ".ppt", ".pptx", ".odp"];
+export const ARQUIVO_EXTENSOES = [".pdf", ".doc", ".docx", ".odt"];
 export const MAX_COAUTORES = 9;
 
 // Limpa a lista de co-autores: remove vazios e espaços sobrando.
@@ -75,9 +75,9 @@ export function formatarTamanho(bytes) {
 }
 
 export function validarArquivo(arquivo) {
-  if (!arquivo) return "Anexe o resumo do trabalho (documento ou slides).";
+  if (!arquivo) return "Anexe o resumo do trabalho.";
   const nome = arquivo.name.toLowerCase();
-  if (!ARQUIVO_EXTENSOES.some((ext) => nome.endsWith(ext))) return "Envie um arquivo PDF, DOC, DOCX, ODT, PPT, PPTX ou ODP.";
+  if (!ARQUIVO_EXTENSOES.some((ext) => nome.endsWith(ext))) return "Envie um arquivo PDF, DOC, DOCX ou ODT.";
   if (arquivo.size === 0) return "O arquivo está vazio.";
   if (arquivo.size > ARQUIVO_MAX_MB * 1024 * 1024) return `O arquivo deve ter até ${ARQUIVO_MAX_MB} MB.`;
   return "";

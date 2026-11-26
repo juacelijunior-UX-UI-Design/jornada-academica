@@ -177,12 +177,12 @@ export default function DadosTrabalho({ form, setCampo, erros, arquivo, setArqui
             {arquivo ? "Trocar arquivo" : "Escolher arquivo"}
           </span>
           <span className="jr-legenda mt-2">
-            Documento (PDF, DOC, DOCX ou ODT) ou slides (PPT, PPTX ou ODP), de até 10 MB.
+            Documento (PDF, DOC, DOCX ou ODT), de até 10 MB.
           </span>
           <input
             id="arquivo"
             type="file"
-            accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.odp"
+            accept=".pdf,.doc,.docx,.odt"
             className="sr-only"
             onChange={(e) => aceitarArquivo(e.target.files?.[0] || null, e.target)}
           />
