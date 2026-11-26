@@ -210,7 +210,11 @@ export default function FormularioInscricao({ aberta, motivo }) {
             />
           </Secao>
 
-          <Secao numero={2} titulo="Seus dados" descricao="Quem vai apresentar o trabalho.">
+          <Secao
+            numero={2}
+            titulo="Seus dados"
+            descricao="Quem vai apresentar o trabalho. Já se inscreveu como participante? Use o mesmo CPF e e-mail: a inscrição vira submissão."
+          >
             <DadosPessoais form={form} setCampo={setCampo} erros={erros} />
           </Secao>
 
