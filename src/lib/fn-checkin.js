@@ -29,7 +29,14 @@ export const minhaSituacaoCheckin = createServerFn({ method: "GET" })
       email,
       nome: context.user.full_name || "",
       pedido: pedido
-        ? { status: pedido.status, nome: pedido.nome, cpf: mascararCpf(pedido.cpf), criado_em: pedido.created_date }
+        ? {
+            status: pedido.status,
+            nome: pedido.nome,
+            cpf: pedido.cpf ? mascararCpf(pedido.cpf) : "",
+            matricula: pedido.matricula || "",
+            curso: pedido.curso || "",
+            criado_em: pedido.created_date,
+          }
         : null,
     };
   });
