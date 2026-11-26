@@ -59,6 +59,10 @@ export default function EditalInscricao() {
             Quem <strong>apresentar</strong> recebe certificado de <strong>20 horas</strong>; sem apresentação, com
             presença, é de 4 horas.
           </li>
+          <li>
+            O <strong>QR Code</strong> da submissão vale para <strong>todas as atividades</strong> do evento (palestras,
+            minicursos e sessões). As outras atividades não somam horas ao certificado.
+          </li>
         </ul>
       </div>
 
