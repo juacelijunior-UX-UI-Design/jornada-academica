@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, cpfValido, mascararCpf } from "@/lib/validacao";
 import { todos } from "@/lib/jornada.server";
-import { acessoDe, permitido } from "@/lib/painel-equipe.server";
+import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
 import { PERFIS_CHAMADA } from "@/lib/perfis";
 
 // Pedidos de acesso à equipe de check-in: a pessoa entra com a própria conta (Google ou e-mail),
@@ -61,6 +61,38 @@ export const solicitarAcessoCheckin = createServerFn({ method: "POST" })
     return { ok: true, liberado: false };
   });
 
+// Página pública "Seja monitor": inscrição da equipe de trabalho (sem login).
+// Nome, e-mail, matrícula e curso. O administrador aprova no painel; aprovada, a pessoa entra
+// com esse mesmo e-mail e já fica como Monitor de Frequência.
+export const inscreverMonitor = createServerFn({ method: "POST" }).handler(async ({ data, context }) => {
+  const base44 = context.getBase44().asServiceRole;
+  const nome = String(data?.nome || "").trim().replace(/\s+/g, " ").slice(0, 150);
+  const email = String(data?.email || "").trim().toLowerCase().slice(0, 150);
+  const matricula = apenasDigitos(data?.matricula).slice(0, 20);
+  const curso = String(data?.curso || "").trim().slice(0, 100);
+
+  const erros = {};
+  if (nome.split(" ").filter(Boolean).length < 2) erros.nome = "Informe nome e sobrenome.";
+  else if (/\d/.test(nome)) erros.nome = "O nome não pode ter números.";
+  if (!EMAIL.test(email)) erros.email = "E-mail inválido.";
+  if (matricula.length < 4) erros.matricula = "Informe a sua matrícula (somente números).";
+  if (curso.length < 3) erros.curso = "Selecione o seu curso.";
+  if (!data?.aceite) erros.aceite = "Aceite o uso dos dados para continuar.";
+  if (Object.keys(erros).length) return { ok: false, erros };
+
+  // Já faz parte da equipe com esse e-mail: não precisa de nova inscrição.
+  const membros = await todos(base44.entities.Equipe.filter({ email }));
+  if (membros.some((m) => m.ativo !== false)) return { ok: true, situacao: "ja_equipe" };
+
+  const atual = await pedidoDe(base44, email);
+  if (atual?.status === "pendente") {
+    await base44.entities.SolicitacaoCheckin.update(atual.id, { nome, matricula, curso, origem: "monitores" });
+    return { ok: true, situacao: "atualizada" };
+  }
+  await base44.entities.SolicitacaoCheckin.create({ nome, email, matricula, curso, origem: "monitores", status: "pendente" });
+  return { ok: true, situacao: "nova" };
+});
+
 // Painel do administrador: pedidos de acesso ao check-in.
 export const listarSolicitacoesCheckin = createServerFn({ method: "GET" })
   .middleware([requireUser])
@@ -75,7 +107,10 @@ export const listarSolicitacoesCheckin = createServerFn({ method: "GET" })
         id: s.id,
         nome: s.nome,
         email: s.email,
-        cpf: mascararCpf(s.cpf),
+        cpf: s.cpf ? mascararCpf(s.cpf) : "",
+        matricula: s.matricula || "",
+        curso: s.curso || "",
+        origem: s.origem || (s.cpf ? "checkin" : "monitores"),
         status: s.status,
         criado_em: s.created_date,
         decidido_por: s.decidido_por || "",
