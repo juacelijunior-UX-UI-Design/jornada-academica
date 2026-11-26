@@ -54,6 +54,11 @@
         "red"
       ],
       "type": "string"
+    },
+    "telefone": {
+      "description": "Telefone com DDD, somente d\u00edgitos (inscri\u00e7\u00e3o pela p\u00e1gina de monitores).",
+      "maxLength": 11,
+      "type": "string"
     }
   },
   "required": [
