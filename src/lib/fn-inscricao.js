@@ -134,10 +134,25 @@ export const criarParticipacao = createServerFn({ method: "POST" }).handler(asyn
   const email = String(data.email).trim().toLowerCase();
 
   const jaExiste = await todos(base44.entities.Participante.list("-created_date"));
-  const dup = {};
-  if (jaExiste.some((p) => p.cpf === cpf)) dup.cpf = "Este CPF já está cadastrado.";
-  if (jaExiste.some((p) => String(p.email).toLowerCase() === email)) dup.email = "Este e-mail já está cadastrado.";
-  if (Object.keys(dup).length) return { ok: false, erros: dup };
+  const existente =
+    jaExiste.find((p) => p.cpf === cpf) || jaExiste.find((p) => String(p.email).toLowerCase() === email);
+  if (existente) {
+    // Uma inscrição por pessoa: quem já submeteu (ou já é participante) usa o QR Code que já tem.
+    const porCpf = existente.cpf === cpf;
+    const dado = porCpf ? "este CPF" : "este e-mail";
+    if (existente.tipo !== "participante") {
+      return {
+        ok: false,
+        ja_inscrito: "submissao",
+        erro: `Você já tem um trabalho submetido com ${dado}. Sua inscrição já vale para todas as atividades do evento: use o QR Code que enviamos por e-mail ou acesse Minha inscrição.`,
+      };
+    }
+    return {
+      ok: false,
+      ja_inscrito: "participante",
+      erro: `Já existe uma inscrição de participante com ${dado}. Use o QR Code que enviamos por e-mail ou acesse Minha inscrição.`,
+    };
+  }
 
   const criado = await base44.entities.Participante.create({
     tipo: "participante",
