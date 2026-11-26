@@ -18,6 +18,12 @@ const PERGUNTAS = [
       "Assim que você confirma sua inscrição no formulário de inscrição, seu QR Code único é enviado para o seu e-mail.",
   },
   {
+    id: "qr-atividades",
+    pergunta: "Quem submeteu trabalho pode assistir a outras atividades?",
+    resposta:
+      "Pode. O QR Code da submissão vale para todas as atividades do evento (palestras, minicursos e sessões de apresentação): faça o check-in na entrada de cada uma. O certificado continua sendo um só: 20 horas para quem apresentar o trabalho. As outras atividades não somam horas.",
+  },
+  {
     id: "apresentacao",
     pergunta: "Como funciona a apresentação?",
     resposta:
