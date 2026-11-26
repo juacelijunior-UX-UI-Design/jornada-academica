@@ -43,12 +43,34 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
   const email = String(data.email).trim().toLowerCase();
 
   const jaExiste = await todos(base44.entities.Participante.list("-created_date"));
-  const dup = {};
-  if (jaExiste.some((p) => p.cpf === cpf)) dup.cpf = "Este CPF já está cadastrado.";
-  if (jaExiste.some((p) => String(p.email).toLowerCase() === email)) dup.email = "Este e-mail já está cadastrado.";
-  if (Object.keys(dup).length) return { ok: false, erros: dup };
+  const porCpf = jaExiste.find((p) => p.cpf === cpf);
+  const porEmail = jaExiste.find((p) => String(p.email).toLowerCase() === email);
 
-  const participante = await base44.entities.Participante.create({
+  // Quem já se inscreveu como participante (ouvinte) pode transformar essa inscrição em submissão,
+  // desde que CPF e e-mail sejam os da mesma inscrição. Mantém o QR Code e as presenças.
+  const converter =
+    porCpf && porEmail && porCpf.id === porEmail.id && porCpf.tipo === "participante" ? porCpf : null;
+
+  if (!converter && (porCpf || porEmail)) {
+    const dup = {};
+    const avisoParticipante =
+      "Use o mesmo CPF e o mesmo e-mail da sua inscrição de participante para transformá-la em submissão.";
+    if (porCpf) {
+      dup.cpf =
+        porCpf.tipo === "participante"
+          ? `Este CPF já tem inscrição de participante com outro e-mail. ${avisoParticipante}`
+          : "Este CPF já tem um trabalho submetido. Cada pessoa pode submeter um trabalho.";
+    }
+    if (porEmail) {
+      dup.email =
+        porEmail.tipo === "participante"
+          ? `Este e-mail já tem inscrição de participante com outro CPF. ${avisoParticipante}`
+          : "Este e-mail já tem um trabalho submetido. Cada pessoa pode submeter um trabalho.";
+    }
+    return { ok: false, erros: dup };
+  }
+
+  const dadosSubmissao = {
     tipo: data.tipo === "externo" ? "externo" : "aluno",
     nome: String(data.nome).trim().replace(/\s+/g, " "),
     coautores: normalizarCoautores(data.coautores).slice(0, MAX_COAUTORES),
@@ -65,13 +87,32 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     arquivo_uri: data.arquivo_uri || undefined,
     arquivo_nome: data.arquivo_nome || undefined,
     arquivo_tamanho: data.arquivo_tamanho ? Number(data.arquivo_tamanho) : undefined,
-  });
+  };
+
+  let participante;
+  if (converter) {
+    // Vira submissão nova: avaliação e apresentação começam do zero; token do QR Code e presenças ficam.
+    await base44.entities.Participante.update(converter.id, {
+      ...dadosSubmissao,
+      avaliacao: "pendente",
+      avaliacao_motivo: "",
+      avaliado_em: null,
+      avaliado_por: "",
+      apresentou: false,
+      apresentou_em: null,
+      apresentou_por: "",
+    });
+    participante = await base44.entities.Participante.get(converter.id);
+  } else {
+    participante = await base44.entities.Participante.create(dadosSubmissao);
+  }
 
   const email_enviado = await enviarConfirmacao(base44, participante);
 
   return {
     ok: true,
     participante: {
+      convertido: Boolean(converter),
       email_enviado,
       nome: participante.nome,
       formato: participante.formato,
