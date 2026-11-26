@@ -3,13 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Clock, Loader2, LogIn, LogOut, Mail, ScanLine, ShieldCheck, UserPlus, XCircle } from "lucide-react";
-import Campo from "@/components/inscricao/Campo";
 import CheckinPainel from "@/components/checkin/CheckinPainel";
 import { GoogleIcon } from "@/components/auth/GoogleIcon";
 import { useAuth } from "@/lib/AuthContext";
 import { signInWithProvider } from "@/lib/authMfaFlow";
-import { minhaSituacaoCheckin, solicitarAcessoCheckin } from "@/lib/fn-checkin";
-import { mascaraCpf } from "@/lib/validacao";
+import { minhaSituacaoCheckin } from "@/lib/fn-checkin";
 
 const VOLTA = "/checkin";
 
@@ -27,8 +25,15 @@ function Entrar() {
       </span>
       <h2 className="mt-4 font-heading text-[1.35rem] font-extrabold text-navy">Equipe de check-in</h2>
       <p className="mt-2 text-tinta-suave">
-        Área restrita a quem registra a presença dos inscritos pelo QR Code. Entre com a sua conta e peça acesso:
-        o administrador do evento libera o check-in para você.
+        Área restrita à equipe de monitores aprovada pela organização, que registra a presença dos inscritos pelo QR
+        Code. Entre com o <strong>mesmo e-mail</strong> usado na inscrição de monitor.
+      </p>
+      <p className="mt-3 rounded-lg bg-fundo px-4 py-3 text-[0.92rem] text-tinta">
+        Ainda não é monitor?{" "}
+        <Link to="/monitores" className="font-semibold">
+          Faça sua inscrição na equipe
+        </Link>
+        .
       </p>
 
       {erro && (
@@ -73,122 +78,47 @@ function Entrar() {
         </Link>
       </div>
       <p className="mt-3 text-center text-[0.85rem] text-tinta-suave">
-        Depois de entrar, você informa nome e CPF para pedir o acesso.
+        Sem inscrição aprovada, o leitor de QR Code não é liberado.
       </p>
     </Cartao>
   );
 }
 
-// 2) Logado, sem acesso: formulário de pedido (nome, e-mail da conta e CPF).
-function Pedido({ situacao, onEnviado }) {
-  const enviar = useServerFn(solicitarAcessoCheckin);
-  const [form, setForm] = useState({ nome: situacao.nome || "", cpf: "", aceite: false });
-  const [erros, setErros] = useState({});
-  const [enviando, setEnviando] = useState(false);
+// 2) Logado, mas o e-mail ainda não está na equipe: orienta a fazer a inscrição de monitor.
+function SemAcesso({ situacao }) {
   const recusado = situacao.pedido?.status === "recusada";
   const removido = situacao.pedido?.status === "aprovada";
-
-  const setCampo = (c, v) => {
-    setForm((a) => ({ ...a, [c]: v }));
-    setErros((a) => ({ ...a, [c]: undefined }));
-  };
-
-  async function submeter(e) {
-    e.preventDefault();
-    if (enviando) return;
-    setEnviando(true);
-    try {
-      const res = await enviar({ data: form });
-      if (!res?.ok) {
-        setErros(res?.erros || {});
-        return;
-      }
-      await onEnviado();
-    } catch {
-      setErros({ geral: "Não foi possível enviar. Tente novamente." });
-    } finally {
-      setEnviando(false);
-    }
-  }
-
   return (
     <Cartao>
-      <h2 className="font-heading text-[1.35rem] font-extrabold text-navy">Pedir acesso ao check-in</h2>
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-fundo">
+        <ShieldCheck className="h-6 w-6 text-royal" aria-hidden="true" />
+      </span>
+      <h2 className="mt-4 font-heading text-[1.35rem] font-extrabold text-navy">Você ainda não está na equipe</h2>
       <p className="mt-2 text-tinta-suave">
-        Preencha seus dados. O administrador do evento recebe o pedido e libera o acesso.
+        O e-mail <strong className="break-all text-tinta">{situacao.email}</strong> não tem acesso ao check-in. Para fazer
+        parte da equipe de monitores, faça a sua inscrição com <strong>este mesmo e-mail</strong>. Depois que a
+        organização aprovar, é só voltar a esta página.
       </p>
 
       {recusado && (
         <div className="jr-alerta jr-alerta-erro mt-5" role="status">
           <XCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-          <span>Seu pedido anterior foi recusado. Se achar que foi engano, envie de novo ou fale com a organização.</span>
+          <span>Sua inscrição anterior foi recusada. Se achar que foi engano, fale com a organização.</span>
         </div>
       )}
       {removido && (
         <div className="jr-alerta jr-alerta-info mt-5" role="status">
-          <span>Seu acesso ao check-in foi retirado pelo administrador. Você pode pedir de novo.</span>
-        </div>
-      )}
-      {erros.geral && (
-        <div className="jr-alerta jr-alerta-erro mt-5" role="alert">
-          {erros.geral}
+          <span>Seu acesso ao check-in foi retirado pelo administrador. Fale com a organização ou inscreva-se de novo.</span>
         </div>
       )}
 
-      <form onSubmit={submeter} noValidate className="mt-6">
-        <Campo id="c-nome" label="Nome completo" erro={erros.nome}>
-          <input
-            id="c-nome"
-            className="jr-input"
-            autoComplete="name"
-            maxLength={150}
-            value={form.nome}
-            aria-invalid={erros.nome ? "true" : undefined}
-            onChange={(e) => setCampo("nome", e.target.value)}
-          />
-        </Campo>
-        <div className="grid gap-x-4 sm:grid-cols-2">
-          <Campo id="c-email" label="E-mail (da sua conta)">
-            <input id="c-email" className="jr-input bg-fundo text-tinta-suave" value={situacao.email} readOnly />
-          </Campo>
-          <Campo id="c-cpf" label="CPF" erro={erros.cpf}>
-            <input
-              id="c-cpf"
-              className="jr-input"
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="000.000.000-00"
-              value={form.cpf}
-              aria-invalid={erros.cpf ? "true" : undefined}
-              onChange={(e) => setCampo("cpf", mascaraCpf(e.target.value))}
-            />
-          </Campo>
-        </div>
-
-        <label className="mt-1 flex cursor-pointer items-start gap-3 text-[0.95rem]">
-          <input
-            type="checkbox"
-            checked={form.aceite}
-            onChange={(e) => setCampo("aceite", e.target.checked)}
-            className="mt-1 h-5 w-5 flex-none accent-[#0040ce]"
-          />
-          <span>Autorizo o uso dos meus dados para identificar quem registra as presenças no evento.</span>
-        </label>
-        {erros.aceite && (
-          <p className="jr-erro" role="alert">
-            {erros.aceite}
-          </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={enviando}
-          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-6 font-bold text-navy transition hover:bg-[#e8b800] disabled:opacity-60"
-        >
-          {enviando ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <ShieldCheck className="h-5 w-5" aria-hidden="true" />}
-          {enviando ? "Enviando..." : "Pedir acesso"}
-        </button>
-      </form>
+      <Link
+        to="/monitores"
+        className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-amarelo px-6 font-bold text-navy no-underline transition hover:bg-[#e8b800]"
+      >
+        <UserPlus className="h-5 w-5" aria-hidden="true" />
+        Fazer inscrição de monitor
+      </Link>
     </Cartao>
   );
 }
@@ -200,7 +130,7 @@ function Aguardando({ situacao }) {
       <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#fff6d9]">
         <Clock className="h-7 w-7 text-[#8a6500]" aria-hidden="true" />
       </span>
-      <h2 className="mt-4 font-heading text-[1.35rem] font-extrabold text-navy">Pedido enviado!</h2>
+      <h2 className="mt-4 font-heading text-[1.35rem] font-extrabold text-navy">Inscrição de monitor recebida!</h2>
       <p className="mt-2 text-tinta-suave">
         Aguarde a aprovação do administrador do evento. Assim que o acesso for liberado, esta página abre o leitor
         de QR Code (é só recarregar).
@@ -214,10 +144,24 @@ function Aguardando({ situacao }) {
           <dt className="font-semibold text-tinta-suave">E-mail:</dt>
           <dd className="break-all text-right">{situacao.email}</dd>
         </div>
-        <div className="flex justify-between gap-3 py-2">
-          <dt className="font-semibold text-tinta-suave">CPF:</dt>
-          <dd className="text-right">{situacao.pedido.cpf}</dd>
-        </div>
+        {situacao.pedido.matricula && (
+          <div className="flex justify-between gap-3 py-2">
+            <dt className="font-semibold text-tinta-suave">Matrícula:</dt>
+            <dd className="text-right">{situacao.pedido.matricula}</dd>
+          </div>
+        )}
+        {situacao.pedido.curso && (
+          <div className="flex justify-between gap-3 py-2">
+            <dt className="font-semibold text-tinta-suave">Curso:</dt>
+            <dd className="text-right">{situacao.pedido.curso}</dd>
+          </div>
+        )}
+        {situacao.pedido.cpf && (
+          <div className="flex justify-between gap-3 py-2">
+            <dt className="font-semibold text-tinta-suave">CPF:</dt>
+            <dd className="text-right">{situacao.pedido.cpf}</dd>
+          </div>
+        )}
       </dl>
     </Cartao>
   );
@@ -227,7 +171,7 @@ function Aguardando({ situacao }) {
 export default function AcessoCheckin() {
   const { user, isLoadingAuth, logout } = useAuth();
   const buscar = useServerFn(minhaSituacaoCheckin);
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["situacao-checkin", user?.email],
     queryFn: () => buscar(),
     enabled: !isLoadingAuth && Boolean(user),
@@ -287,7 +231,7 @@ export default function AcessoCheckin() {
   return (
     <>
       {barraConta}
-      <Pedido situacao={data} onEnviado={refetch} />
+      <SemAcesso situacao={data} />
     </>
   );
 }
