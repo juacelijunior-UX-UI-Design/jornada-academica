@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Loader2, QrCode, ShoppingBasket, UserCheck, UserPlus } from "lucide-react";
+import { ArrowRight, CheckCircle2, Info, Loader2, QrCode, ShoppingBasket, Ticket, UserCheck, UserPlus } from "lucide-react";
 import Campo from "@/components/inscricao/Campo";
 import IngressoCard from "@/components/ingresso/IngressoCard";
 import { CARGA_HORARIA_PARTICIPANTE } from "@/lib/evento";
@@ -22,6 +22,8 @@ export default function FormularioParticipante() {
   const [form, setForm] = useState({ nome: "", cpf: "", telefone: "", email: "", aceite: false });
   const [erros, setErros] = useState({});
   const [erroGeral, setErroGeral] = useState("");
+  // Pessoa que já tem inscrição (submissão ou participante): mostra orientação, não erro.
+  const [jaInscrito, setJaInscrito] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [resultado, setResultado] = useState(null);
 
@@ -47,6 +49,7 @@ export default function FormularioParticipante() {
     e.preventDefault();
     if (enviando) return;
     setErroGeral("");
+    setJaInscrito(null);
     const locais = validarParticipante(valores);
     if (Object.keys(locais).length) {
       setErros(locais);
@@ -58,6 +61,11 @@ export default function FormularioParticipante() {
     try {
       const res = await criar({ data: valores });
       if (!res?.ok) {
+        if (res?.ja_inscrito) {
+          setJaInscrito({ tipo: res.ja_inscrito, texto: res.erro });
+          setTimeout(() => document.getElementById("aviso-ja-inscrito")?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+          return;
+        }
         if (res?.erros) setErros(res.erros);
         if (res?.erro) setErroGeral(res.erro);
         return;
@@ -131,6 +139,36 @@ export default function FormularioParticipante() {
       {erroGeral && (
         <div className="jr-alerta jr-alerta-erro mt-5" role="alert">
           {erroGeral}
+        </div>
+      )}
+
+      {jaInscrito && (
+        <div id="aviso-ja-inscrito" className="mt-5 overflow-hidden rounded-xl border border-[#b7c8f0]" role="status">
+          <div className="flex items-start gap-3 bg-[#e9effc] px-4 py-3.5">
+            <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-navy text-amarelo">
+              {jaInscrito.tipo === "submissao" ? (
+                <Ticket className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Info className="h-5 w-5" aria-hidden="true" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <strong className="block font-heading text-[1.02rem] text-navy">
+                {jaInscrito.tipo === "submissao" ? "Você já está inscrito no evento" : "Você já é participante"}
+              </strong>
+              <p className="m-0 mt-1 text-[0.92rem] leading-snug text-tinta">{jaInscrito.texto}</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white px-4 py-3">
+            <span className="text-[0.82rem] text-tinta-suave">Entre com o mesmo e-mail da inscrição para ver o QR Code.</span>
+            <Link
+              to="/minha-inscricao"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-lg bg-royal px-4 text-[0.92rem] font-semibold text-white no-underline transition hover:bg-navy"
+            >
+              Ir para Minha inscrição
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       )}
 
