@@ -10,6 +10,7 @@ const NAVEGACAO = [
   { texto: "Inscrição", to: "/inscricao" },
   { texto: "Certificado", to: "/certificado" },
   { texto: "Validar certificado", to: "/validar" },
+  { texto: "Seja monitor", to: "/monitores" },
 ];
 
 const rotulo = "mb-4 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-[#8f9fd1]";
