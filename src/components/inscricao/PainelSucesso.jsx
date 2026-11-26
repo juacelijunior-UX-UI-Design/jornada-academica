@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { CheckCircle2, QrCode, ShoppingBasket } from "lucide-react";
+import { CheckCircle2, QrCode, RefreshCw, ShoppingBasket } from "lucide-react";
 import Botao from "@/components/site/Botao";
 import { EVENTO, FORMATOS } from "@/lib/evento";
 
@@ -15,6 +15,16 @@ export default function PainelSucesso({ resultado, onNova }) {
         <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
         <span>Inscrição confirmada, {String(resultado.nome).split(" ")[0]}!</span>
       </div>
+
+      {resultado.convertido && (
+        <div className="jr-alerta jr-alerta-info mb-4" role="status">
+          <RefreshCw className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+          <span>
+            Sua inscrição de <strong>participante</strong> foi transformada em <strong>submissão de trabalho</strong>.
+            Seu QR Code de ingresso continua o mesmo.
+          </span>
+        </div>
+      )}
 
       {recebidos.length > 0 && (
         <p className="mb-3">
