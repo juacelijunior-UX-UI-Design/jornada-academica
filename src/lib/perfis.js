@@ -71,7 +71,7 @@ export const SECOES_PAINEL = [
     to: "/painel/usuarios",
     grupo: "admin",
     perfis: ["administrador"],
-    resumo: "Pedidos de check-in, equipe e contas do site.",
+    resumo: "Inscrições de monitores, equipe e contas do site.",
   },
 ];
 

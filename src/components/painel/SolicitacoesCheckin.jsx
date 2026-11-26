@@ -52,7 +52,7 @@ export default function SolicitacoesCheckin({ onAtualizar }) {
     return (
       <p className="jr-card flex items-center gap-3 p-5 text-tinta-suave">
         <Loader2 className="h-5 w-5 animate-spin text-royal" aria-hidden="true" />
-        Carregando pedidos de check-in…
+        Carregando inscrições de monitores…
       </p>
     );
   }
@@ -68,14 +68,14 @@ export default function SolicitacoesCheckin({ onAtualizar }) {
         <div>
           <h2 className="flex items-center gap-2 font-heading text-[1.1rem] font-extrabold text-navy">
             <ScanLine className="h-5 w-5 text-royal" aria-hidden="true" />
-            Pedidos de acesso ao check-in
+            Inscrições de monitores
             {pendentes.length > 0 && (
               <span className="rounded-full bg-amarelo px-2 py-0.5 text-[0.8rem] text-navy">{pendentes.length}</span>
             )}
           </h2>
           <p className="jr-legenda mt-1">
-            Quem pediu acesso pela página Check-in. Aprovado, vira Monitor de Frequência e passa a registrar presenças
-            pelo QR Code.
+            Alunos que se inscreveram na página "Seja monitor". Aprovado, vira Monitor de Frequência: entra na página
+            Check-in com o mesmo e-mail e registra as presenças pelo QR Code.
           </p>
         </div>
         {decididos.length > 0 && (
@@ -90,7 +90,7 @@ export default function SolicitacoesCheckin({ onAtualizar }) {
       </div>
 
       {lista.length === 0 ? (
-        <p className="mt-4 text-tinta-suave">Nenhum pedido aguardando aprovação.</p>
+        <p className="mt-4 text-tinta-suave">Nenhuma inscrição de monitor aguardando aprovação.</p>
       ) : (
         <ul className="mt-4 divide-y divide-linea rounded-lg border border-linea">
           {lista.map((s) => (
@@ -99,7 +99,14 @@ export default function SolicitacoesCheckin({ onAtualizar }) {
                 <strong className="block break-words text-navy">{s.nome}</strong>
                 <span className="block break-all text-[0.85rem] text-tinta-suave">{s.email}</span>
                 <span className="block text-[0.8rem] text-tinta-suave">
-                  CPF {s.cpf} · pedido em {dataBr(s.criado_em)}
+                  {[
+                    s.matricula && `Matrícula ${s.matricula}`,
+                    s.curso,
+                    s.cpf && `CPF ${s.cpf}`,
+                    `inscrito em ${dataBr(s.criado_em)}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </span>
               </div>
               {s.status === "pendente" ? (

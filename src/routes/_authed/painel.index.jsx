@@ -105,7 +105,7 @@ function VisaoGeral() {
       tom: "alerta",
       texto: (
         <>
-          <strong>{n.pedidosCheckin}</strong> pedido(s) de acesso ao check-in aguardando sua aprovação.
+          <strong>{n.pedidosCheckin}</strong> inscrição(ões) de monitor aguardando sua aprovação.
         </>
       ),
       acao: "Responder",

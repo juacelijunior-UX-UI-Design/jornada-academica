@@ -10,7 +10,7 @@ import EquipeLista from "@/components/painel/EquipeLista";
 import SolicitacoesCheckin from "@/components/painel/SolicitacoesCheckin";
 
 const ABAS = [
-  { id: "pedidos", titulo: "Pedidos de check-in", Icone: ScanLine },
+  { id: "pedidos", titulo: "Monitores", Icone: ScanLine },
   { id: "equipe", titulo: "Equipe", Icone: ShieldCheck },
   { id: "contas", titulo: "Contas do site", Icone: UserRound },
 ];
