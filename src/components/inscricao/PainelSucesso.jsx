@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { CheckCircle2, QrCode, RefreshCw, ShoppingBasket } from "lucide-react";
+import { CalendarCheck, CheckCircle2, QrCode, RefreshCw, ShoppingBasket } from "lucide-react";
 import Botao from "@/components/site/Botao";
 import { EVENTO, FORMATOS } from "@/lib/evento";
 
@@ -47,6 +47,15 @@ export default function PainelSucesso({ resultado, onNova }) {
           Para vê-lo aqui no site, entre com o mesmo e-mail da inscrição em{" "}
           <Link to="/minha-inscricao">Minha inscrição</Link>. Apresente-o nos dias do evento para
           registrar a sua presença.
+        </span>
+      </div>
+
+      <div className="jr-alerta jr-alerta-info mb-4">
+        <CalendarCheck className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+        <span>
+          <strong>Seu QR Code vale para todo o evento.</strong> Além da sua apresentação, você pode participar de
+          palestras, minicursos e outras sessões: faça o check-in na entrada de cada atividade. O certificado é único
+          (20 horas para quem apresentar); as outras atividades não somam horas.
         </span>
       </div>
 
