@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_site/monitores")({
 });
 
 const PASSOS = [
-  { Icone: UserPlus, titulo: "Faça a inscrição", texto: "Nome, e-mail, matrícula e curso." },
+  { Icone: UserPlus, titulo: "Faça a inscrição", texto: "Nome, e-mail, telefone, matrícula e curso." },
   { Icone: ClipboardCheck, titulo: "Aguarde a aprovação", texto: "A organização analisa e aprova a equipe." },
   { Icone: ScanLine, titulo: "Trabalhe no evento", texto: `Em ${EVENTO.datas}, entre na página Check-in com o mesmo e-mail e registre as presenças pelo QR Code.` },
 ];

@@ -6,9 +6,10 @@ import Campo from "@/components/inscricao/Campo";
 import CartaoFaixa from "@/components/painel/CartaoFaixa";
 import { inscreverMonitor } from "@/lib/fn-checkin";
 import { CURSOS, OUTROS } from "@/lib/evento";
+import { mascaraTelefone } from "@/lib/validacao";
 
-const VAZIO = { nome: "", email: "", matricula: "", curso: "", curso_outro: "", aceite: false };
-const ORDEM = ["nome", "email", "matricula", "curso"];
+const VAZIO = { nome: "", email: "", telefone: "", matricula: "", curso: "", curso_outro: "", aceite: false };
+const ORDEM = ["nome", "email", "telefone", "matricula", "curso"];
 
 // Formulário da página "Seja monitor": nome, e-mail, matrícula e curso na UNINASSAU.
 export default function FormularioMonitor() {
@@ -30,6 +31,7 @@ export default function FormularioMonitor() {
     if (nome.split(" ").filter(Boolean).length < 2) e.nome = "Informe nome e sobrenome.";
     else if (/\d/.test(nome)) e.nome = "O nome não pode ter números.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = "E-mail inválido.";
+    if (form.telefone.replace(/\D/g, "").length < 10) e.telefone = "Informe o telefone com DDD.";
     if (form.matricula.replace(/\D/g, "").length < 4) e.matricula = "Informe a sua matrícula (somente números).";
     if (!form.curso) e.curso = "Selecione o seu curso.";
     else if (form.curso === OUTROS && form.curso_outro.trim().length < 3) e.curso_outro = "Informe o nome do curso.";
@@ -54,6 +56,7 @@ export default function FormularioMonitor() {
         data: {
           nome: form.nome,
           email: form.email,
+          telefone: form.telefone,
           matricula: form.matricula,
           curso: form.curso === OUTROS ? form.curso_outro.trim() : form.curso,
           aceite: form.aceite,
@@ -175,6 +178,16 @@ export default function FormularioMonitor() {
         </Campo>
 
         <div className="grid gap-x-4 sm:grid-cols-2">
+          <Campo id="m-telefone" label="Telefone (WhatsApp)" erro={erros.telefone}>
+            <input
+              {...props("telefone")}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel-national"
+              placeholder="(86) 99999-9999"
+              onChange={(e) => setCampo("telefone", mascaraTelefone(e.target.value))}
+            />
+          </Campo>
           <Campo id="m-matricula" label="Matrícula" erro={erros.matricula}>
             <input
               {...props("matricula")}
@@ -186,7 +199,9 @@ export default function FormularioMonitor() {
               onChange={(e) => setCampo("matricula", e.target.value.replace(/\D/g, ""))}
             />
           </Campo>
-          <Campo id="m-curso" label="Curso na UNINASSAU" erro={erros.curso}>
+        </div>
+
+        <Campo id="m-curso" label="Curso na UNINASSAU" erro={erros.curso}>
             <select {...props("curso")}>
               <option value="">Selecione o curso</option>
               {CURSOS.map((c) => (
@@ -197,7 +212,6 @@ export default function FormularioMonitor() {
               <option value={OUTROS}>Outro curso</option>
             </select>
           </Campo>
-        </div>
 
         {form.curso === OUTROS && (
           <Campo id="m-curso_outro" label="Nome do curso" erro={erros.curso_outro}>

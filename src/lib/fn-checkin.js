@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireUser } from "@/lib/auth-middleware";
-import { apenasDigitos, cpfValido, mascararCpf } from "@/lib/validacao";
+import { apenasDigitos, cpfValido, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
 import { PERFIS_CHAMADA } from "@/lib/perfis";
@@ -75,6 +75,7 @@ export const inscreverMonitor = createServerFn({ method: "POST" }).handler(async
   const base44 = context.getBase44().asServiceRole;
   const nome = String(data?.nome || "").trim().replace(/\s+/g, " ").slice(0, 150);
   const email = String(data?.email || "").trim().toLowerCase().slice(0, 150);
+  const telefone = normalizarTelefone(data?.telefone).slice(0, 11);
   const matricula = apenasDigitos(data?.matricula).slice(0, 20);
   const curso = String(data?.curso || "").trim().slice(0, 100);
 
@@ -82,6 +83,7 @@ export const inscreverMonitor = createServerFn({ method: "POST" }).handler(async
   if (nome.split(" ").filter(Boolean).length < 2) erros.nome = "Informe nome e sobrenome.";
   else if (/\d/.test(nome)) erros.nome = "O nome não pode ter números.";
   if (!EMAIL.test(email)) erros.email = "E-mail inválido.";
+  if (telefone.length < 10) erros.telefone = "Informe o telefone com DDD.";
   if (matricula.length < 4) erros.matricula = "Informe a sua matrícula (somente números).";
   if (curso.length < 3) erros.curso = "Selecione o seu curso.";
   if (!data?.aceite) erros.aceite = "Aceite o uso dos dados para continuar.";
@@ -93,10 +95,10 @@ export const inscreverMonitor = createServerFn({ method: "POST" }).handler(async
 
   const atual = await pedidoDe(base44, email);
   if (atual?.status === "pendente") {
-    await base44.entities.SolicitacaoCheckin.update(atual.id, { nome, matricula, curso, origem: "monitores" });
+    await base44.entities.SolicitacaoCheckin.update(atual.id, { nome, telefone, matricula, curso, origem: "monitores" });
     return { ok: true, situacao: "atualizada" };
   }
-  await base44.entities.SolicitacaoCheckin.create({ nome, email, matricula, curso, origem: "monitores", status: "pendente" });
+  await base44.entities.SolicitacaoCheckin.create({ nome, email, telefone, matricula, curso, origem: "monitores", status: "pendente" });
   return { ok: true, situacao: "nova" };
 });
 
@@ -115,6 +117,7 @@ export const listarSolicitacoesCheckin = createServerFn({ method: "GET" })
         nome: s.nome,
         email: s.email,
         cpf: s.cpf ? mascararCpf(s.cpf) : "",
+        telefone: s.telefone || "",
         matricula: s.matricula || "",
         curso: s.curso || "",
         origem: s.origem || (s.cpf ? "checkin" : "monitores"),

@@ -14,6 +14,13 @@ const dataBr = (d) =>
       })
     : "";
 
+const telefoneBr = (t) => {
+  const d = String(t || "").replace(/\D/g, "");
+  if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return t;
+};
+
 const SELO = {
   pendente: "bg-[#fff6d9] text-[#7a5800]",
   aprovada: "bg-[#e8f6ee] text-[#166b3b]",
@@ -100,6 +107,7 @@ export default function SolicitacoesCheckin({ onAtualizar }) {
                 <span className="block break-all text-[0.85rem] text-tinta-suave">{s.email}</span>
                 <span className="block text-[0.8rem] text-tinta-suave">
                   {[
+                    s.telefone && telefoneBr(s.telefone),
                     s.matricula && `Matrícula ${s.matricula}`,
                     s.curso,
                     s.cpf && `CPF ${s.cpf}`,
