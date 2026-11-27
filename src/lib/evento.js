@@ -60,6 +60,7 @@ export const CURSOS = [
   "Administração",
   "Análise e Desenvolvimento de Sistemas",
   "Arquitetura e Urbanismo",
+  "Biomedicina",
   "Ciência da Computação",
   "Ciências Contábeis",
   "Design",
