@@ -52,7 +52,7 @@ export default function ComoParticipar() {
         </h2>
       </div>
 
-      <div className="jr-container pt-10 lg:max-w-[1360px]">
+      <div className="jr-container-amplo pt-10">
         <ol className="m-0 grid auto-rows-fr list-none gap-5 p-0 sm:grid-cols-2 xl:grid-cols-4">
           {PASSOS.map(({ titulo, texto }, i) => (
             <li
@@ -66,7 +66,7 @@ export default function ComoParticipar() {
                 {i + 1}
               </span>
               <h3 className="mt-4 font-heading text-[1.15rem] font-bold text-tinta">{titulo}</h3>
-              <p className="mt-2 text-[1rem] leading-relaxed text-tinta">{texto}</p>
+              <p className="mt-2 text-[1rem] leading-relaxed text-tinta [hyphens:auto] text-justify">{texto}</p>
             </li>
           ))}
         </ol>
