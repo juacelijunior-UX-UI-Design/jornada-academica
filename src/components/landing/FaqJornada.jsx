@@ -63,7 +63,7 @@ export default function FaqJornada() {
       <div className="jr-container-amplo">
         <TituloSecao id="titulo-faq">Perguntas frequentes</TituloSecao>
 
-        <ul className="mt-9 list-none space-y-3 p-0">
+        <ul className="mx-auto mt-9 max-w-[56rem] list-none space-y-3 p-0">
           {PERGUNTAS.map((item) => (
             <FaqItem
               key={item.id}
@@ -76,7 +76,7 @@ export default function FaqJornada() {
           ))}
         </ul>
 
-        <p className="mt-6 text-center text-[0.95rem] text-tinta-suave">
+        <p className="mx-auto mt-6 max-w-[56rem] text-center text-[0.95rem] text-tinta-suave">
           Todas as normas e novidades da Jornada são divulgadas neste site e no Instagram{" "}
           <a
             href={REDES.instagram}
