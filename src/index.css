@@ -116,6 +116,16 @@
     @apply mx-auto w-full max-w-[1180px] px-4 sm:px-10;
   }
 
+  /* largura única de todas as seções da página inicial (alinhadas entre si e com o rodapé) */
+  .jr-container-amplo {
+    @apply mx-auto w-full max-w-[1360px] px-4 sm:px-10;
+  }
+
+  /* página inicial termina numa seção branca: sem faixa vazia antes do rodapé */
+  main:has(#faq) + footer {
+    margin-top: 0;
+  }
+
   .jr-card {
     @apply rounded-lg border border-linea bg-white shadow-[0_2px_12px_rgba(1,28,99,0.08)];
   }
