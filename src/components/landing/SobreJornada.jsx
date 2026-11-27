@@ -6,15 +6,15 @@ const botaoPequeno =
 
 export default function SobreJornada() {
   return (
-    <section id="sobre" aria-labelledby="titulo-sobre" className="py-8 lg:py-10">
-      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-8 lg:px-10">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:gap-10">
+    <section id="sobre" aria-labelledby="titulo-sobre" className="py-14 lg:py-20">
+      <div className="jr-container lg:max-w-[1360px]">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-10">
           <div>
             <h2 id="titulo-sobre" className="jr-titulo-bloco filete">
               Sobre o evento
             </h2>
 
-            <div className="mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] text-justify">
+            <div className="mt-6 space-y-4 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] text-justify">
               <p>
                 Em 2026, a UNINASSAU Teresina realiza a{" "}
                 <strong className="font-bold text-navy">VI Jornada Acadêmica</strong>, com o tema{" "}
@@ -39,7 +39,7 @@ export default function SobreJornada() {
 
           <aside
             aria-labelledby="titulo-quem-participa"
-            className="flex flex-col rounded-xl border-t-[5px] border-amarelo bg-white p-6 shadow-[0_8px_28px_rgba(1,28,99,0.12)] sm:p-7 lg:self-start"
+            className="flex flex-col rounded-xl border-t-[5px] border-amarelo bg-white p-6 shadow-[0_8px_28px_rgba(1,28,99,0.12)] sm:p-7 lg:mt-2 lg:self-start"
           >
             <h3 id="titulo-quem-participa" className="font-heading text-[1.3rem] font-extrabold text-navy">
               Quem pode participar
