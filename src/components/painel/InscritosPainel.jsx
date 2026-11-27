@@ -10,6 +10,7 @@ import ExcluirInscrito from "@/components/painel/ExcluirInscrito";
 import TrabalhoDetalhes from "@/components/painel/TrabalhoDetalhes";
 import TipoSeletor from "@/components/inscricao/TipoSeletor";
 import CartaoFaixa from "@/components/painel/CartaoFaixa";
+import { cursoPadrao } from "@/lib/evento";
 
 const rotuloFormato = (i) => (i.formato === "banner" ? "Banner" : "Comunicação oral");
 const telefoneBr = (t) => {
@@ -187,10 +188,12 @@ export default function InscritosPainel() {
   const participantes = useMemo(() => inscritos.filter((i) => i.tipo === "participante"), [inscritos]);
 
   // Áreas (cursos) que têm submissões, em ordem alfabética, com a quantidade de cada uma.
+  // O mesmo curso escrito de jeitos diferentes conta como uma área só (usa o nome da lista de cursos).
+  const areaDe = (i) => (i.curso ? cursoPadrao(i.curso) : "Sem curso informado");
   const areas = useMemo(() => {
     const contagem = new Map();
     for (const i of submissoes) {
-      const c = (i.curso || "").trim() || "Sem curso informado";
+      const c = areaDe(i);
       contagem.set(c, (contagem.get(c) || 0) + 1);
     }
     return [...contagem.entries()].sort((a, b) => a[0].localeCompare(b[0], "pt-BR"));
@@ -199,7 +202,7 @@ export default function InscritosPainel() {
   const contagemSituacao = useMemo(() => {
     const c = { pendente: 0, aprovado: 0, negado: 0 };
     for (const i of submissoes) {
-      if (area && ((i.curso || "").trim() || "Sem curso informado") !== area) continue;
+      if (area && areaDe(i) !== area) continue;
       c[i.avaliacao] = (c[i.avaliacao] || 0) + 1;
     }
     return c;
@@ -208,7 +211,7 @@ export default function InscritosPainel() {
   const visiveis = useMemo(() => {
     let base = aba === "submissoes" ? submissoes : participantes;
     if (aba === "submissoes") {
-      if (area) base = base.filter((i) => ((i.curso || "").trim() || "Sem curso informado") === area);
+      if (area) base = base.filter((i) => areaDe(i) === area);
       if (situacao) base = base.filter((i) => i.avaliacao === situacao);
     }
     const termo = norm(busca.trim());

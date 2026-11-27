@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth-middleware";
 import { apenasDigitos, mascararCpf, normalizarTelefone } from "@/lib/validacao";
 import { calcularResumo, descreverRegra, todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
-import { INSTITUICAO_ALUNO } from "@/lib/evento";
+import { INSTITUICAO_ALUNO, cursoPadrao } from "@/lib/evento";
 import { PERFIS_AVALIACAO, PERFIS_EQUIPE, PERFIS_GESTAO, PERFIS_INSCRICAO, PERFIS_PARTICIPANTES } from "@/lib/perfis";
 
 const lista = (res) => (Array.isArray(res) ? res : (res?.items ?? []));
@@ -217,7 +217,7 @@ export const atualizarInscrito = createServerFn({ method: "POST" })
     // Só altera os campos enviados: o participante (ouvinte) não tem instituição, curso nem título.
     const alteracoes = { nome, email, telefone };
     if ("instituicao" in data) alteracoes.instituicao = String(data.instituicao || "").trim().slice(0, 150);
-    if ("curso" in data) alteracoes.curso = String(data.curso || "").trim().slice(0, 100);
+    if ("curso" in data) alteracoes.curso = cursoPadrao(data.curso).slice(0, 100);
     if ("titulo" in data) alteracoes.titulo = String(data.titulo || "").trim().slice(0, 200);
     await base44.entities.Participante.update(data.id, alteracoes);
     return { ok: true };

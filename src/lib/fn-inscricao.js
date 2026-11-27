@@ -3,6 +3,7 @@ import {
   FORMATO_AUTOMATICO,
   DISCIPLINAS,
   INSTITUICAO_ALUNO,
+  cursoPadrao,
 } from "@/lib/evento";
 import {
   MAX_COAUTORES,
@@ -43,6 +44,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
   const email = String(data.email).trim().toLowerCase();
 
   const jaExiste = await todos(base44.entities.Participante.list("-created_date"));
+  const cursosCadastrados = [...new Set(jaExiste.map((p) => p.curso).filter(Boolean))];
   const porCpf = jaExiste.find((p) => p.cpf === cpf);
   const porEmail = jaExiste.find((p) => String(p.email).toLowerCase() === email);
 
@@ -79,7 +81,7 @@ export const criarInscricao = createServerFn({ method: "POST" }).handler(async (
     cpf,
     matricula: data.tipo === "externo" ? "" : soDigitosOuVazio(apenasDigitos(data.matricula)),
     instituicao: data.tipo === "externo" ? String(data.instituicao || "").trim() : INSTITUICAO_ALUNO,
-    curso: String(data.curso).trim(),
+    curso: cursoPadrao(data.curso, cursosCadastrados),
     disciplina: externo ? undefined : data.disciplina,
     formato,
     titulo: String(data.titulo || "").trim().replace(/\s+/g, " "),

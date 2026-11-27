@@ -4,6 +4,7 @@ import { apenasDigitos, cpfValido, mascararCpf, normalizarTelefone } from "@/lib
 import { todos } from "@/lib/jornada.server";
 import { EMAIL, acessoDe, permitido } from "@/lib/painel-equipe.server";
 import { PERFIS_CHAMADA } from "@/lib/perfis";
+import { cursoPadrao } from "@/lib/evento";
 
 // Pedidos de acesso à equipe de check-in: a pessoa entra com a própria conta (Google ou e-mail),
 // informa nome e CPF, e o administrador aprova. Aprovada, ela vira "Monitor de Frequência".
@@ -77,7 +78,7 @@ export const inscreverMonitor = createServerFn({ method: "POST" }).handler(async
   const email = String(data?.email || "").trim().toLowerCase().slice(0, 150);
   const telefone = normalizarTelefone(data?.telefone).slice(0, 11);
   const matricula = apenasDigitos(data?.matricula).slice(0, 20);
-  const curso = String(data?.curso || "").trim().slice(0, 100);
+  const curso = cursoPadrao(data?.curso).slice(0, 100);
 
   const erros = {};
   if (nome.split(" ").filter(Boolean).length < 2) erros.nome = "Informe nome e sobrenome.";

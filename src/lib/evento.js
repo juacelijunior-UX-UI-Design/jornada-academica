@@ -59,6 +59,8 @@ export const FORMATO_AUTOMATICO = {
 export const CURSOS = [
   "Administração",
   "Análise e Desenvolvimento de Sistemas",
+  "Arquitetura e Urbanismo",
+  "Ciência da Computação",
   "Ciências Contábeis",
   "Design",
   "Direito",
@@ -79,6 +81,29 @@ export const CURSOS = [
   "Radiologia",
   "Terapia Ocupacional",
 ];
+
+// Chave para comparar nomes de curso: sem acentos, minúsculas, espaços únicos e sem plural
+// ("Ciências da computação" e "ciencia da computacao" viram a mesma chave).
+export function chaveCurso(nome) {
+  return String(nome || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((p) => (p.length > 3 && p.endsWith("s") ? p.slice(0, -1) : p))
+    .join(" ");
+}
+
+// Nome padrão do curso: se bater com um curso da lista (ou com outro já cadastrado), usa esse nome;
+// senão, guarda o texto digitado com espaços arrumados.
+export function cursoPadrao(nome, extras = []) {
+  const limpo = String(nome || "").trim().replace(/\s+/g, " ");
+  if (!limpo) return "";
+  const chave = chaveCurso(limpo);
+  return CURSOS.find((c) => chaveCurso(c) === chave) || extras.find((c) => chaveCurso(c) === chave) || limpo;
+}
 
 export const ORIENTADOR = "Juaceli Junior";
 
