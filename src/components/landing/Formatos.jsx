@@ -31,7 +31,7 @@ const FORMATOS = [
 export default function Formatos() {
   return (
     <section id="formatos" aria-labelledby="titulo-formatos" className="bg-white py-14 lg:py-16">
-      <div className="jr-container">
+      <div className="jr-container-amplo">
         <TituloSecao id="titulo-formatos">Formatos de apresentação</TituloSecao>
 
         <div className="mt-9 grid auto-rows-fr gap-5 md:grid-cols-2">
@@ -42,7 +42,7 @@ export default function Formatos() {
             >
               <h3 className="font-heading text-[1.2rem] font-bold text-navy">{f.titulo}</h3>
               <p className="mt-1 text-[0.95rem] text-tinta-suave">{f.regra}</p>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[0.95rem] leading-snug text-tinta">
+              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[0.95rem] leading-snug text-tinta [hyphens:auto] text-justify">
                 {f.itens.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
