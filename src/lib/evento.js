@@ -94,7 +94,7 @@ export function chaveCurso(nome) {
     .split(/\s+/)
     .filter(Boolean)
     .map((p) => (p.length > 3 && p.endsWith("s") ? p.slice(0, -1) : p))
-    .join(" ");
+    .join(""); // sem espaços: "Bio Medicina" e "Biomedicina" contam como o mesmo curso
 }
 
 // Nome padrão do curso: se bater com um curso da lista (ou com outro já cadastrado), usa esse nome;
