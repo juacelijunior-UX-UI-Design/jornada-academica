@@ -52,7 +52,7 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b-4 border-amarelo bg-navy shadow-[0_4px_16px_rgba(1,28,99,0.25)]">
-      <div className="jr-container flex max-w-[1400px] items-center justify-between gap-3 py-3">
+      <div className="jr-container-amplo flex items-center justify-between gap-3 py-3">
         <Link
           to="/"
           className="flex flex-none items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 sm:gap-3 sm:px-3"
