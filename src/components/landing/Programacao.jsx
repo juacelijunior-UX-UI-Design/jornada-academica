@@ -47,9 +47,9 @@ export default function Programacao() {
                 {dia.itens.map(([hora, texto]) => (
                   <li
                     key={hora}
-                    className="grid min-h-[3.5rem] grid-cols-1 items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[9.5rem_1fr]"
+                    className="grid min-h-[3.5rem] grid-cols-1 items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[10.5rem_1fr]"
                   >
-                    <strong className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#e8eefc] px-3 py-1 font-heading text-[0.9rem] font-bold text-navy">
+                    <strong className="inline-flex w-fit items-center whitespace-nowrap gap-1.5 rounded-full bg-[#e8eefc] px-3 py-1 font-heading text-[0.9rem] font-bold text-navy">
                       <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                       {hora}
                     </strong>
