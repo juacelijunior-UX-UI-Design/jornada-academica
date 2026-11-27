@@ -66,7 +66,7 @@ export default function ComoParticipar() {
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-1 -top-3 font-heading text-[5.5rem] font-extrabold leading-none text-[#e8eefc] transition-colors duration-300 group-hover:text-[#dde6fb]"
+                className="pointer-events-none absolute right-3 -top-2 font-heading text-[5.5rem] font-extrabold leading-none text-[#e8eefc] transition-colors duration-300 group-hover:text-[#dde6fb]"
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
