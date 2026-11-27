@@ -3,7 +3,7 @@ import { ShoppingBasket } from "lucide-react";
 export default function DoacaoCard() {
   return (
     <section id="doacao" aria-labelledby="titulo-doacao" className="py-12 lg:py-14">
-      <div className="jr-container">
+      <div className="jr-container-amplo">
         <div className="flex flex-col items-start gap-4 rounded-xl border border-[#f3d27a] bg-[#fff6d9] p-6 sm:flex-row sm:items-center sm:gap-5 lg:p-8">
           <span className="flex h-16 w-16 flex-none items-center justify-center rounded-full bg-amarelo">
             <ShoppingBasket className="h-8 w-8 text-navy" aria-hidden="true" />
