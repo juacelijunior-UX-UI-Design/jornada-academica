@@ -34,7 +34,7 @@ export default function HeroJornada() {
       />
 
       <div className="jr-container-amplo relative z-10 grid items-stretch gap-9 py-12 lg:grid-cols-[1fr_47%] lg:gap-[3.6%] lg:py-16">
-        <div className="flex min-w-0 flex-col justify-between gap-10">
+        <div className="flex min-w-0 flex-col justify-between gap-8">
           <div>
             <div className="inline-block max-w-full rounded-lg bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
               <h1 id="titulo-jornada" className="m-0 leading-none">
@@ -87,7 +87,7 @@ export default function HeroJornada() {
           <Image
             src={HERO_FOTO}
             alt="Quatro estudantes sorridentes, de camiseta azul-marinho, olham juntos para a tela de um notebook em um pátio do campus."
-            className="block aspect-[4/3] w-full rounded-[18px] bg-[#04101f] object-cover shadow-[12px_12px_0_0_#ffcb0c] lg:aspect-[602/628] lg:w-[calc(100%-38px)]"
+            className="block aspect-[4/3] w-full rounded-[18px] bg-[#04101f] object-cover shadow-[12px_12px_0_0_#ffcb0c] lg:aspect-auto lg:h-full lg:min-h-[26rem] lg:w-[calc(100%-38px)]"
           />
         </figure>
       </div>
