@@ -14,7 +14,7 @@ export default function SobreJornada() {
               Sobre o evento
             </h2>
 
-            <div className="mt-6 space-y-4 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] sm:text-justify">
+            <div className="mt-6 space-y-4 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] text-justify">
               <p>
                 Em 2026, a UNINASSAU Teresina realiza a{" "}
                 <strong className="font-bold text-navy">VI Jornada Acadêmica</strong>, com o tema{" "}
@@ -39,16 +39,16 @@ export default function SobreJornada() {
 
           <aside
             aria-labelledby="titulo-quem-participa"
-            className="flex flex-col rounded-xl border-t-[5px] border-amarelo bg-white p-6 shadow-[0_8px_28px_rgba(1,28,99,0.12)] sm:p-7 lg:mt-2 lg:self-stretch"
+            className="flex flex-col rounded-xl border-t-[5px] border-amarelo bg-white p-6 shadow-[0_8px_28px_rgba(1,28,99,0.12)] sm:p-7 lg:mt-2 lg:self-start"
           >
             <h3 id="titulo-quem-participa" className="font-heading text-[1.3rem] font-extrabold text-navy">
               Quem pode participar
             </h3>
-            <p className="mt-1 text-[0.95rem] text-tinta">
+            <p className="mt-1 text-[0.95rem] leading-snug text-tinta [hyphens:auto] text-justify">
               Estudantes e profissionais de diversas áreas, sem taxa de inscrição.
             </p>
 
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-[0.95rem] leading-snug text-tinta [hyphens:auto] sm:text-justify">
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-[0.95rem] leading-snug text-tinta [hyphens:auto] text-justify">
               <li>
                 <strong className="font-bold text-navy">Obrigatória</strong> para alunos das disciplinas de
                 Atividades Práticas Interdisciplinares de Extensão (APIExt I a VI).
@@ -63,7 +63,7 @@ export default function SobreJornada() {
               </li>
             </ul>
 
-            <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:mt-auto lg:grid-cols-1 lg:pt-8 xl:grid-cols-2">
+            <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               <a
                 href={EDITAL}
                 target="_blank"
