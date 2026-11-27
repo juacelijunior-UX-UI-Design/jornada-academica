@@ -7,7 +7,7 @@ const botaoPequeno =
 export default function SobreJornada() {
   return (
     <section id="sobre" aria-labelledby="titulo-sobre" className="py-14 lg:py-20">
-      <div className="jr-container lg:max-w-[1360px]">
+      <div className="jr-container-amplo">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-10">
           <div>
             <h2 id="titulo-sobre" className="jr-titulo-bloco filete">
