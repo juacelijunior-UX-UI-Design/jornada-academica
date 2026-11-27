@@ -22,7 +22,7 @@ const DIAS = [
 export default function Programacao() {
   return (
     <section id="programacao" aria-labelledby="titulo-programacao" className="bg-white py-14 lg:py-16">
-      <div className="jr-container">
+      <div className="jr-container-amplo">
         <TituloSecao
           id="titulo-programacao"
           subtitulo="Dia e horário de cada apresentação divulgados em 05/12/2026 · UNINASSAU Teresina"
