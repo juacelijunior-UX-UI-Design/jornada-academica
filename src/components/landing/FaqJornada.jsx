@@ -60,10 +60,10 @@ export default function FaqJornada() {
 
   return (
     <section id="faq" aria-labelledby="titulo-faq" className="bg-white py-14 lg:py-16">
-      <div className="jr-container">
+      <div className="jr-container-amplo">
         <TituloSecao id="titulo-faq">Perguntas frequentes</TituloSecao>
 
-        <ul className="mx-auto mt-9 max-w-[60rem] list-none space-y-3 p-0">
+        <ul className="mt-9 list-none space-y-3 p-0">
           {PERGUNTAS.map((item) => (
             <FaqItem
               key={item.id}
@@ -76,7 +76,7 @@ export default function FaqJornada() {
           ))}
         </ul>
 
-        <p className="mx-auto mt-6 max-w-[60rem] text-center text-[0.95rem] text-tinta-suave">
+        <p className="mt-6 text-center text-[0.95rem] text-tinta-suave">
           Todas as normas e novidades da Jornada são divulgadas neste site e no Instagram{" "}
           <a
             href={REDES.instagram}
