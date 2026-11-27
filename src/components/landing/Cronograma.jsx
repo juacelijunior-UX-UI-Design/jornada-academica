@@ -22,7 +22,7 @@ const GRUPOS = [
 export default function Cronograma() {
   return (
     <section id="cronograma" aria-labelledby="titulo-cronograma" className="py-14 lg:py-16">
-      <div className="jr-container">
+      <div className="jr-container-amplo">
         <TituloSecao id="titulo-cronograma" subtitulo="Datas oficiais do edital">
           Cronograma
         </TituloSecao>
