@@ -35,7 +35,7 @@ export default function SiteFooter() {
         className="pointer-events-none absolute bottom-0 right-0 w-[min(55vw,320px)] -scale-x-100 opacity-90"
       />
 
-      <div className="jr-container relative z-10 max-w-[1400px]">
+      <div className="jr-container-amplo relative z-10">
         <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-[auto_auto_auto] lg:justify-between xl:grid-cols-[minmax(0,1fr)_auto_auto_auto] xl:gap-x-16">
           <div className="sm:col-span-2 lg:col-span-3 lg:flex lg:items-center lg:gap-10 xl:col-span-1 xl:block">
             <Link
