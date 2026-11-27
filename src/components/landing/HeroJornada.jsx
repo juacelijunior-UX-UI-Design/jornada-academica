@@ -33,7 +33,7 @@ export default function HeroJornada() {
         className="pointer-events-none absolute bottom-0 left-0 w-[min(50vw,300px)] opacity-70"
       />
 
-      <div className="jr-container relative z-10 grid items-stretch gap-9 py-12 lg:grid-cols-[1fr_47%] lg:gap-[3.6%] lg:py-16">
+      <div className="jr-container-amplo relative z-10 grid items-stretch gap-9 py-12 lg:grid-cols-[1fr_47%] lg:gap-[3.6%] lg:py-16">
         <div className="flex min-w-0 flex-col justify-between gap-10">
           <div>
             <div className="inline-block max-w-full rounded-lg bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
