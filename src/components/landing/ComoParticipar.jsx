@@ -52,7 +52,7 @@ export default function ComoParticipar() {
         </h2>
       </div>
 
-      <div className="jr-container pt-10">
+      <div className="jr-container pt-10 lg:max-w-[1360px]">
         <ol className="m-0 grid auto-rows-fr list-none gap-5 p-0 sm:grid-cols-2 xl:grid-cols-4">
           {PASSOS.map(({ titulo, texto }, i) => (
             <li
