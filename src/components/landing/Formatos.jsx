@@ -1,8 +1,10 @@
+import { Mic, Presentation } from "lucide-react";
 import TituloSecao from "@/components/landing/TituloSecao";
 import { BANNER_DIMENSOES } from "@/lib/evento";
 
 const FORMATOS = [
   {
+    Icone: Presentation,
     titulo: "Banner",
     regra: "Obrigatório para APIExt I, III e V.",
     itens: [
@@ -18,6 +20,7 @@ const FORMATOS = [
     ],
   },
   {
+    Icone: Mic,
     titulo: "Comunicação oral",
     regra: "Obrigatória para APIExt II, IV e VI.",
     itens: [
@@ -38,11 +41,18 @@ export default function Formatos() {
           {FORMATOS.map((f) => (
             <article
               key={f.titulo}
-              className="rounded-xl border border-linea bg-white p-6 shadow-[0_8px_24px_rgba(1,28,99,0.08)]"
+              className="rounded-2xl border border-linea border-t-[5px] border-t-amarelo bg-white p-6 shadow-[0_8px_24px_rgba(1,28,99,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(1,28,99,0.14)] lg:p-7"
             >
-              <h3 className="font-heading text-[1.2rem] font-bold text-navy">{f.titulo}</h3>
-              <p className="mt-1 text-[0.95rem] text-tinta-suave">{f.regra}</p>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[0.95rem] leading-snug text-tinta [hyphens:auto] text-justify">
+              <div className="flex items-center gap-4">
+                <span className="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-[#e8eefc] text-navy">
+                  <f.Icone className="h-6 w-6" aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="font-heading text-[1.2rem] font-bold text-navy">{f.titulo}</h3>
+                  <p className="text-[0.95rem] font-semibold text-royal">{f.regra}</p>
+                </div>
+              </div>
+              <ul className="mt-4 list-disc marker:text-amarelo space-y-1.5 pl-5 text-[0.95rem] leading-snug text-tinta [hyphens:auto] text-justify">
                 {f.itens.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
