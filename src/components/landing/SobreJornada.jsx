@@ -6,15 +6,15 @@ const botaoPequeno =
 
 export default function SobreJornada() {
   return (
-    <section id="sobre" aria-labelledby="titulo-sobre" className="py-8 lg:py-10">
-      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-8 lg:px-10">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:gap-10">
+    <section id="sobre" aria-labelledby="titulo-sobre" className="py-5 lg:py-6">
+      <div className="w-full px-4 lg:px-5">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] lg:gap-8">
           <div>
             <h2 id="titulo-sobre" className="jr-titulo-bloco filete">
               Sobre o evento
             </h2>
 
-            <div className="mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] text-justify">
+            <div className="mt-4 space-y-3 text-[1.0625rem] leading-relaxed text-tinta [hyphens:auto] text-justify">
               <p>
                 Em 2026, a UNINASSAU Teresina realiza a{" "}
                 <strong className="font-bold text-navy">VI Jornada Acadêmica</strong>, com o tema{" "}
