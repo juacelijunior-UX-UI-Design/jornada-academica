@@ -29,16 +29,22 @@ export default function Cronograma() {
 
         <div className="mt-9 grid items-start gap-8 md:grid-cols-2">
           {GRUPOS.map((g) => (
-            <div key={g.titulo} className="border-l-4 border-amarelo pl-4">
+            <div key={g.titulo} className="rounded-2xl bg-white p-5 shadow-[0_8px_24px_rgba(1,28,99,0.08)] sm:p-6">
               <h3 className="font-heading text-[1.15rem] font-bold text-navy">{g.titulo}</h3>
-              <ol className="mt-3 space-y-2.5">
+              <ol className="relative mt-4 space-y-3 before:absolute before:bottom-3 before:left-[7px] before:top-3 before:w-0.5 before:bg-[#d6def3]">
                 {g.etapas.map(([data, texto, destaque]) => (
                   <li
                     key={`${data}-${texto}`}
-                    className={`grid min-h-[3.25rem] grid-cols-1 items-center gap-x-3 gap-y-0.5 sm:grid-cols-[9.5rem_1fr] rounded-lg bg-white px-4 py-3 shadow-[0_2px_12px_rgba(1,28,99,0.08)] ${
-                      destaque ? "border-l-4 border-vermelho" : ""
+                    className={`relative grid min-h-[3.25rem] grid-cols-1 items-center gap-x-3 gap-y-0.5 pl-8 sm:grid-cols-[10rem_1fr] rounded-xl px-4 py-3 ${
+                      destaque ? "bg-[#fdecee]" : "bg-[#f3f6fd]"
                     }`}
                   >
+                    <span
+                      aria-hidden="true"
+                      className={`absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-[3px] border-white shadow-[0_0_0_2px_currentColor] ${
+                        destaque ? "bg-vermelho text-vermelho" : "bg-amarelo text-amarelo"
+                      }`}
+                    />
                     <strong
                       className={`font-heading text-[0.95rem] font-bold ${destaque ? "text-vermelho-texto" : "text-navy"}`}
                     >
